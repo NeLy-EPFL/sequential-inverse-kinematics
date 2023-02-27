@@ -21,8 +21,9 @@ Finally, install all the dependencies by running:
 $ pip install -e .
 ```
 
-Note that the IKPy module is added as a submodule. To initialize i, run:
+Note that the IKPy module is added as a submodule. To initialize the submodule, run:
 ```bash
+$ git submodule add https://github.com/gizemozd/ikpy.git ikpy_submodule
 $ git submodule update --init
 ```
 
@@ -57,6 +58,6 @@ Note that, although the leg joint angles are calculated based on the IKPy librar
 <summary>TO-DO</summary>
 
   + [ ] Adaptation of code to locomotion
-  + [ ] Parallelization of leg inv kin calculation
+  + [ ] Parallelization of leg inv kin calculation (code speed improvement)
   + [ ] Head kinematics -> antennal pitch and head roll
 </details>
