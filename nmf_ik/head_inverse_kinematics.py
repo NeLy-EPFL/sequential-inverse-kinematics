@@ -36,7 +36,7 @@ This configration is internally checked as well.
 """
 from pathlib import Path
 import logging
-from typing import Dict, List, Union
+from typing import Dict, Union
 from nptyping import NDArray
 
 import numpy as np
@@ -75,7 +75,6 @@ class HeadInverseKinematics:
     def __init__(
             self, aligned_pos: Dict[str, NDArray],
             nmf_template: Dict[str, NDArray],
-            angles_to_calculate: List[str] = None,
     ) -> None:
         self.aligned_pos = aligned_pos
         self.nmf_template = nmf_template
@@ -88,8 +87,9 @@ class HeadInverseKinematics:
         head_angles['Angle_head_pitch'] = self.compute_head_pitch()
         head_angles['Angle_head_yaw'] = self.compute_head_yaw()
         for side in ['L', 'R']:
-            head_angles[f'Angle_antenna_pitch_{side}'] = self.compute_antenna_yaw(side=side)
-            head_angles[f'Angle_antenna_yaw_{side}'] = self.compute_antenna_pitch(side=side, head_roll=head_angles['Angle_head_roll'])
+            head_angles[f'Angle_antenna_yaw_{side}'] = self.compute_antenna_yaw(side=side)
+            head_angles[f'Angle_antenna_pitch_{side}'] = self.compute_antenna_pitch(
+                side=side, head_roll=head_angles['Angle_head_roll'])
 
         if export_path is not None:
             export_path = Path(export_path) if not isinstance(export_path, Path) else export_path
@@ -127,14 +127,13 @@ class HeadInverseKinematics:
         The returned angle is in radians.
         """
         # reshape to (N,3)
-        v1 = v1.reshape(-1,3)
-        v2 = v2.reshape(-1,3)
+        v1 = v1.reshape(-1, 3)
+        v2 = v2.reshape(-1, 3)
 
-        v1_norm = v1 / np.linalg.norm(v1, axis=1)[:,None]
-        v2_norm = v2 / np.linalg.norm(v2, axis=1)[:,None]
+        v1_norm = v1 / np.linalg.norm(v1, axis=1)[:, None]
+        v2_norm = v2 / np.linalg.norm(v2, axis=1)[:, None]
 
-        return np.arccos(np.einsum("ij,ij->i", v1_norm,v2_norm))
-
+        return np.arccos(np.einsum("ij,ij->i", v1_norm, v2_norm))
 
     def compute_head_pitch(self):
         """ Calculates the head pitch angle (rad) from head mid vector
@@ -151,7 +150,7 @@ class HeadInverseKinematics:
 
         angle = HeadInverseKinematics.angle_between_segments(
             v1=anteroposterior_axis, v2=head_vector
-            )
+        )
 
         return angle + self.rest_head_pitch
 
@@ -192,13 +191,6 @@ class HeadInverseKinematics:
         )
 
         return angle
-
-    def derotate_vector(self, head_roll_angle, vector_to_derotate):
-        """Rotates a vector by the amount of `head_roll_angle` along the x axis."""
-        # counter-clockwise rotation in its coordinate system
-        rotation = R.from_euler('x', -head_roll_angle, degrees=False)
-        return rotation.apply(vector_to_derotate)
-
 
     def compute_antenna_pitch(self, side: str, head_roll: NDArray) -> NDArray:
         """ Calculates the head pitch angle (rad) from head vector
@@ -271,12 +263,18 @@ class HeadInverseKinematics:
     def rest_head_pitch(self) -> float:
         """ Head pitch angle at zero pose in the fly biomechanical model."""
         head_vector = (
-            self.nmf_template["R_Antenna_base"] + \
-                  self.nmf_template["L_Antenna_base"]) * 0.5 - self.nmf_template["Neck"]
+            self.nmf_template["R_Antenna_base"] +
+            self.nmf_template["L_Antenna_base"]) * 0.5 - self.nmf_template["Neck"]
         head_vector[1] = 0
 
         return HeadInverseKinematics.angle_between_segments(head_vector, X_AXIS)
 
-    def _get_plane(self, row, n_row):
+    def derotate_vector(self, head_roll_angle: float, vector_to_derotate: NDArray):
+        """Rotates a vector by the amount of `head_roll_angle` along the x axis."""
+        # counter-clockwise rotation in its coordinate system
+        rotation = R.from_euler('x', -head_roll_angle, degrees=False)
+        return rotation.apply(vector_to_derotate)
+
+    def _get_plane(self, row: NDArray, n_row: int):
         """ Construct an array by repeating row n_row many times."""
         return np.tile(row, (n_row, 1))
