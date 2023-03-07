@@ -1,4 +1,3 @@
-# pylint: disable=C0301, C0103
 """ Implementation of a class to calculate head inverse kinematics.
 
 Example usage:
@@ -15,15 +14,6 @@ Example usage:
 >>> class_hk = HeadInverseKinematics(
         aligned_pos = data,
         nmf_template=NMF_TEMPLATE,
-        angles_to_calculate=[
-            'Angle_head_roll',
-            'Angle_head_pitch',
-            'Angle_head_yaw',
-            'Angle_antenna_pitch_L',
-            'Angle_antenna_pitch_R',
-            'Angle_antenna_yaw_L',
-            'Angle_antenna_yaw_R'
-            ]
     )
 >>> joint_angles = class_hk.compute_head_angles(export_path = DATA_PATH)
 
@@ -68,8 +58,6 @@ class HeadInverseKinematics:
     nmf_template : Dict[str, NDArray]
         Dictionary containing the positions of fly model body segments.
         Check ./data.py for the default dictionary.
-    angles_to_calculate : List[str], optional
-        DOFs to calculate, by default None
     """
 
     def __init__(
