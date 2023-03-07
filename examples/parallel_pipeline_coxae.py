@@ -39,15 +39,6 @@ def run_pipeline(path):
     class_hk = HeadInverseKinematics(
         aligned_pos=aligned_pos,
         nmf_template=NMF_TEMPLATE,
-        angles_to_calculate=[
-            "Angle_head_roll",
-            "Angle_head_pitch",
-            "Angle_head_yaw",
-            "Angle_antenna_pitch_L",
-            "Angle_antenna_pitch_R",
-            "Angle_antenna_yaw_L",
-            "Angle_antenna_yaw_R",
-        ],
     )
     head_joint_angles = class_hk.compute_head_angles(export_path=path)
 
