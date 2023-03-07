@@ -79,38 +79,19 @@ class HeadInverseKinematics:
     ) -> None:
         self.aligned_pos = aligned_pos
         self.nmf_template = nmf_template
-        if angles_to_calculate is None:
-            self.angles_to_calculate = [
-                'Angle_head_roll',
-                'Angle_head_pitch',
-                'Angle_head_yaw',
-                'Angle_antenna_pitch_L',
-                'Angle_antenna_pitch_R',
-                'Angle_antenna_yaw_L',
-                'Angle_antenna_yaw_R']
-        else:
-            self.angles_to_calculate = angles_to_calculate
 
     def compute_head_angles(self, export_path: Union[str, Path] = None) -> Dict[str, NDArray]:
         """Calculates all desired joint angles and saves them if export path is provided."""
         head_angles = {}
-        for angle in self.angles_to_calculate:
-            if 'head_roll' in angle:
-                head_angles[angle] = self.compute_head_roll()
-            elif 'head_pitch' in angle:
-                head_angles[angle] = self.compute_head_pitch()
-            elif 'head_yaw' in angle:
-                head_angles[angle] = self.compute_head_yaw()
-            elif 'antenna_pitch' in angle:
-                head_angles[angle] = self.compute_antenna_pitch(side=angle[-1], head_roll=head_angles['Angle_head_roll'])
-            elif 'antenna_yaw' in angle:
-                head_angles[angle] = self.compute_antenna_yaw(side=angle[-1])
-            else:
-                logging.warning('%s cannot be calculated! Check the name.', angle)
-                continue
+
+        head_angles['Angle_head_roll'] = self.compute_head_roll()
+        head_angles['Angle_head_pitch'] = self.compute_head_pitch()
+        head_angles['Angle_head_yaw'] = self.compute_head_yaw()
+        for side in ['L', 'R']:
+            head_angles[f'Angle_antenna_pitch_{side}'] = self.compute_antenna_yaw(side=side)
+            head_angles[f'Angle_antenna_yaw_{side}'] = self.compute_antenna_pitch(side=side, head_roll=head_angles['Angle_head_roll'])
 
         if export_path is not None:
-
             export_path = Path(export_path) if not isinstance(export_path, Path) else export_path
 
             save_file(export_path / 'head_joint_angles.pkl', head_angles)
