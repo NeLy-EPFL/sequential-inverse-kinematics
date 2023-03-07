@@ -40,6 +40,7 @@ from typing import Dict, List, Union
 from nptyping import NDArray
 
 import numpy as np
+from scipy.spatial.transform import Rotation as R
 
 from nmf_ik.utils import save_file
 
@@ -101,7 +102,7 @@ class HeadInverseKinematics:
             elif 'head_yaw' in angle:
                 head_angles[angle] = self.compute_head_yaw()
             elif 'antenna_pitch' in angle:
-                head_angles[angle] = self.compute_antenna_pitch(side=angle[-1])
+                head_angles[angle] = self.compute_antenna_pitch(side=angle[-1], head_roll=head_angles['Angle_head_roll'])
             elif 'antenna_yaw' in angle:
                 head_angles[angle] = self.compute_antenna_yaw(side=angle[-1])
             else:
@@ -217,7 +218,13 @@ class HeadInverseKinematics:
 
         return angle
 
-    def compute_antenna_pitch(self, side: str) -> NDArray:
+    def derotate_vector(self, head_roll_angle, vector_to_derotate):
+        """Rotates a vector by the amount of `head_roll_angle` along the x axis."""
+        # counter-clockwise rotation in its coordinate system
+        rotation = R.from_euler('x', -head_roll_angle, degrees=False)
+        return rotation.apply(vector_to_derotate)
+
+    def compute_antenna_pitch(self, side: str, head_roll: NDArray) -> NDArray:
         """ Calculates the head pitch angle (rad) from head vector
         projected onto sagittal plane to antenna vector (from base ant to edge).
         Furthermore, it subtracts the angle with the resting joint angle of the antenna pitch.
@@ -228,13 +235,20 @@ class HeadInverseKinematics:
         if side not in {"R", "L"}:
             raise ValueError("Side should be either R or L")
 
+        v_derotate = np.vectorize(self.derotate_vector, signature='(m),(m,n)->(m,n)')
+
         antenna_vector = self.ant_vector(side).copy()
         assert antenna_vector.shape[1] == 3, f'Ant vector ({antenna_vector.shape}) does not have the right shape (N,3).'
+        # Derotate the antenna vector to eliminate head roll based errors
+        antenna_vector = v_derotate(head_roll, antenna_vector)
         antenna_vector[:, 1] = 0
 
         head_vector = self.head_vector(side).copy()
         assert head_vector.shape[1] == 3, f'Head vector ({head_vector.shape}) does not have the right shape (N,3).'
+
+        head_vector = v_derotate(head_roll, head_vector)
         head_vector[:, 1] = 0
+
 
         angle = np.zeros(head_vector.shape[0])
         for t in range(angle.shape[0]):
