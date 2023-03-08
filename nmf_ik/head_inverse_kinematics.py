@@ -75,7 +75,8 @@ class HeadInverseKinematics:
         head_angles['Angle_head_pitch'] = self.compute_head_pitch()
         head_angles['Angle_head_yaw'] = self.compute_head_yaw()
         for side in ['L', 'R']:
-            head_angles[f'Angle_antenna_yaw_{side}'] = self.compute_antenna_yaw(side=side)
+            head_angles[f'Angle_antenna_yaw_{side}'] = self.compute_antenna_yaw(
+                side=side, head_roll=head_angles['Angle_head_roll'])
             head_angles[f'Angle_antenna_pitch_{side}'] = self.compute_antenna_pitch(
                 side=side, head_roll=head_angles['Angle_head_roll'])
 
@@ -211,7 +212,7 @@ class HeadInverseKinematics:
 
         return angle - self.rest_antenna_pitch
 
-    def compute_antenna_yaw(self, side):
+    def compute_antenna_yaw(self, side: str, head_roll: NDArray) -> NDArray:
         """ Calculates the antenna yaw angle (rad) from the lateral head vector
         projected onto transverse plane to antenna vector (from base ant to edge)
         projected, again, on the transverse plane.
@@ -223,10 +224,14 @@ class HeadInverseKinematics:
         if side not in {"R", "L"}:
             raise ValueError("Side should be either R or L")
 
+        v_derotate = np.vectorize(self.derotate_vector, signature='(m),(m,n)->(m,n)')
+
         antenna_vector = self.ant_vector(side).copy()
+        antenna_vector = v_derotate(head_roll, antenna_vector)
         antenna_vector[:, 0] = 0
 
         head_vector = self.head_vector_horizontal.copy()
+        head_vector = v_derotate(head_roll, head_vector)
         head_vector[:, 0] = 0
 
         angle = HeadInverseKinematics.angle_between_segments(
