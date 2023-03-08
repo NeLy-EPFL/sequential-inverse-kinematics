@@ -88,22 +88,22 @@ class HeadInverseKinematics:
 
         return head_angles
 
-    def head_vector(self, side):
+    def head_vector(self, side) -> NDArray:
         """ Vector ((N,3) array) from one antenna base to neck."""
         return self.aligned_pos["Neck"] - self.aligned_pos[f"{side}_head"][:, 0, :]
 
     @property
-    def head_vector_mid(self):
+    def head_vector_mid(self) -> NDArray:
         """ Vector ((N,3) array) from antenna mid base to neck."""
         return (self.aligned_pos["R_head"][:, 0, :] + self.aligned_pos["L_head"]
                 [:, 0, :]) * 0.5 - self.aligned_pos["Neck"]
 
     @property
-    def head_vector_horizontal(self):
+    def head_vector_horizontal(self) -> NDArray:
         """ Vector ((N,3) array) from right antenna base to left antenna base."""
         return self.aligned_pos["L_head"][:, 0, :] - self.aligned_pos["R_head"][:, 0, :]
 
-    def ant_vector(self, side):
+    def ant_vector(self, side: str) -> NDArray:
         """ Vector ((N,3) array) from antenna base to antenna edge."""
         return self.aligned_pos[f"{side}_head"][:, 1, :] - self.aligned_pos[f"{side}_head"][:, 0, :]
 
@@ -124,7 +124,7 @@ class HeadInverseKinematics:
 
         return np.arccos(np.einsum("ij,ij->i", v1_norm, v2_norm))
 
-    def compute_head_pitch(self):
+    def compute_head_pitch(self) -> NDArray:
         """ Calculates the head pitch angle (rad) from head mid vector
         projected onto sagittal plane to the anteroposterior plane.
         Furthermore, it sums the angle with the resting joint angle of the head pitch.
@@ -143,7 +143,7 @@ class HeadInverseKinematics:
 
         return angle + self.rest_head_pitch
 
-    def compute_head_roll(self):
+    def compute_head_roll(self) -> NDArray:
         """ Calculates the head roll angle (rad) from horizontal axis
         to head horizontal vector projected onto transverse plane.
 
@@ -162,7 +162,7 @@ class HeadInverseKinematics:
 
         return angle
 
-    def compute_head_yaw(self):
+    def compute_head_yaw(self) -> NDArray:
         """ Calculates the head yaw angle (rad) from horizontal axis
         to head horizontal vector projected onto frontal plane.
 
@@ -262,12 +262,12 @@ class HeadInverseKinematics:
 
         return HeadInverseKinematics.angle_between_segments(head_vector, X_AXIS)
 
-    def derotate_vector(self, head_roll_angle: float, vector_to_derotate: NDArray):
+    def derotate_vector(self, head_roll_angle: float, vector_to_derotate: NDArray) -> NDArray:
         """Rotates a vector by the amount of `head_roll_angle` along the x axis."""
         # counter-clockwise rotation in its coordinate system
         rotation = R.from_euler('x', -head_roll_angle, degrees=False)
         return rotation.apply(vector_to_derotate)
 
-    def _get_plane(self, row: NDArray, n_row: int):
+    def _get_plane(self, row: NDArray, n_row: int) -> NDArray:
         """ Construct an array by repeating row n_row many times."""
         return np.tile(row, (n_row, 1))
