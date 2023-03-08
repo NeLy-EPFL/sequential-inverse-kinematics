@@ -248,3 +248,4 @@ poetry.toml
 *.pdf
 *.csv
 *.ipynb
+.DS_Store

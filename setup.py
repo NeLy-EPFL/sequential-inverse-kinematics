@@ -36,10 +36,10 @@ setup(
     license="MIT license",
     long_description=readme + '\n\n',
     include_package_data=True,
-    name='sequential-inverse-kinematics',
+    name='nmf_ik',
     packages=find_packages(include=['nmf_ik', 'nmf_ik.*']),
     test_suite='tests',
     url='https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git',
-    version='0.0.1',
+    version='0.0.2',
     zip_safe=False,
 )

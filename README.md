@@ -29,6 +29,12 @@ $ git submodule update --init
 
 ## Methodology
 
+### Head joint angle calculations
+Since the head consists of two moving body parts (left and right antennae) on the main neck joint, the kinematic chain approach is not accurate as it tends to follow one antenna "more closely" than the other, thus introducing errors. Therefore, head joint angles are calculated via the conventional dot product method.
+
+
+### Leg joint angle calculations
+
 The main limitation of the conventional IK approaches is that the previous joint are sacrificed at the expense of the end effector. To overcome this challenge, we can build the kinematic chain gradually, starting from beginning.
 
 Specifically, we will start building
@@ -59,5 +65,5 @@ Note that, although the leg joint angles are calculated based on the IKPy librar
 
   + [ ] Adaptation of code to locomotion
   + [ ] Parallelization of leg inv kin calculation (code speed improvement)
-  + [ ] Head kinematics -> antennal pitch and head roll
+  + [x] Head kinematics -> antennal pitch and head roll
 </details>
