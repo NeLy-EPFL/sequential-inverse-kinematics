@@ -57,7 +57,7 @@ def run_pipeline(path):
         logging.info("Running leg IK")
 
         class_seq_ik = LegInverseKinematics(
-            aligned_pos=aligned_pos, nmf_template=NMF_TEMPLATE, bounds=BOUNDS, initial_angles=INITIAL_ANGLES
+            aligned_pos=aligned_pos, bounds=BOUNDS, initial_angles=INITIAL_ANGLES
         )
         leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(export_path=path)
 

@@ -125,7 +125,7 @@ class HeadInverseKinematics:
         mask = np.empty((v1_norm.shape[0],))
 
         for row in range(v1_norm.shape[0]):
-            mask[row] = 1 if np.linalg.det([rot_axis, v1[row,:], v2[row,:]]) > 0 else -1
+            mask[row] = 1 if np.linalg.det([rot_axis, v1[row, :], v2[row, :]]) > 0 else -1
 
         return np.arccos(np.einsum("ij,ij->i", v1_norm, v2_norm)) * mask
 
