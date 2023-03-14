@@ -6,6 +6,7 @@ from pathlib import Path
 import time
 import multiprocessing
 
+import nmf_ik
 from nmf_ik.alignment import AlignPose
 from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
 from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
@@ -49,15 +50,15 @@ def run_pipeline(path):
     )
     head_joint_angles = class_hk.compute_head_angles(export_path=path)
 
-    if (Path(path) / "body_joint_angles.pkl").is_file():
-        logging.info("Joint angles exist!!")
-        return
+    # if (Path(path) / "body_joint_angles.pkl").is_file():
+    #     logging.info("Joint angles exist!!")
+    #     return
 
     if 'RLF' not in path:
         logging.info("Running leg IK")
 
         class_seq_ik = LegInverseKinematics(
-            aligned_pos=aligned_pos, nmf_template=NMF_TEMPLATE, bounds=BOUNDS, initial_angles=INITIAL_ANGLES
+            aligned_pos=aligned_pos, bounds=BOUNDS, initial_angles=INITIAL_ANGLES, nmf_size=None,
         )
         leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(export_path=path)
 
@@ -69,10 +70,21 @@ def run_pipeline(path):
 
 
 if __name__ == "__main__":
+    print(nmf_ik.__path__)
 
     # main_dir = '/mnt/nas2/GO/7cam/221221_aJO-GAL4xUAS-CsChr/Fly001'
     main_dirs = [
-        '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly002',
+        '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly001',
+        '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly002',
+        '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly003',
+        '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly004',
+        '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly005',
+        '/mnt/nas2/GO/7cam/220807_aJO-GAL4xUAS-CsChr/Fly001',
+        '/mnt/nas2/GO/7cam/220807_aJO-GAL4xUAS-CsChr/Fly002',
+        '/mnt/nas2/GO/7cam/220807_aJO-GAL4xUAS-CsChr/Fly003',
+        '/mnt/nas2/GO/7cam/220809_aJO-GAL4xUAS-CsChr/Fly001',
+        '/mnt/nas2/GO/7cam/220809_aJO-GAL4xUAS-CsChr/Fly002',
+        '/mnt/nas2/GO/7cam/220809_aJO-GAL4xUAS-CsChr/Fly003',
     ]
 
     paths_to_run_ik = []
