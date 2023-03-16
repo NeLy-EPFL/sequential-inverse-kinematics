@@ -17,13 +17,13 @@ def calc_head_and_plot(aligned_pose, head_joint_angles, plot=True, export_path=N
     if plot:
         fig, axs = plt.subplots(3, 2, figsize=(10, 6))
 
-        axs[0, 0].plot(-np.rad2deg(head_joint_angles['Angle_antenna_pitch_R']))
+        axs[0, 0].plot(np.rad2deg(head_joint_angles['Angle_antenna_pitch_R']))
         axs[0, 0].plot(np.rad2deg(head_joint_angles_derotated['Angle_antenna_pitch_R']),
                        color='firebrick', ls='--')
         axs[0, 0].set_ylabel('Right')
         # axs[0,0].plot(np.rad2deg(angles_new_r), ls=':')
 
-        axs[0, 1].plot(-np.rad2deg(head_joint_angles['Angle_antenna_pitch_L']), label='original')
+        axs[0, 1].plot(np.rad2deg(head_joint_angles['Angle_antenna_pitch_L']), label='original')
         axs[0, 1].plot(np.rad2deg(head_joint_angles_derotated['Angle_antenna_pitch_L']),
                        color='firebrick', ls='--', label='derotated')
         axs[0, 1].set_ylabel('Left')
@@ -42,8 +42,13 @@ def calc_head_and_plot(aligned_pose, head_joint_angles, plot=True, export_path=N
         axs[1, 1].legend()
 
         axs[2, 0].plot(np.rad2deg(head_joint_angles['Angle_head_pitch']))
+        axs[2, 0].plot(np.rad2deg(head_joint_angles_derotated['Angle_head_pitch']),
+                       color='firebrick', ls='--', label='derotated')
         axs[2, 0].set_ylabel('Angle_head_pitch')
+
         axs[2, 1].plot(np.rad2deg(head_joint_angles['Angle_head_roll']))
+        axs[2, 1].plot(np.rad2deg(head_joint_angles_derotated['Angle_head_roll']),
+                       color='firebrick', ls='--', label='derotated')
         axs[2, 1].set_ylabel('Angle_head_roll')
 
         plt.suptitle(title)
@@ -66,6 +71,7 @@ if __name__ == '__main__':
         '/Volumes/data2/GO/7cam/221222_aJO-GAL4xUAS-CsChr/Fly001/004_Beh/behData/pose-3d/',
         '/Volumes/data2/GO/7cam/221222_aJO-GAL4xUAS-CsChr/Fly001/011_RLF/behData/pose-3d/',
         '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d/',
+        '/Volumes/data2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly002/002_Beh/behData/pose-3d/',
     ]
 
     for posedir in pose_dirs:

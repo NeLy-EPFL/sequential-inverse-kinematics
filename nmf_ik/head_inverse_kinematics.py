@@ -108,7 +108,7 @@ class HeadInverseKinematics:
         return self.aligned_pos[f"{side}_head"][:, 1, :] - self.aligned_pos[f"{side}_head"][:, 0, :]
 
     @staticmethod
-    def angle_between_segments(v1: NDArray, v2: NDArray) -> float:
+    def angle_between_segments(v1: NDArray, v2: NDArray, rot_axis: NDArray) -> float:
         """ Calculates the angle between two vectors based on the cosinus formula.
         It reverses the sign of the angle if determinant of the matrix having
         two vectors and the rotation axis is negative.
@@ -122,7 +122,12 @@ class HeadInverseKinematics:
         v1_norm = v1 / np.linalg.norm(v1, axis=1)[:, None]
         v2_norm = v2 / np.linalg.norm(v2, axis=1)[:, None]
 
-        return np.arccos(np.einsum("ij,ij->i", v1_norm, v2_norm))
+        mask = np.empty((v1_norm.shape[0],))
+
+        for row in range(v1_norm.shape[0]):
+            mask[row] = 1 if np.linalg.det([rot_axis, v1[row, :], v2[row, :]]) > 0 else -1
+
+        return np.arccos(np.einsum("ij,ij->i", v1_norm, v2_norm)) * mask
 
     def compute_head_pitch(self) -> NDArray:
         """ Calculates the head pitch angle (rad) from head mid vector
@@ -138,7 +143,7 @@ class HeadInverseKinematics:
         anteroposterior_axis = self._get_plane([1, 0, 0], head_vector.shape[0])
 
         angle = HeadInverseKinematics.angle_between_segments(
-            v1=anteroposterior_axis, v2=head_vector
+            v1=anteroposterior_axis, v2=head_vector, rot_axis=Y_AXIS
         )
 
         return angle + self.rest_head_pitch
@@ -157,7 +162,7 @@ class HeadInverseKinematics:
         horizontal_axis = self._get_plane([0, 1, 0], head_vector.shape[0])
 
         angle = HeadInverseKinematics.angle_between_segments(
-            v1=horizontal_axis, v2=head_vector
+            v1=horizontal_axis, v2=head_vector, rot_axis=X_AXIS
         )
 
         return angle
@@ -176,7 +181,7 @@ class HeadInverseKinematics:
         horizontal_axis = self._get_plane([0, 1, 0], head_vector.shape[0])
 
         angle = HeadInverseKinematics.angle_between_segments(
-            v1=horizontal_axis, v2=head_vector
+            v1=horizontal_axis, v2=head_vector, rot_axis=Z_AXIS
         )
 
         return angle
@@ -207,7 +212,7 @@ class HeadInverseKinematics:
         head_vector[:, 1] = 0
 
         angle = HeadInverseKinematics.angle_between_segments(
-            v1=head_vector, v2=antenna_vector
+            v1=head_vector, v2=antenna_vector, rot_axis=Y_AXIS
         )
 
         return angle - self.rest_antenna_pitch
@@ -235,7 +240,7 @@ class HeadInverseKinematics:
         head_vector[:, 0] = 0
 
         angle = HeadInverseKinematics.angle_between_segments(
-            v1=antenna_vector, v2=head_vector
+            v1=antenna_vector, v2=head_vector, rot_axis=X_AXIS
         )
 
         if side == 'R':
@@ -250,7 +255,7 @@ class HeadInverseKinematics:
         head_vector[1] = 0
         antenna_vector = self.nmf_template["R_Antenna_edge"] - self.nmf_template["R_Antenna_base"]
         antenna_vector[1] = 0
-        return HeadInverseKinematics.angle_between_segments(head_vector, antenna_vector)
+        return HeadInverseKinematics.angle_between_segments(head_vector, antenna_vector, Y_AXIS)
 
     @property
     def rest_head_pitch(self) -> float:
@@ -260,7 +265,7 @@ class HeadInverseKinematics:
             self.nmf_template["L_Antenna_base"]) * 0.5 - self.nmf_template["Neck"]
         head_vector[1] = 0
 
-        return HeadInverseKinematics.angle_between_segments(head_vector, X_AXIS)
+        return HeadInverseKinematics.angle_between_segments(head_vector, X_AXIS, Y_AXIS)
 
     def derotate_vector(self, head_roll_angle: float, vector_to_derotate: NDArray) -> NDArray:
         """Rotates a vector by the amount of `head_roll_angle` along the x axis."""
