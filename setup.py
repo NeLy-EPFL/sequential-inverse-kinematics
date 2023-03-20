@@ -17,7 +17,10 @@ requirements = [
     "poppy",
     "sympy",
     "tqdm",
-    "wcmatch"
+    "wcmatch",
+    "pandas",
+    "seaborn",
+    "mycolorpy",
 ]
 
 
