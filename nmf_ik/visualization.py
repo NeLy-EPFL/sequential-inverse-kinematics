@@ -20,26 +20,28 @@ logging.basicConfig(
     level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s"
 )
 
+
 def get_frames_from_video(path):
 
     vidcap = cv2.VideoCapture(str(path))
-    success,image = vidcap.read()
+    success, image = vidcap.read()
     count = 0
-    write_path = path.parents[0] / str(path.name).replace('.mp4','_frames')
+    write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
     write_path.mkdir()
     print('Frames will be saved at: ', write_path)
 
     while success:
-      cv2.imwrite(str(write_path / f"frame_{count}.jpg"), image)     # save frame as JPEG file
-      success,image = vidcap.read()
+        cv2.imwrite(str(write_path / f"frame_{count}.jpg"), image)     # save frame as JPEG file
+        success, image = vidcap.read()
 #       print('Read a new frame: ', success)
-      count += 1
+        count += 1
+
 
 def get_frames_from_video_ffmpeg(path):
 
-    write_path = path.parents[0] / str(path.name).replace('.mp4','_frames')
+    write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
     write_path.mkdir()
-    cmd = ['ffmpeg', '-i', str(path), '-r', '1',  str(write_path / 'frame_%d.jpg') ]
+    cmd = ['ffmpeg', '-i', str(path), '-r', '1', str(write_path / 'frame_%d.jpg')]
     subprocess.run(cmd)
 
 
@@ -298,6 +300,7 @@ def _plot_3d_points(points3d, key_points, export_path=None, t=0):
 
     plt.show()
 
+
 def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
     """Plots 3D points."""
 
@@ -315,7 +318,7 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
             color = color_map_left[j]
             j += 1
         else:
-            color='grey'
+            color = 'grey'
 
         if len(order) > 3:
             ax3d.plot(
@@ -338,8 +341,6 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
                 color=color,
             )
 
-
-
     if export_path is not None:
         fig.savefig(export_path, bbox_inches="tight")
 
@@ -356,15 +357,15 @@ def plot_trailing_kp(ax3d, points3d, key_points, export_path=None, t=0, trail=5)
             color = color_map_left[j]
             j += 1
         else:
-            color='grey'
+            color = 'grey'
 
         ax3d.scatter(
-            points3d[max(0, t-trail):t, order, 0],
-            points3d[max(0, t-trail):t, order, 1],
-            points3d[max(0, t-trail):t, order, 2],
+            points3d[max(0, t - trail):t, order, 0],
+            points3d[max(0, t - trail):t, order, 1],
+            points3d[max(0, t - trail):t, order, 2],
             label=kp,
             marker=ls,
-#             markersize=9,
+            #             markersize=9,
             color=color,
         )
 
@@ -415,7 +416,6 @@ def plot_joint_angle(
     ax.spines["right"].set_visible(False)
 
     ax.legend(bbox_to_anchor=(1.2, 1), frameon=False, borderaxespad=0.)
-
 
 
 def plot_grid(
@@ -489,10 +489,10 @@ def plot_grid(
     # ax3.set_ylabel("Leg joint angles (deg)")
     ax3.set_xlabel("Time (sec)")
 
-    #% start: automatic generated code from pylustrator
+    # % start: automatic generated code from pylustrator
     fig.ax_dict = {ax.get_label(): ax for ax in fig.axes}
     getattr(fig, '_pylustrator_init', lambda: ...)()
-    fig.set_size_inches(22.870000/2.54, 15.130000/2.54, forward=True)
+    fig.set_size_inches(22.870000 / 2.54, 15.130000 / 2.54, forward=True)
     fig.axes[0].set(position=[0.2786, 0.664, 0.4316, 0.326])
     fig.axes[1].set(position=[0.00265, 0.1157, 0.2995, 0.4525])
     fig.axes[2].legend(loc=(0.9902, -0.06284), frameon=False)
@@ -503,14 +503,15 @@ def plot_grid(
     fig.axes[3].set_position([0.342251, 0.082519, 0.523162, 0.221085])
     fig.axes[3].yaxis.labelpad = -26.465817
     fig.text(0.3378, 0.6156, 'Head joint angles (deg)', transform=fig.transFigure, )
-    fig.text(0.3378, 0.3281, 'Leg joint angles (deg)',transform=fig.transFigure, )
-    #% end: automatic generated code from pylustrator
+    fig.text(0.3378, 0.3281, 'Leg joint angles (deg)', transform=fig.transFigure, )
+    # % end: automatic generated code from pylustrator
 
     if export_path is not None:
         fig.savefig(export_path, bbox_inches="tight")
         print(f'Figure saved at {str(export_path)}')
 
     return fig
+
 
 if __name__ == '__main__':
 
@@ -585,4 +586,3 @@ if __name__ == '__main__':
     total_time = end - start
 
     print(f'Total time taken to execute the code: {total_time}')
-
