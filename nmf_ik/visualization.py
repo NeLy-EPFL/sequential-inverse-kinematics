@@ -2,6 +2,8 @@
 import pickle
 import logging
 import time
+import cv2
+import pandas as pd
 from datetime import date
 from pathlib import Path
 
@@ -9,12 +11,50 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 from mycolorpy import colorlist as mcp
+from matplotlib.gridspec import GridSpec
 import mpl_toolkits.mplot3d.axes3d as p3
+import subprocess
 
 # Change the logging level here
 logging.basicConfig(
     level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s"
 )
+
+
+def get_frames_from_video(path):
+
+    vidcap = cv2.VideoCapture(str(path))
+    success, image = vidcap.read()
+    count = 0
+    write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
+    write_path.mkdir()
+    print('Frames will be saved at: ', write_path)
+
+    while success:
+        cv2.imwrite(str(write_path / f"frame_{count}.jpg"), image)     # save frame as JPEG file
+        success, image = vidcap.read()
+#       print('Read a new frame: ', success)
+        count += 1
+
+
+def get_frames_from_video_ffmpeg(path):
+
+    write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
+    write_path.mkdir()
+    cmd = ['ffmpeg', '-i', str(path), '-r', '1', str(write_path / 'frame_%d.jpg')]
+    subprocess.run(cmd)
+
+
+def load_grid_plot_data(data_path: Path):
+    if (data_path / "body_joint_angles.pkl").is_file():
+        joint_angles = pd.read_pickle(data_path / "body_joint_angles.pkl")
+    else:
+        head_joint_angles = pd.read_pickle(data_path / "head_joint_angles.pkl")
+        leg_joint_angles = pd.read_pickle(data_path / "leg_joint_angles.pkl")
+        joint_angles = {**head_joint_angles, **leg_joint_angles}
+    aligned_pose = pd.read_pickle(data_path / "pose3d_aligned.pkl")
+
+    return joint_angles, aligned_pose
 
 
 def animate_3d_points(
@@ -201,11 +241,11 @@ def animate_3d_points(
     logging.info(f"Animation is saved at {export_path}")
 
 
-def plot_3d_points(points3d, key_points, export_path=None, t=0):
+def _plot_3d_points(points3d, key_points, export_path=None, t=0):
     """Plots 3D points."""
     fig = plt.figure(figsize=(5, 5))
     ax3d = p3.Axes3D(fig)
-    ax3d.view_init(azim=9, elev=16)
+    ax3d.view_init(azim=0, elev=16)
 
     color_map_right = mcp.gen_color(cmap="RdPu", n=len(key_points))
     color_map_left = mcp.gen_color(cmap="BuGn", n=len(key_points))
@@ -259,6 +299,218 @@ def plot_3d_points(points3d, key_points, export_path=None, t=0):
         fig.savefig(export_path, bbox_inches="tight")
 
     plt.show()
+
+
+def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
+    """Plots 3D points."""
+
+    color_map_right = mcp.gen_color(cmap="Reds", n=len(key_points) + 1)
+    color_map_left = mcp.gen_color(cmap="Blues", n=len(key_points) + 1)
+    color_map_scatter = mcp.gen_color(cmap="RdBu", n=len(key_points) + 1)
+
+    i, j, k = 1, 1, 1
+
+    for kp, (order, ls) in key_points.items():
+        if 'R' in kp:
+            color = color_map_right[i]
+            i += 1
+        elif 'L' in kp:
+            color = color_map_left[j]
+            j += 1
+        else:
+            color = 'grey'
+
+        if len(order) > 3:
+            ax3d.plot(
+                points3d[t, order, 0],
+                points3d[t, order, 1],
+                points3d[t, order, 2],
+                label=kp,
+                linestyle=ls,
+                linewidth=3,
+                color=color,
+            )
+        else:
+            ax3d.plot(
+                points3d[t, order, 0],
+                points3d[t, order, 1],
+                points3d[t, order, 2],
+                label=kp,
+                marker=ls,
+                markersize=9,
+                color=color,
+            )
+
+    if export_path is not None:
+        fig.savefig(export_path, bbox_inches="tight")
+
+
+def plot_trailing_kp(ax3d, points3d, key_points, export_path=None, t=0, trail=5):
+    color_map_right = mcp.gen_color(cmap="Reds", n=len(key_points) + 1)
+    color_map_left = mcp.gen_color(cmap="Blues", n=len(key_points) + 1)
+    i, j = 1, 1
+    for kp, (order, ls) in key_points.items():
+        if 'R' in kp:
+            color = color_map_right[i]
+            i += 1
+        elif 'L' in kp:
+            color = color_map_left[j]
+            j += 1
+        else:
+            color = 'grey'
+
+        ax3d.scatter(
+            points3d[max(0, t - trail):t, order, 0],
+            points3d[max(0, t - trail):t, order, 1],
+            points3d[max(0, t - trail):t, order, 2],
+            label=kp,
+            marker=ls,
+            #             markersize=9,
+            color=color,
+        )
+
+    if export_path is not None:
+        fig.savefig(export_path, bbox_inches="tight")
+
+
+def plot_joint_angle(
+    ax, kinematics_data, angles_to_plot, x_axis=None, degrees=True, fps=100, until_t=-1
+):
+    """[summary]
+
+    Parameters
+    ----------
+    kinematics_data : [type]
+        [description]
+    leg : str
+        Name of the leg. e.g., RF
+    ax : [type], optional
+        [description], by default None
+    """
+    colors = mcp.gen_color(cmap="Set2", n=len(angles_to_plot))
+
+    for i, joint_name in enumerate(angles_to_plot):
+        joint_angles = kinematics_data[joint_name]
+
+        label = " ".join((joint_name.split("_")[-2], joint_name.split("_")[-1]))
+        if degrees:
+            ax.plot(
+                np.array(joint_angles[:until_t]) * 180 / np.pi,
+                "o-",
+                ms=5,
+                markevery=[-1],
+                label=label,
+                color=colors[i],
+            )
+        else:
+            ax.plot(
+                np.array(joint_angles[:until_t]),
+                "o-",
+                ms=5,
+                markevery=[-1],
+                label=label,
+                color=colors[i],
+            )
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    ax.legend(bbox_to_anchor=(1.2, 1), frameon=False, borderaxespad=0.)
+
+
+def plot_grid(
+    img_path,
+    aligned_pose,
+    joint_angles,
+    leg_angles_to_plot,
+    head_angles_to_plot,
+    key_points_3d,
+    key_points_3d_trail,
+    t,
+    t_start,
+    t_end,
+    fps=100,
+    trail=30,
+    export_path=None,
+):
+
+    # import pylustrator
+    # pylustrator.start()
+    plt.style.use("dark_background")
+
+    fig = plt.figure(figsize=(14, 6), dpi=120)
+
+    gs = GridSpec(3, 4, figure=fig)
+    ax_img = fig.add_subplot(gs[0, :])
+    ax1 = fig.add_subplot(gs[1:, :2], projection="3d")
+    ax2 = fig.add_subplot(gs[1, 2:])
+    ax3 = fig.add_subplot(gs[2, 2:])
+
+    # load the image
+    img = cv2.imread(str(img_path / f'frame_{t}.jpg'), 0)
+    ax_img.imshow(img, vmin=0, vmax=255, cmap='gray')
+
+    plot_3d_points(ax1, aligned_pose, key_points=key_points_3d, t=t)
+    plot_trailing_kp(ax1, aligned_pose, key_points=key_points_3d_trail, trail=trail, t=t)
+    plot_joint_angle(ax3, joint_angles, angles_to_plot=leg_angles_to_plot, until_t=t)
+    plot_joint_angle(ax2, joint_angles, angles_to_plot=head_angles_to_plot, until_t=t)
+
+    ax_img.axis('off')
+    # ax1 properties
+    ax1.view_init(azim=7, elev=10)
+    ax1.set_xlim3d([-0.8, 0.8])
+    ax1.set_ylim3d([-0.7, 0.7])
+    ax1.set_zlim3d([0.2, 1.2])
+    ax1.set_xticks([])
+    ax1.set_yticks([])
+    ax1.set_zticks([])
+    ax1.axis("off")
+
+    # ax2 properties
+    ax2.set_xlim((t_start, t_end))
+    # ax2.set_ylabel("Head joint angles (deg)")
+    ax2.spines["bottom"].set_visible(False)
+    ax2.set_xticks([])
+    ax2.set_xlim((t_start, t_end))
+
+    ax2.set_ylim((-60, 60))
+    ax2.set_yticks(ticks=[-60, 0, 60])
+    ax2.set_yticklabels(labels=[-60, 0, 60])
+
+    # ax3 properties
+    ax3.set_xlim((t_start, t_end))
+    ax3.set_ylim((-160, 160))
+    ax3.set_yticks(ticks=[-160, 0, 160])
+    ax3.set_yticklabels(labels=[-160, 0, 160])
+
+    ax3.set_xticks(ticks=np.arange(t_start, t_end + 50, 50))
+    ax3.set_xticklabels(labels=np.arange(t_start, t_end + 50, 50) / fps)
+
+    # ax3.set_ylabel("Leg joint angles (deg)")
+    ax3.set_xlabel("Time (sec)")
+
+    # % start: automatic generated code from pylustrator
+    fig.ax_dict = {ax.get_label(): ax for ax in fig.axes}
+    getattr(fig, '_pylustrator_init', lambda: ...)()
+    fig.set_size_inches(22.870000 / 2.54, 15.130000 / 2.54, forward=True)
+    fig.axes[0].set(position=[0.2786, 0.664, 0.4316, 0.326])
+    fig.axes[1].set(position=[0.00265, 0.1157, 0.2995, 0.4525])
+    fig.axes[2].legend(loc=(0.9902, -0.06284), frameon=False)
+    fig.axes[2].set_position([0.342251, 0.376048, 0.523162, 0.221085])
+    fig.axes[2].yaxis.labelpad = -20.137022
+    fig.axes[3].legend(loc=(0.9902, -0.01824), frameon=False)
+    fig.axes[3].set(position=[0.5293, 0.08108, 0.3707, 0.2265])
+    fig.axes[3].set_position([0.342251, 0.082519, 0.523162, 0.221085])
+    fig.axes[3].yaxis.labelpad = -26.465817
+    fig.text(0.3378, 0.6156, 'Head joint angles (deg)', transform=fig.transFigure, )
+    fig.text(0.3378, 0.3281, 'Leg joint angles (deg)', transform=fig.transFigure, )
+    # % end: automatic generated code from pylustrator
+
+    if export_path is not None:
+        fig.savefig(export_path, bbox_inches="tight")
+        print(f'Figure saved at {str(export_path)}')
+
+    return fig
 
 
 if __name__ == '__main__':
