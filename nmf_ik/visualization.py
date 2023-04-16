@@ -1,9 +1,11 @@
-""" Plotting and animation. """
+""" Functions for plotting and animation. """
 import pickle
 import logging
 import time
 import cv2
 import pandas as pd
+from typing import Tuple, List, Dict
+
 from datetime import date
 from pathlib import Path
 
@@ -20,32 +22,63 @@ logging.basicConfig(
     level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s"
 )
 
+def video_frames_generator(video_path: Path, start_frame: int, end_frame: int):
+    """ Returns the frames as a generator in a given interval.
 
-def get_frames_from_video(path):
+    Parameters
+    ----------
+    video_path : Path
+        Video path.
+    start_frame : int
+        Starting frame.
+    end_frame : int
+        End frame.
 
-    vidcap = cv2.VideoCapture(str(path))
-    success, image = vidcap.read()
-    count = 0
-    write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
-    write_path.mkdir()
-    print('Frames will be saved at: ', write_path)
+    Yields
+    ------
+    Frame
+        Generator containing all the frames in the specified interval.
+    """
+    cap = cv2.VideoCapture(str(video_path))
+    cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
 
-    while success:
-        cv2.imwrite(str(write_path / f"frame_{count}.jpg"), image)     # save frame as JPEG file
-        success, image = vidcap.read()
-#       print('Read a new frame: ', success)
-        count += 1
+    for i in range(start_frame, end_frame):
+        ret, frame = cap.read()
+        if not ret:
+            break
+        yield frame
+
+    cap.release()
 
 
 def get_frames_from_video_ffmpeg(path):
+    """ Saves frames of a video using FFMPEG.
 
+    Parameters
+    ----------
+    path : Path
+        Video path.
+        This path appended with a `_frames` folder will be used to save the frames.
+    """
     write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
     write_path.mkdir()
     cmd = ['ffmpeg', '-i', str(path), '-r', '1', str(write_path / 'frame_%d.jpg')]
     subprocess.run(cmd)
 
 
-def load_grid_plot_data(data_path: Path):
+def load_grid_plot_data(data_path: Path) -> [Dict, Dict]:
+    """ Loads the set of data necessary for plotting the grid.
+
+    Parameters
+    ----------
+    data_path : Path
+        Data path where the pose3d and inverse kinematics are saved.
+
+    Returns
+    -------
+    Tuple
+        Returns joint angles (head and leg) and aligned pose as a tuple.
+    """
     if (data_path / "body_joint_angles.pkl").is_file():
         joint_angles = pd.read_pickle(data_path / "body_joint_angles.pkl")
     else:
@@ -58,19 +91,57 @@ def load_grid_plot_data(data_path: Path):
 
 
 def animate_3d_points(
-    points3d,
-    key_points,
-    export_path,
-    points3d_second=None,
-    key_points_second=None,
-    fps=100,
-    frame_no=1000,
-    format_video="mp4",
-    elev=10,
-    azim=90,
+    points3d: Dict[str, np.ndarray],
+    key_points: Dict[str, Tuple[np.ndarray, str]],
+    export_path: Path,
+    points3d_second: Dict[str, np.ndarray] = None,
+    key_points_second: Dict[str, Tuple[np.ndarray, str]] = None,
+    fps: int = 100,
+    frame_no: int = 1000,
+    format_video: str = "mp4",
+    elev: int = 10,
+    azim: int = 90,
 ):
-    """Makes an animation from 3D plot."""
-    # plt.style.use('dark_background')
+    """ Makes an animation of 3D pose.
+    This code is intended for animating the raw 3D pose and
+    IK based 3D pose.
+
+    Parameters
+    ----------
+    points3d : Dict[str,np.ndarray]
+        Dictionary containing the 3D pose,
+        usually this is the raw 3D pose.
+    key_points : Dict[str, Tuple]
+        Dictionary mapping key points names to their indices
+        and line styles.
+        Example:
+            KEY_POINTS_DICT = {
+                "RF": (np.arange(0, 5), "solid"),
+                "R Ant": (np.arange(10, 12), "o"),
+                "Neck": (np.arange(14, 15), "x"),
+                "L Ant": (np.arange(12, 14), "o"),
+                "LF": (np.arange(5, 10), "solid"),
+            }
+    export_path : Path
+        Path where the animation will be saved.
+    points3d_second : Dict[str,np.ndarray], optional
+        Dictionary containing the 3D pose
+        usually this is the forward kinematics, by default None
+    key_points_second : Dict[str, Tuple, optional
+        Same as `key_points` for `points3d_second`, by default None
+    fps : int, optional
+        Frames per second, by default 100
+    frame_no : int, optional
+        Frame number until which the animation will be recorded,
+        by default 1000
+    format_video : str, optional
+        Format of the video, by default "mp4"
+    elev : int, optional
+        Elevation of 3D axis, by default 10
+    azim : int, optional
+        Azimuth of 3D axis, by default 90
+    """
+    # Dark background
     plt.rcParams.update({
         "axes.facecolor": "black",
         "axes.edgecolor": "black",
@@ -302,7 +373,7 @@ def _plot_3d_points(points3d, key_points, export_path=None, t=0):
 
 
 def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
-    """Plots 3D points."""
+    """Plots 3D points at time t."""
 
     color_map_right = mcp.gen_color(cmap="Reds", n=len(key_points) + 1)
     color_map_left = mcp.gen_color(cmap="Blues", n=len(key_points) + 1)
@@ -327,7 +398,7 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
                 points3d[t, order, 2],
                 label=kp,
                 linestyle=ls,
-                linewidth=3,
+                linewidth=2,
                 color=color,
             )
         else:
@@ -337,17 +408,20 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
                 points3d[t, order, 2],
                 label=kp,
                 marker=ls,
-                markersize=9,
+                markersize=7,
                 color=color,
             )
 
     if export_path is not None:
-        fig.savefig(export_path, bbox_inches="tight")
+        plt.savefig(export_path, bbox_inches="tight")
 
 
 def plot_trailing_kp(ax3d, points3d, key_points, export_path=None, t=0, trail=5):
+    """ Plots the traces of key points from t-trail to t. """
+
     color_map_right = mcp.gen_color(cmap="Reds", n=len(key_points) + 1)
     color_map_left = mcp.gen_color(cmap="Blues", n=len(key_points) + 1)
+
     i, j = 1, 1
     for kp, (order, ls) in key_points.items():
         if 'R' in kp:
