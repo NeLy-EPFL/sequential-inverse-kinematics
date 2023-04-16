@@ -2,25 +2,26 @@
 import pickle
 import logging
 import time
-import cv2
-import pandas as pd
+import subprocess
+from pathlib import Path
+from datetime import date
 from typing import Tuple, List, Dict
 
-from datetime import date
-from pathlib import Path
-
+import cv2
+import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import animation
 from mycolorpy import colorlist as mcp
+from matplotlib import animation
 from matplotlib.gridspec import GridSpec
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import mpl_toolkits.mplot3d.axes3d as p3
-import subprocess
 
 # Change the logging level here
 logging.basicConfig(
     level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s"
 )
+
 
 def video_frames_generator(video_path: Path, start_frame: int, end_frame: int):
     """ Returns the frames as a generator in a given interval.
@@ -45,9 +46,9 @@ def video_frames_generator(video_path: Path, start_frame: int, end_frame: int):
 
     # Define the contrast and brightness values
     alpha = 1.15  # Contrast control
-    beta = -5 # Brightness control
+    beta = -5  # Brightness control
 
-    for i in range(start_frame, end_frame):
+    for _ in range(start_frame, end_frame):
         ret, frame = cap.read()
         adjusted_frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
 
@@ -70,7 +71,7 @@ def get_frames_from_video_ffmpeg(path):
     write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
     write_path.mkdir()
     cmd = ['ffmpeg', '-i', str(path), '-r', '1', str(write_path / 'frame_%d.jpg')]
-    subprocess.run(cmd)
+    subprocess.run(cmd, check=True)
 
 
 def load_grid_plot_data(data_path: Path) -> [Dict, Dict]:
@@ -687,12 +688,9 @@ def plot_grid(
     getattr(plt.figure(1), '_pylustrator_init', lambda: ...)()
     plt.figure(1).set_size_inches(24.520000 / 2.54, 11.450000 / 2.54, forward=True)
 
-    plt.figure(1).axes[0].text(
-        1.2502,
-        1.0174,
-        'Head joint angles (deg)',
-        transform=plt.figure(1).axes[0].transAxes,
-    )  # id=plt.figure(1).axes[0].texts[0].new
+    plt.figure(1).text(
+        0.5263, 0.8830, 'Head joint angles (deg)', transform=plt.figure(1).transFigure,
+    )
     plt.figure(1).text(
         0.5263,
         0.6169,
@@ -714,8 +712,9 @@ def plot_grid(
     plt.figure(1).axes[3].legend(loc=(1.056, -0.5187), frameon=False)
     plt.figure(1).axes[4].set(position=[0.4071, 0.1107, 0.397, 0.2135])
 
-    plt.figure(1).texts[0].set_position([0.403832, 0.608496])
-    plt.figure(1).texts[1].set_position([0.403832, 0.352935])
+    plt.figure(1).texts[0].set(position=(0.4061, 0.883))
+    plt.figure(1).texts[1].set(position=(0.4061, 0.6169))
+    plt.figure(1).texts[2].set(position=(0.4061, 0.3458))
     # % end: automatic generated code from pylustrator
 
     if export_path is not None:
@@ -723,6 +722,55 @@ def plot_grid(
         print(f'Figure saved at {str(export_path)}')
 
     return fig
+
+
+def plot_grid_generator(
+    fly_frames: np.ndarray,
+    aligned_pose: Dict[str, np.ndarray],
+    joint_angles: Dict[str, np.ndarray],
+    leg_angles_to_plot: List[str],
+    head_angles_to_plot: List[str],
+    key_points_3d: Dict[str, Tuple[np.ndarray, str]],
+    key_points_3d_trail: Dict[str, Tuple[np.ndarray, str]],
+    t_start: int,
+    t_end: int,
+    t_interval: int = 20,
+    fps: int = 100,
+    trail: int = 30,
+    stim_lines: List[int] = None,
+    export_path: Path = None,
+):
+    """ Generator for plotting grid."""
+
+    for t, fly_img in enumerate(fly_frames):
+        fig = plot_grid(
+            img=fly_img,
+            aligned_pose=aligned_pose,
+            joint_angles=joint_angles,
+            leg_angles_to_plot=leg_angles_to_plot,
+            head_angles_to_plot=head_angles_to_plot,
+            key_points_3d=key_points_3d,
+            key_points_3d_trail=key_points_3d_trail,
+            t=t + t_start,
+            t_start=t_start,
+            t_end=t_end,
+            t_interval=t_interval,
+            fps=fps,
+            trail=trail,
+            stim_lines=stim_lines,
+            export_path=export_path
+        )
+        yield fig_to_array(fig)
+        plt.close(fig)
+
+
+def fig_to_array(fig):
+    """ Converts a matplotlib figure into an array. """
+    canvas = FigureCanvas(fig)
+    canvas.draw()
+    data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
+    data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+    return data
 
 
 if __name__ == '__main__':
