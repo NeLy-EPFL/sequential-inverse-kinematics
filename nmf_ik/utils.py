@@ -1,7 +1,10 @@
 """ Utilities. """
-import pickle
+from pathlib import Path
+import logging
 from typing import Dict
+import pickle
 import numpy as np
+import cv2
 from nptyping import NDArray
 from scipy.interpolate import pchip_interpolate
 
@@ -11,6 +14,84 @@ def load_data(output_fname):
     with open(output_fname, "rb") as f:
         pts = pickle.load(f)
     return pts
+
+
+def get_fps_from_video(video_dir):
+    """ Finds the fps of a video. """
+    cap = cv2.VideoCapture(str(video_dir))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    return fps
+
+
+def load_stim_data(main_dir: Path):
+    """ Loads the stimulus info from txt."""
+    stim_dir = main_dir / 'stimulusSequence.txt'
+
+    try:
+        with open(stim_dir) as f:
+            lines = f.readlines()
+        return lines
+    except FileNotFoundError:
+        logging.error(f'{stim_dir} does not exist!!')
+        return False
+
+
+def get_stim_array(
+        lines: list,
+        frame_rate: int,
+        scale: int = 1,
+        hamming_window_size: int = 0,
+        time_scale: int = 1e-3):
+    """ Computes a stimulus array from the stimulus information.
+
+    Parameters
+    ----------
+    main_dir : str
+        Path of the file containing the stim info.
+    frame_rate : int
+        Frame rate of the recordings.
+    scale : int, optional
+        Interpolation rate applied in df3dPP, by default 1 (no interpolation!)
+    hamming_window_size : int, optional
+        Size of the filter applied in df3dPP, by default 28
+    time_scale : int, optional
+        Time scale of the stimulus info (msec), by default 1e-3
+
+    Returns
+    -------
+    np.ndarray
+        np.array(length, ) of boolean values indicating the stimulus time points.
+    """
+    stim_duration = int(lines[0].split()[-2])
+    frame_no = stim_duration * frame_rate * scale
+    repeat = int(lines[-1].split()[-1])
+    stim_array = np.zeros(frame_no)
+    # Get only the sequence data
+    start = 0
+    for repeat_no in range(repeat):
+        for line_no in range(2, len(lines) - 1):
+            duration = int(int(lines[line_no].split()[-1])
+                           * frame_rate * time_scale * scale)
+            stim_array[start:start +
+                       duration] = False if lines[line_no].startswith('off') else True
+            start += duration
+
+    trim_ind = int(hamming_window_size * 0.5)
+    return stim_array[trim_ind: stim_array.shape[0] - trim_ind]
+
+
+def get_stim_intervals(stim_data):
+    """ Reads stimulus array and returns the stim intervals for plotting purposes.
+    Use get_stim_array otherwise. """
+    stim_on = np.where(stim_data)[0]
+    stim_start_end = [stim_on[0]]
+    for ind in list(np.where(np.diff(stim_on) > 1)[0]):
+        stim_start_end.append(stim_on[ind])
+        stim_start_end.append(stim_on[ind + 1])
+
+    if not stim_on[-1] in stim_start_end:
+        stim_start_end.append(stim_on[-1])
+    return stim_start_end
 
 
 def calculate_nmf_size(nmf_template: Dict[str, NDArray]) -> Dict[str, NDArray]:

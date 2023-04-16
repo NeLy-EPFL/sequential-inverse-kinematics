@@ -684,37 +684,37 @@ def plot_grid(
     ax4.set_xlabel("Time (sec)")
 
     # #% start: automatic generated code from pylustrator
-    plt.figure(1).ax_dict = {ax.get_label(): ax for ax in plt.figure(1).axes}
-    getattr(plt.figure(1), '_pylustrator_init', lambda: ...)()
-    plt.figure(1).set_size_inches(24.520000 / 2.54, 11.450000 / 2.54, forward=True)
+    fig.ax_dict = {ax.get_label(): ax for ax in fig.axes}
+    getattr(fig, '_pylustrator_init', lambda: ...)()
+    fig.set_size_inches(24.520000 / 2.54, 11.450000 / 2.54, forward=True)
 
-    plt.figure(1).text(
-        0.5263, 0.8830, 'Head joint angles (deg)', transform=plt.figure(1).transFigure,
+    fig.text(
+        0.5263, 0.8830, 'Head joint angles (deg)', transform=fig.transFigure,
     )
-    plt.figure(1).text(
+    fig.text(
         0.5263,
         0.6169,
         'Left leg joint angles (deg)',
-        transform=plt.figure(1).transFigure,
-    )  # id=plt.figure(1).texts[0].new
-    plt.figure(1).text(
+        transform=fig.transFigure,
+    )  # id=fig.texts[0].new
+    fig.text(
         0.5263,
         0.3458,
         'Right leg joint angles (deg)',
-        transform=plt.figure(1).transFigure,
-    )  # id=plt.figure(1).texts[1].new
+        transform=fig.transFigure,
+    )  # id=fig.texts[1].new
 
-    plt.figure(1).axes[0].set(position=[0.0385, 0.5848, 0.2853, 0.3084])
-    plt.figure(1).axes[1].set(position=[0.07833, 0.04041, 0.2226, 0.4813])
-    plt.figure(1).axes[2].legend(loc=(1.056, -0.03196), frameon=False)
-    plt.figure(1).axes[2].set(position=[0.4071, 0.6564, 0.397, 0.2135])
-    plt.figure(1).axes[3].set(position=[0.4071, 0.3835, 0.397, 0.2135])
-    plt.figure(1).axes[3].legend(loc=(1.056, -0.5187), frameon=False)
-    plt.figure(1).axes[4].set(position=[0.4071, 0.1107, 0.397, 0.2135])
+    fig.axes[0].set(position=[0.0385, 0.5848, 0.2853, 0.3084])
+    fig.axes[1].set(position=[0.07833, 0.04041, 0.2226, 0.4813])
+    fig.axes[2].legend(loc=(1.056, -0.03196), frameon=False)
+    fig.axes[2].set(position=[0.4071, 0.6564, 0.397, 0.2135])
+    fig.axes[3].set(position=[0.4071, 0.3835, 0.397, 0.2135])
+    fig.axes[3].legend(loc=(1.056, -0.5187), frameon=False)
+    fig.axes[4].set(position=[0.4071, 0.1107, 0.397, 0.2135])
 
-    plt.figure(1).texts[0].set(position=(0.4061, 0.883))
-    plt.figure(1).texts[1].set(position=(0.4061, 0.6169))
-    plt.figure(1).texts[2].set(position=(0.4061, 0.3458))
+    fig.texts[0].set(position=(0.4061, 0.883))
+    fig.texts[1].set(position=(0.4061, 0.6169))
+    fig.texts[2].set(position=(0.4061, 0.3458))
     # % end: automatic generated code from pylustrator
 
     if export_path is not None:
@@ -760,8 +760,8 @@ def plot_grid_generator(
             stim_lines=stim_lines,
             export_path=export_path
         )
-        yield fig_to_array(fig)
         plt.close(fig)
+        yield fig_to_array(fig)
 
 
 def fig_to_array(fig):
