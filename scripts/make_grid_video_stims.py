@@ -4,7 +4,7 @@
     The video is saved in the same directory as the pose data if export_path is not provided.
 
     Example usage:
-    >>> python make_grid_video.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_3.mp4' --export_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
+    >>> python make_grid_video_stims.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_3.mp4' --export_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
 
 """
 import argparse
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         out_video_name = str(video_name).replace('/','_') + f'_stim_{stim_ind}_grid_video.mp4'
 
         export_path = str(DATA_PATH / out_video_name) if args.export_path is None \
-            else str(args.export_path / out_video_name)
+            else str(Path(args.export_path) / out_video_name)
 
         utils_video.make_video(
             export_path,

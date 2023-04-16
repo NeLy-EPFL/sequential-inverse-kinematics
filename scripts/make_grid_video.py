@@ -1,7 +1,7 @@
 """ Makes a grid video of 3D pose estimation, joint angles, and the fly recording.
 
 Example usage:
->>> python make_grid_video.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_3.mp4' --time_start 200 --time_end 600 --frame_rate 100
+>>> python make_grid_video.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_3.mp4' --time_start 200 --time_end 600
 
 """
 import argparse
@@ -12,6 +12,7 @@ import utils_video
 from nmf_ik.visualization import (video_frames_generator,
                                   plot_grid_generator,
                                   load_grid_plot_data)
+from nmf_ik.utils import get_fps_from_video
 
 
 def parse_args():
@@ -41,13 +42,6 @@ def parse_args():
         help="Path where the grid video to be saved",
     )
     parser.add_argument(
-        "-fps",
-        "--frame_rate",
-        type=int,
-        default=100,
-        help="Frame rate of the video",
-    )
-    parser.add_argument(
         "-ts",
         "--time_start",
         type=int,
@@ -67,16 +61,16 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
 
-    t_start = args.time_start
-    t_end = args.time_end
-    fps = args.frame_rate
-
     DATA_PATH = Path(
         args.data_path
     )
 
     VIDEO_PATH = Path(
         args.video_path)
+
+    t_start = args.time_start
+    t_end = args.time_end
+    fps = get_fps_from_video(VIDEO_PATH)
 
     # Frames generator
     fly_frames = video_frames_generator(VIDEO_PATH, t_start, t_end)
