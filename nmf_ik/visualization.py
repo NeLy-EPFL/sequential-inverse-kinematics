@@ -24,6 +24,7 @@ logging.basicConfig(
 
 def video_frames_generator(video_path: Path, start_frame: int, end_frame: int):
     """ Returns the frames as a generator in a given interval.
+    Modifies the brightness and contrast of the images.
 
     Parameters
     ----------
@@ -42,11 +43,17 @@ def video_frames_generator(video_path: Path, start_frame: int, end_frame: int):
     cap = cv2.VideoCapture(str(video_path))
     cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
 
+    # Define the contrast and brightness values
+    alpha = 1.15  # Contrast control
+    beta = -5 # Brightness control
+
     for i in range(start_frame, end_frame):
         ret, frame = cap.read()
+        adjusted_frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
+
         if not ret:
             break
-        yield frame
+        yield adjusted_frame
 
     cap.release()
 
