@@ -51,17 +51,22 @@ if __name__ == '__main__':
     with open(txt_path) as f:
         lines = f.readlines()
 
-    data_paths = [Path(p.strip()) / 'behData/pose-3d' for p in lines]
-    video_paths = [Path(p.strip()) / 'behData/videos/camera_3.mp4' for p in lines]
+    # from IPython import embed; embed()
+
+    data_paths = []
+    for p in lines:
+        path_name = p.strip()
+        data_paths += Path(path_name).rglob('pose-3d')
 
     cmds_list = [
         ['python', './make_grid_video_stims.py',
          '--data_path', str(dp),
-         '--video_path', str(vp),
-         '--export_path', str(export_path)] for dp, vp in zip(data_paths, video_paths)]
+         '--video_path', str(dp).replace('pose-3d', 'videos/camera_3.mp4'),
+         '--export_path', str(export_path)] for dp in data_paths]
 
     # First solution, using Popen - in the second option you can limit the NO CORES,
     # in this case, I am not so sure
+    # print(' '.join(cmds_list[0]))
     procs_list = [Popen(cmd, stdout=PIPE, stderr=PIPE) for cmd in cmds_list]
 
     for proc in procs_list:
