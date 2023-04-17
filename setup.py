@@ -8,7 +8,7 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 requirements = [
-    "utils_video @ git+https://github.com/NeLy-EPFL/utils_video.git",
+    "utils_video @ git+https://github.com/NeLy-EPFL/utils_video@replace-deepfly#egg=utils_video-0.1",
     "matplotlib",
     "nptyping",
     "numpy==1.22",
