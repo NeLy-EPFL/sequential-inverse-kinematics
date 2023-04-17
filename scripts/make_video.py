@@ -1,4 +1,7 @@
-""" Plotting and animation. """
+""" Plots the raw 3D pose and forward kinematics in the same axis.
+    Example usage:
+    >>> python make_video.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
+"""
 import pickle
 import logging
 from pathlib import Path
