@@ -149,6 +149,7 @@ if __name__ == '__main__':
             export_path,
             generator,
             fps=fps,
+            output_shape=(-1,1440),
             n_frames=t_end - t_start)
 
         generator = 0
