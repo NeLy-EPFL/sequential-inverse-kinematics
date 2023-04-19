@@ -23,7 +23,8 @@ logging.basicConfig(
 )
 
 
-def video_frames_generator(video_path: Path, start_frame: int, end_frame: int, stim_lines: List[int], radius=30, center=(50, 50), color=(255, 0, 0)):
+def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
+                           stim_lines: List[int], radius=30, center=(50, 50), color=(255, 0, 0)):
     """ Returns the frames as a generator in a given interval.
     Modifies the brightness and contrast of the images.
 
@@ -551,8 +552,10 @@ def plot_grid(
 
     Parameters
     ----------
-    img : Path
-        Image of the fly at frame t.
+    img_front : Path
+        Image of the fly at frame t on the front camera.
+    img_side : Path
+        Image of the fly at frame t on the side camera.
     aligned_pose : Dict[str, np.ndarray]
         Aligned 3D pose.
     joint_angles : Dict[str, np.ndarray]
@@ -693,7 +696,7 @@ def plot_grid(
     ax4.set_xlabel("Time (s)")
 
     # #% start: automatic generated code from pylustrator
-    fig.set_size_inches(22.710000/2.54, 11.430000/2.54, forward=True)
+    fig.set_size_inches(22.710000 / 2.54, 11.430000 / 2.54, forward=True)
     fig.text(
         0.3865, 0.9184, 'Head and antennae joint angles (deg)', transform=fig.transFigure,
     )
@@ -709,7 +712,7 @@ def plot_grid(
     )  # id=fig.texts[1].new
 
     # #% start: automatic generated code from pylustrator
-    fig.set_size_inches(21.890000/2.54, 11.420000/2.54, forward=True)
+    fig.set_size_inches(21.890000 / 2.54, 11.420000 / 2.54, forward=True)
     fig.axes[0].set_position([0.049668, 0.665633, 0.277935, 0.266469])
     fig.axes[1].set_position([0.049668, 0.382601, 0.277935, 0.266469])
     fig.axes[2].set(position=[0.1194, 0.06658, 0.1318, 0.2619])
@@ -723,19 +726,6 @@ def plot_grid(
 
     fig.axes[3].legend(loc=(1.068, -0.1324), frameon=False)
     fig.axes[4].legend(loc=(1.064, -0.569), frameon=False)
-    #% end: automatic generated code from pylustrator
-
-    # fig.axes[0].set(position=[0.0385, 0.5848, 0.2853, 0.3084])
-    # fig.axes[1].set(position=[0.07833, 0.04041, 0.2226, 0.4813])
-    # fig.axes[2].legend(loc=(1.056, -0.03196), frameon=False)
-    # fig.axes[2].set(position=[0.4071, 0.6564, 0.397, 0.2135])
-    # fig.axes[3].set(position=[0.4071, 0.3835, 0.397, 0.2135])
-    # fig.axes[3].legend(loc=(1.056, -0.5187), frameon=False)
-    # fig.axes[4].set(position=[0.4071, 0.1107, 0.397, 0.2135])
-
-    # fig.texts[0].set(position=(0.4061, 0.883))
-    # fig.texts[1].set(position=(0.4061, 0.6169))
-    # fig.texts[2].set(position=(0.4061, 0.3458))
     # % end: automatic generated code from pylustrator
 
     if export_path is not None:
@@ -801,7 +791,7 @@ if __name__ == '__main__':
     start = time.time()
     today = date.today()
 
-    fps = 100
+    FPS = 100
 
     DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
     out_dir = DATA_PATH / f"inverse_kinematics_results_{today}.mp4"
@@ -810,7 +800,7 @@ if __name__ == '__main__':
     forward_kinematics = DATA_PATH / "forward_kinematics.pkl"
 
     with open(anipose_data, "rb") as f:
-        aligned_pose = pickle.load(f)
+        aligned_pose_data = pickle.load(f)
     with open(forward_kinematics, "rb") as f:
         forward_kin = pickle.load(f)
 
@@ -818,11 +808,11 @@ if __name__ == '__main__':
 
     points_aligned_all = np.concatenate(
         (
-            aligned_pose["RF_leg"],
-            aligned_pose["LF_leg"],
-            aligned_pose["R_head"],
-            aligned_pose["L_head"],
-            np.tile(aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
+            aligned_pose_data["RF_leg"],
+            aligned_pose_data["LF_leg"],
+            aligned_pose_data["R_head"],
+            aligned_pose_data["L_head"],
+            np.tile(aligned_pose_data["Neck"], (aligned_pose_data["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
         ),
         axis=1,
     )
@@ -833,7 +823,7 @@ if __name__ == '__main__':
             forward_kin["LF_leg"],
             forward_kin["R_head"],
             forward_kin["L_head"],
-            np.tile(aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
+            np.tile(aligned_pose_data["Neck"], (aligned_pose_data["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
         ),
         axis=1,
     )
