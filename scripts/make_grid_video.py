@@ -1,7 +1,7 @@
 """ Makes a grid video of 3D pose estimation, joint angles, and the fly recording.
 
 Example usage:
->>> python make_grid_video.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_3.mp4' --time_start 200 --time_end 600
+>>> python make_grid_video.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos' --time_start 200 -export_path /Volumes/data2/GO/grid_videos --time_end 600
 
 """
 import argparse
@@ -65,15 +65,15 @@ if __name__ == '__main__':
         args.data_path
     )
 
-    VIDEO_PATH = Path(
-        args.video_path)
+    VIDEO_PATH_FRONT = Path(
+        args.video_path) / 'camera_3.mp4'
+
+    VIDEO_PATH_SIDE = Path(
+        args.video_path) / 'camera_5.mp4'
 
     t_start = args.time_start
     t_end = args.time_end
-    fps = get_fps_from_video(VIDEO_PATH)
-
-    # Frames generator
-    fly_frames = video_frames_generator(VIDEO_PATH, t_start, t_end)
+    fps = get_fps_from_video(VIDEO_PATH_FRONT)
 
     joint_angles, aligned_pose = load_grid_plot_data(DATA_PATH)
 
@@ -121,8 +121,14 @@ if __name__ == '__main__':
         "Angle_antenna_pitch_R",
     ]
 
+    stim_lines = [250, 550]
+
+    fly_frames_front = video_frames_generator(VIDEO_PATH_FRONT, t_start, t_end, stim_lines)
+    fly_frames_side = video_frames_generator(VIDEO_PATH_SIDE, t_start, t_end, stim_lines)
+
     generator = plot_grid_generator(
-        fly_frames=fly_frames,
+        fly_frames_front=fly_frames_front,
+        fly_frames_side=fly_frames_side,
         aligned_pose=points_aligned_all,
         joint_angles=joint_angles,
         leg_angles_to_plot=angles,
@@ -134,7 +140,7 @@ if __name__ == '__main__':
         t_interval=100,
         fps=fps,
         trail=30,
-        stim_lines=[250, 550],
+        stim_lines=stim_lines,
         export_path=None
     )
 
