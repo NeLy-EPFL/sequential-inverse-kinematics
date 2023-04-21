@@ -84,11 +84,12 @@ if __name__ == '__main__':
     )
 
     KEY_POINTS_DICT = {
+        "Head roll": ([10,12], '.'),
+        "Neck": (np.arange(14, 15), "x"),
         "RF": (np.arange(0, 5), "solid"),
         "R Ant": (np.arange(10, 12), "o"),
-        "Neck": (np.arange(14, 15), "x"),
-        "L Ant": (np.arange(12, 14), "o"),
         "LF": (np.arange(5, 10), "solid"),
+        "L Ant": (np.arange(12, 14), "o"),
     }
 
     KEY_POINTS_TRAIL = {
