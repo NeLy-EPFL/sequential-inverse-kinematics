@@ -23,7 +23,8 @@ logging.basicConfig(
 )
 
 
-def video_frames_generator(video_path: Path, start_frame: int, end_frame: int):
+def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
+                           stim_lines: List[int], radius=30, center=(50, 50), color=(255, 0, 0)):
     """ Returns the frames as a generator in a given interval.
     Modifies the brightness and contrast of the images.
 
@@ -48,9 +49,12 @@ def video_frames_generator(video_path: Path, start_frame: int, end_frame: int):
     alpha = 1.15  # Contrast control
     beta = -5  # Brightness control
 
-    for _ in range(start_frame, end_frame):
+    for t in range(start_frame, end_frame):
         ret, frame = cap.read()
         adjusted_frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
+        # if stimulation, add a red dot
+        if stim_lines[0] <= t <= stim_lines[-1]:
+            adjusted_frame = cv2.circle(adjusted_frame, center, radius, color, -1)
 
         if not ret:
             break
@@ -383,9 +387,8 @@ def _plot_3d_points(points3d, key_points, export_path=None, t=0):
 def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
     """Plots 3D points at time t."""
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len(key_points) + 1)
-    color_map_left = mcp.gen_color(cmap="Blues", n=len(key_points) + 1)
-    color_map_scatter = mcp.gen_color(cmap="RdBu", n=len(key_points) + 1)
+    color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in key_points if 'R' in kp]) + 2)
+    color_map_left = mcp.gen_color(cmap="Blues", n=len([kp for kp in key_points if 'L' in kp]) + 2)
 
     i, j, k = 1, 1, 1
 
@@ -397,7 +400,7 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
             color = color_map_left[j]
             j += 1
         else:
-            color = 'grey'
+            color = 'lightgrey'
 
         if len(order) > 3:
             ax3d.plot(
@@ -406,7 +409,7 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
                 points3d[t, order, 2],
                 label=kp,
                 linestyle=ls,
-                linewidth=2,
+                linewidth=1.7,
                 color=color,
             )
         else:
@@ -416,7 +419,7 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
                 points3d[t, order, 2],
                 label=kp,
                 marker=ls,
-                markersize=7,
+                markersize=4.5,
                 color=color,
             )
 
@@ -494,6 +497,9 @@ def plot_joint_angle(
 
         label = " ".join((joint_name.split("_")[-2], joint_name.split("_")[-1]))
 
+        if label in ['pitch R', 'pitch L', 'yaw R', 'yaw L', 'roll R', 'roll L']:
+            label = 'ant. ' + label
+
         convert2deg = 180 / np.pi if degrees else 1
 
         ax.plot(
@@ -518,7 +524,8 @@ def plot_joint_angle(
 
 
 def plot_grid(
-    img: np.ndarray,
+    img_front: np.ndarray,
+    img_side: np.ndarray,
     aligned_pose: Dict[str, np.ndarray],
     joint_angles: Dict[str, np.ndarray],
     leg_angles_to_plot: List[str],
@@ -545,8 +552,10 @@ def plot_grid(
 
     Parameters
     ----------
-    img : Path
-        Image of the fly at frame t.
+    img_front : Path
+        Image of the fly at frame t on the front camera.
+    img_side : Path
+        Image of the fly at frame t on the side camera.
     aligned_pose : Dict[str, np.ndarray]
         Aligned 3D pose.
     joint_angles : Dict[str, np.ndarray]
@@ -613,9 +622,10 @@ def plot_grid(
 
     gs = GridSpec(3, 4, figure=fig)
     # 7cam recording
-    ax_img = fig.add_subplot(gs[0, :1])
+    ax_img_side = fig.add_subplot(gs[0, :2])
+    ax_img_front = fig.add_subplot(gs[1, :2])
     # 3D pose
-    ax1 = fig.add_subplot(gs[1:, :2], projection="3d")
+    ax1 = fig.add_subplot(gs[2, :2], projection="3d")
     # head, right leg, left leg joint angles
     ax2 = fig.add_subplot(gs[0, 2:])
     ax3 = fig.add_subplot(gs[1, 2:])
@@ -624,7 +634,8 @@ def plot_grid(
     # load the image
 
     # img = cv2.imread(str(img_path / f'frame_{t}.jpg'), 0)
-    ax_img.imshow(img, vmin=0, vmax=255, cmap='gray')
+    ax_img_side.imshow(img_side, vmin=0, vmax=255, cmap='gray')
+    ax_img_front.imshow(img_front, vmin=0, vmax=255, cmap='gray')
 
     plot_3d_points(ax1, aligned_pose, key_points=key_points_3d, t=t)
     plot_trailing_kp(ax1, aligned_pose, key_points=key_points_3d_trail, trail=trail, t=t)
@@ -645,12 +656,13 @@ def plot_grid(
         show_legend=False,
         stim_lines=stim_lines)
 
-    ax_img.axis('off')
+    ax_img_side.axis('off')
+    ax_img_front.axis('off')
     # ax1 properties
     ax1.view_init(azim=7, elev=10)
-    ax1.set_xlim3d([-0.8, 0.8])
-    ax1.set_ylim3d([-0.7, 0.7])
-    ax1.set_zlim3d([0.2, 1.2])
+    ax1.set_xlim3d([-0.45, 0.45])
+    ax1.set_ylim3d([-0.6, 0.6])
+    ax1.set_zlim3d([0.42, 1.1])
     ax1.set_xticks([])
     ax1.set_yticks([])
     ax1.set_zticks([])
@@ -681,40 +693,39 @@ def plot_grid(
 
     ax4.set_xticks(ticks=np.arange(t_start, t_end + t_interval, t_interval))
     ax4.set_xticklabels(labels=np.arange(t_start, t_end + t_interval, t_interval) / fps)
-    ax4.set_xlabel("Time (sec)")
+    ax4.set_xlabel("Time (s)")
 
     # #% start: automatic generated code from pylustrator
-    fig.ax_dict = {ax.get_label(): ax for ax in fig.axes}
-    getattr(fig, '_pylustrator_init', lambda: ...)()
-    fig.set_size_inches(24.520000 / 2.54, 11.450000 / 2.54, forward=True)
-
+    fig.set_size_inches(22.710000 / 2.54, 11.430000 / 2.54, forward=True)
     fig.text(
-        0.5263, 0.8830, 'Head joint angles (deg)', transform=fig.transFigure,
+        0.3865, 0.9184, 'Head and antennae joint angles (deg)', transform=fig.transFigure,
     )
     fig.text(
-        0.5263,
-        0.6169,
-        'Left leg joint angles (deg)',
+        0.3865, 0.6346,
+        'Left front leg joint angles (deg)',
         transform=fig.transFigure,
     )  # id=fig.texts[0].new
     fig.text(
-        0.5263,
-        0.3458,
-        'Right leg joint angles (deg)',
+        0.3865, 0.3502,
+        'Right front leg joint angles (deg)',
         transform=fig.transFigure,
     )  # id=fig.texts[1].new
 
-    fig.axes[0].set(position=[0.0385, 0.5848, 0.2853, 0.3084])
-    fig.axes[1].set(position=[0.07833, 0.04041, 0.2226, 0.4813])
-    fig.axes[2].legend(loc=(1.056, -0.03196), frameon=False)
-    fig.axes[2].set(position=[0.4071, 0.6564, 0.397, 0.2135])
-    fig.axes[3].set(position=[0.4071, 0.3835, 0.397, 0.2135])
-    fig.axes[3].legend(loc=(1.056, -0.5187), frameon=False)
-    fig.axes[4].set(position=[0.4071, 0.1107, 0.397, 0.2135])
+    # #% start: automatic generated code from pylustrator
+    fig.set_size_inches(21.890000 / 2.54, 11.420000 / 2.54, forward=True)
+    fig.axes[0].set_position([0.049668, 0.665633, 0.277935, 0.266469])
+    fig.axes[1].set_position([0.049668, 0.382601, 0.277935, 0.266469])
+    fig.axes[2].set(position=[0.1194, 0.06658, 0.1318, 0.2619])
+    fig.axes[2].set_position([0.123600, 0.069459, 0.136149, 0.261065])
+    fig.axes[3].set_position([0.400791, 0.677390, 0.383414, 0.225807])
+    fig.axes[4].set_position([0.400791, 0.396851, 0.383414, 0.225807])
+    fig.axes[5].set_position([0.400791, 0.112723, 0.383414, 0.225807])
+    fig.texts[0].set_position([0.399756, 0.918650])
+    fig.texts[1].set_position([0.399756, 0.635718])
+    fig.texts[2].set_position([0.399756, 0.352188])
 
-    fig.texts[0].set(position=(0.4061, 0.883))
-    fig.texts[1].set(position=(0.4061, 0.6169))
-    fig.texts[2].set(position=(0.4061, 0.3458))
+    fig.axes[3].legend(loc=(1.068, -0.1324), frameon=False)
+    fig.axes[4].legend(loc=(1.064, -0.569), frameon=False)
     # % end: automatic generated code from pylustrator
 
     if export_path is not None:
@@ -725,7 +736,8 @@ def plot_grid(
 
 
 def plot_grid_generator(
-    fly_frames: np.ndarray,
+    fly_frames_front: np.ndarray,
+    fly_frames_side: np.ndarray,
     aligned_pose: Dict[str, np.ndarray],
     joint_angles: Dict[str, np.ndarray],
     leg_angles_to_plot: List[str],
@@ -742,9 +754,10 @@ def plot_grid_generator(
 ):
     """ Generator for plotting grid."""
 
-    for t, fly_img in enumerate(fly_frames):
+    for t, (fly_img_front, fly_img_side) in enumerate(zip(fly_frames_front, fly_frames_side)):
         fig = plot_grid(
-            img=fly_img,
+            img_front=fly_img_front,
+            img_side=fly_img_side,
             aligned_pose=aligned_pose,
             joint_angles=joint_angles,
             leg_angles_to_plot=leg_angles_to_plot,
@@ -778,7 +791,7 @@ if __name__ == '__main__':
     start = time.time()
     today = date.today()
 
-    fps = 100
+    FPS = 100
 
     DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
     out_dir = DATA_PATH / f"inverse_kinematics_results_{today}.mp4"
@@ -787,7 +800,7 @@ if __name__ == '__main__':
     forward_kinematics = DATA_PATH / "forward_kinematics.pkl"
 
     with open(anipose_data, "rb") as f:
-        aligned_pose = pickle.load(f)
+        aligned_pose_data = pickle.load(f)
     with open(forward_kinematics, "rb") as f:
         forward_kin = pickle.load(f)
 
@@ -795,11 +808,11 @@ if __name__ == '__main__':
 
     points_aligned_all = np.concatenate(
         (
-            aligned_pose["RF_leg"],
-            aligned_pose["LF_leg"],
-            aligned_pose["R_head"],
-            aligned_pose["L_head"],
-            np.tile(aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
+            aligned_pose_data["RF_leg"],
+            aligned_pose_data["LF_leg"],
+            aligned_pose_data["R_head"],
+            aligned_pose_data["L_head"],
+            np.tile(aligned_pose_data["Neck"], (aligned_pose_data["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
         ),
         axis=1,
     )
@@ -810,7 +823,7 @@ if __name__ == '__main__':
             forward_kin["LF_leg"],
             forward_kin["R_head"],
             forward_kin["L_head"],
-            np.tile(aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
+            np.tile(aligned_pose_data["Neck"], (aligned_pose_data["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
         ),
         axis=1,
     )

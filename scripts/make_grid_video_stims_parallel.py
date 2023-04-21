@@ -61,7 +61,7 @@ if __name__ == '__main__':
     cmds_list = [
         ['python', './make_grid_video_stims.py',
          '--data_path', str(dp),
-         '--video_path', str(dp).replace('pose-3d', 'videos/camera_3.mp4'),
+         '--video_path', str(dp).replace('pose-3d', 'videos'),
          '--export_path', str(export_path)] for dp in data_paths]
 
     # First solution, using Popen - in the second option you can limit the NO CORES,

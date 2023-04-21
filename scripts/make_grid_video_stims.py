@@ -4,7 +4,7 @@
     The video is saved in the same directory as the pose data if export_path is not provided.
 
     Example usage:
-    >>> python make_grid_video_stims.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_3.mp4' --export_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
+    >>> python make_grid_video_stims.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos' --export_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
 
 """
 import argparse
@@ -53,10 +53,13 @@ if __name__ == '__main__':
         args.data_path
     )
 
-    VIDEO_PATH = Path(
-        args.video_path)
+    VIDEO_PATH_FRONT = Path(
+        args.video_path) / 'camera_3.mp4'
 
-    fps = get_fps_from_video(VIDEO_PATH)
+    VIDEO_PATH_SIDE = Path(
+        args.video_path) / 'camera_5.mp4'
+
+    fps = get_fps_from_video(VIDEO_PATH_FRONT)
 
     stim_data = load_stim_data(DATA_PATH.parents[0] / 'StimulusData')
     stim_intervals = get_stim_intervals(get_stim_array(stim_data, fps))
@@ -81,11 +84,12 @@ if __name__ == '__main__':
     )
 
     KEY_POINTS_DICT = {
+        "Head roll": ([10,12], '.'),
+        "Neck": (np.arange(14, 15), "x"),
         "RF": (np.arange(0, 5), "solid"),
         "R Ant": (np.arange(10, 12), "o"),
-        "Neck": (np.arange(14, 15), "x"),
-        "L Ant": (np.arange(12, 14), "o"),
         "LF": (np.arange(5, 10), "solid"),
+        "L Ant": (np.arange(12, 14), "o"),
     }
 
     KEY_POINTS_TRAIL = {
@@ -121,10 +125,12 @@ if __name__ == '__main__':
         t_end = stim_end + int(fps/2)
 
         # Frames generator
-        fly_frames = video_frames_generator(VIDEO_PATH, t_start, t_end)
+        fly_frames_front = video_frames_generator(VIDEO_PATH_FRONT, t_start, t_end, (stim_start, stim_end) )
+        fly_frames_side = video_frames_generator(VIDEO_PATH_SIDE, t_start, t_end, (stim_start, stim_end) )
 
         generator = plot_grid_generator(
-            fly_frames=fly_frames,
+            fly_frames_front=fly_frames_front,
+            fly_frames_side=fly_frames_side,
             aligned_pose=points_aligned_all,
             joint_angles=joint_angles,
             leg_angles_to_plot=angles,

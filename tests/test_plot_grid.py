@@ -18,9 +18,11 @@ if __name__ == '__main__':
         '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
     )
 
-    VIDEO_PATH = Path(
+    VIDEO_PATH_FRONT = Path(
         '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_3.mp4')
 
+    VIDEO_PATH_SIDE = Path(
+        '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos/camera_5.mp4')
 
     joint_angles, aligned_pose = load_grid_plot_data(DATA_PATH)
 
@@ -38,11 +40,12 @@ if __name__ == '__main__':
     )
 
     KEY_POINTS_DICT = {
+        "Head roll": ([10,12], '.'),
+        "Neck": (np.arange(14, 15), "x"),
         "RF": (np.arange(0, 5), "solid"),
         "R Ant": (np.arange(10, 12), "o"),
-        "Neck": (np.arange(14, 15), "x"),
-        "L Ant": (np.arange(12, 14), "o"),
         "LF": (np.arange(5, 10), "solid"),
+        "L Ant": (np.arange(12, 14), "o"),
     }
 
     KEY_POINTS_TRAIL = {
@@ -73,13 +76,16 @@ if __name__ == '__main__':
     t_start = 300
     t_end = 600
 
-    t = t_start + 100
+    t = t_start + 290
     fps = 100
+    stim_lines=[350,500]
 
-    fly_frames = video_frames_generator(VIDEO_PATH, t_start, t_end)
+    fly_frames_front = video_frames_generator(VIDEO_PATH_FRONT, t_start, t_end, stim_lines)
+    fly_frames_side = video_frames_generator(VIDEO_PATH_SIDE, t_start, t_end, stim_lines)
 
     fig = plot_grid(
-        img=list(fly_frames)[t - t_start],
+        img_front=list(fly_frames_front)[t - t_start],
+        img_side=list(fly_frames_side)[t - t_start],
         aligned_pose=points_aligned_all,
         joint_angles=joint_angles,
         leg_angles_to_plot=leg_joint_angles,
@@ -91,7 +97,8 @@ if __name__ == '__main__':
         t_end=t_end,
         fps=fps,
         trail=30,
-        stim_lines=[350,500],
+        t_interval=100,
+        stim_lines=stim_lines,
         export_path=DATA_PATH / f'frame_{t}_alpha1.2_beta_0.png',
     )
 
