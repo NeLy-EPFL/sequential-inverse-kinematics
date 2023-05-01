@@ -8,10 +8,16 @@ import os
 import re
 import argparse
 from pathlib import Path
+import logging
 from sys import platform
 import pandas as pd
 import cv2
 from tqdm import tqdm
+
+
+# Change the logging level here
+logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")
+
 
 def parse_args():
     """ Argument parser. """
@@ -103,7 +109,7 @@ def get_stim_dur_repeat(trial_dir: str):
         stim_repeat = int(lines[-1].strip().split(',')[-1])
 
     except FileNotFoundError:
-        print(f'{stim_path} does not exist!!')
+        logging.warning(f'{stim_path} does not exist!!')
         stim_dur, stim_repeat = 0, 0
 
     return {'stim_dur': stim_dur, 'stim_repeat': stim_repeat}
@@ -151,8 +157,11 @@ def create_empty_df(columns=None):
 
 def get_experiment_folders(source, date, genotypes):
     """ Returns all the experiment folders in the source directory. """
+
     selected_folders = [os.path.join(source, folder) for folder in os.listdir(source) if any(
-        genotype.lower() in folder.lower() for genotype in genotypes) and int(folder.split('_')[0]) > date]
+        genotype.lower() in folder.lower() for genotype in genotypes) and
+        int(folder.split('_')[0]) > date and os.path.isdir(os.path.join(source, folder))
+    ]
 
     return selected_folders
 
@@ -193,26 +202,29 @@ if __name__ == '__main__':
     metadata_df = create_empty_df(columns)
 
     for exp in tqdm(selected_experiments):
-        fly_paths = list(path_name for path_name in Path(exp).iterdir() if 'Fly' in str(path_name))
+        fly_paths = list(path_name for path_name in Path(exp).iterdir() if str(
+            path_name.parts[-1]).startswith('Fly') and path_name.is_dir())
 
         for fly_path in fly_paths:
+
+            trial_paths = list(fly_path.rglob('*/behData'))
             fly_path = str(fly_path)
             exp_info = get_exp_info(fly_path, source=source)
 
-            trial_paths = list(fly_path.rglob('*/behData'))
             for trial_path in trial_paths:
                 new_row = empty_df.copy()
 
                 trial_path = str(trial_path)
                 trial_info = get_trial_type_and_number(trial_path)
                 stim_info = get_stim_dur_repeat(trial_path)
-                video_dir = list(Path(trial_path).rglob('*camera_3.mp4'))[-1]
+                video_dir_list = list(Path(trial_path).rglob('*camera_3.mp4'))
 
-                if not video_dir.is_file():
-                    print(f'{video_dir} does not exist!!')
-                    video_info = {'fps': 0, 'duration': 0}
-                else:
+                if len(video_dir_list):
+                    video_dir = video_dir_list[-1]
                     video_info = get_fps_duration_from_video(video_dir)
+                else:
+                    logging.warning(f'Videos do not exist in {trial_path}!!')
+                    video_info = {'fps': 0, 'duration': 0}
 
                 # Let's fill the new row data frame
                 new_row['stim_duration'] = stim_info['stim_dur']
