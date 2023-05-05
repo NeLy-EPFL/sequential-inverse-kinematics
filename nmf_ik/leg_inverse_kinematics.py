@@ -26,7 +26,7 @@ Example usage:
 
 import pickle
 from pathlib import Path
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Union, List
 import logging
 from nptyping import NDArray
 import warnings
@@ -198,7 +198,7 @@ class LegInverseKinematics(KinematicChain):
         return forward_kinematics
 
     def run_ik_and_fk(
-        self, export_path: Union[Path, str] = None
+        self, export_path: Union[Path, str] = None, stages: List[int] = [1,2,3,4]
     ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
         """ Runs inverse and forward kinematics for leg joints.
 
@@ -212,6 +212,7 @@ class LegInverseKinematics(KinematicChain):
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
+        assert 1 in stages, "stages should start with 1 and strictly be incrementary"
         forward_kinematics_dict = {}
         joint_angles_dict = {}
 
@@ -221,7 +222,7 @@ class LegInverseKinematics(KinematicChain):
                 leg_name = segment[:2]
                 origin = segment_array[:, 0, :]
 
-                for stage in [1, 2, 3, 4]:
+                for stage in stages:
                     end_effector_pos = segment_array[:, stage, :]
                     init_ang = self.initial_angles[segment[:2]][f'stage_{stage}']
 

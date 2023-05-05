@@ -51,7 +51,6 @@ def run_pipeline(path):
 
     class_seq_ik = LegInverseKinematics(
         aligned_pos=aligned_pos,
-        nmf_template=NMF_TEMPLATE,
         bounds=BOUNDS,
         initial_angles=INITIAL_ANGLES
     )
@@ -76,6 +75,8 @@ if __name__ == "__main__":
     for main_dir in main_dirs:
         paths_to_run_ik += list(Path(main_dir).rglob('pose-3d'))
 
+    logging.info('Paths to run IK ', paths_to_run_ik)
+
     then = time.time()
 
     # Max number of cores
@@ -91,4 +92,4 @@ if __name__ == "__main__":
         )
 
     now = time.time()
-    print("Time taken: ", now - then)
+    logging.info("Time taken: ", now - then)
