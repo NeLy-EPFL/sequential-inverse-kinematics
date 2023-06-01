@@ -22,6 +22,11 @@ Example usage:
 )
 >>> leg_joint_angles, forward_kinematics = seq_ik.run_ik_and_fk(export_path=DATA_PATH)
 
+Note that there are two kinds of kinematic_chain classes for now.
+One with the original configuration where there is no trochanter, the other one is
+with the offset introduced by trochanter. If you want to manually change the inherited
+class, just change the import in this file.
+
 """
 
 import pickle
@@ -37,16 +42,16 @@ from tqdm import trange
 
 from ikpy.chain import Chain
 
-from nmf_ik.utils import save_file, calculate_nmf_size
+from nmf_ik.utils import save_file
 from nmf_ik.kinematic_chain import KinematicChain
-from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE
+from nmf_ik.data import BOUNDS, INITIAL_ANGLES
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
 # Change the logging level here
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s- %(message)s")
 
 
@@ -124,7 +129,8 @@ class LegInverseKinematics(KinematicChain):
         initial_angles: NDArray,
         stage: int = None,
         segment_name: str = None,
-        kinematic_chain: Chain = None
+        kinematic_chain: Chain = None,
+        femur_orientation: float = 0
     ) -> NDArray:
         """For a given trial pose data, calculates the inverse kinematics
         by using a sequential inverse kinematics method.
@@ -157,17 +163,21 @@ class LegInverseKinematics(KinematicChain):
         joint_angles = np.empty((frames_no, len(initial_angles)))
         forward_kinematics = np.empty((frames_no, len(initial_angles), 3))
 
+        femur_orientation = 1 * femur_orientation if 'RF' in segment_name else -1 * femur_orientation
+
         if origin.size == 3:
             origin = np.tile(origin, (frames_no, 1))
 
         if stage == 1:
-            kinematic_chain = self.create_leg_chain(stage=stage, leg_name=segment_name)
+            kinematic_chain = self.create_leg_chain(
+                stage=stage, leg_name=segment_name, femur_orientation=femur_orientation)
 
         # Start the IK process
-        for t in trange(frames_no, disable=True):
+        for t in trange(frames_no, disable=False):
             if stage in [2, 3, 4]:
                 kinematic_chain = self.create_leg_chain(
-                    stage=stage, leg_name=segment_name, angles=self.joint_angles_empty, t=t)
+                    stage=stage, leg_name=segment_name, angles=self.joint_angles_empty, t=t,
+                    femur_orientation=femur_orientation)
 
             initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
             joint_angles[t, :] = LegInverseKinematics.calculate_ik(
@@ -198,7 +208,7 @@ class LegInverseKinematics(KinematicChain):
         return forward_kinematics
 
     def run_ik_and_fk(
-        self, export_path: Union[Path, str] = None
+        self, export_path: Union[Path, str] = None, femur_orientation: float = 0
     ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
         """ Runs inverse and forward kinematics for leg joints.
 
@@ -231,7 +241,8 @@ class LegInverseKinematics(KinematicChain):
                         initial_angles=init_ang,
                         stage=stage,
                         segment_name=leg_name,
-                        kinematic_chain=None
+                        kinematic_chain=None,
+                        femur_orientation=femur_orientation,
                     )
 
             else:
