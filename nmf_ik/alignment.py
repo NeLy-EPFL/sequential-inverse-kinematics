@@ -8,21 +8,19 @@ Example usage:
 
 >>> DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
 
->>> align = AlignPose(DATA_PATH)
->>> aligned_pose = align.align_pose(save_pose_file=True)
+>>> align = AlignPose.from_file_path(DATA_PATH, convert_dict=True)
+>>> aligned_pose = align.align_pose(export_path=DATA_PATH)
 
 NOTES:
 ------
 Despite being extendable, this method is written with a special focus on forelegs and head.
 """
-from typing import Dict, List, Union, Tuple
+from pathlib import Path
+from typing import Dict, List, Union, Optional
 import pickle
 import logging
 from nptyping import NDArray
 import numpy as np
-import pandas as pd
-from wcmatch import pathlib
-from wcmatch.pathlib import Path
 
 from nmf_ik.data import PTS2ALIGN, NMF_TEMPLATE
 from nmf_ik.utils import save_file, calculate_nmf_size
@@ -54,71 +52,104 @@ def _get_distance_btw_vecs(vector1, vector2):
 
 
 class AlignPose:
-    """Alings the 3D poses obtained from Anipose.
+    """Aligns the 3D poses.
 
     Parameters
     ----------
-    main_dir : Union[str, Path]
-        Path where the Anipose triangulation results are saved.
-        By default, the result file is caled pose3d.h5
-        However, if the name is different, <pose_result_path> should
-        be modified accordingly.
-        Example: '../Fly001/001_Beh/behData/pose-3d'
-    pose_file_ext : Tuple[str], optional
-        Extension of the pose3d file, by default ["csv", "h5"]
+    pose_data_dict : Dict[str, NDArray]
+        3D pose put in a dictionary that has the following structure defined
+        by PTS2ALIGN (see data.py for more details):
+
+        pose_data_dict = {
+            'RF_leg': NDArray[N_frames,N_key_points,3],
+            'LF_leg': NDArray[N_frames,N_key_points,3],
+            'R_head': NDArray[N_frames,N_key_points,3],
+            'L_head': NDArray[N_frames,N_key_points,3],
+            'Neck': NDArray[N_frames,N_key_points,3],
+        }
     include_claw : bool, optional
         True if claw is included in the scaling process, by default False
-    pts2align : Dict[str, List[str]], optional
-        Region names and corresponding key points names to be aligned,
-        check data.py for an example, by default None
     nmf_template : Dict[str, NDArray], optional
         Dictionary containing the positions of fly model body segments.
         Check ./data.py for the default dictionary, by default None
+
+    For the class usage examples, please refer to `example_alignment.py`
     """
 
     def __init__(
         self,
-        main_dir: Union[str, Path],
-        pose_file_ext: Tuple[str] = None,
-        include_claw: bool = False,
-        pts2align: Dict[str, List[str]] = None,
-        nmf_template: Dict[str, NDArray] = None,
+        pose_data_dict: Dict[str, NDArray],
+        include_claw: Optional[bool] = False,
+        nmf_template: Optional[Dict[str, NDArray]] = None,
     ):
-        self.main_dir = Path(main_dir) if not isinstance(main_dir, Path) else main_dir
-        self.pose_file_ext = ["csv", "h5"] if pose_file_ext is None else pose_file_ext
+        self.pose_data_dict = pose_data_dict
         self.include_claw = include_claw
-        self.pts2align = PTS2ALIGN if pts2align is None else pts2align
         self.nmf_template = NMF_TEMPLATE if nmf_template is None else nmf_template
         self.nmf_size = calculate_nmf_size(self.nmf_template)
 
-        self.pose_data = self.load_pose_data
-        self.pose_data_dict = self.convert_from_anipose_to_dict(self.pose_data)
+    @classmethod
+    def from_file_path(
+        cls, main_dir: Union[str, Path],
+        file_name: Optional[str] = "pose3d.*",
+        convert_dict: Optional[bool] = True,
+        pts2align: Optional[Dict[str, List[str]]] = None,
+        **kwargs
+    ):
+        """
+        Class method to load pose3d data and convert it into a proper
+        structure.
 
-    @property
-    def pose_result_path(self) -> str:
-        """ Returns the pose file path the given extensions."""
-        exts = ",".join(self.pose_file_ext[:])
-        paths = list(self.main_dir.glob(f"*pose3d*.{{{exts}}}", flags=pathlib.BRACE))
-        if len(paths) >= 1:
-            return paths[-1].as_posix()
-        raise FileNotFoundError(f"pose3d does not exits in {self.main_dir}")
+        Parameters
+        ----------
+        main_dir : Union[str, Path]
+            Path where the Anipose triangulation results are saved.
+            By default, the result file is caled pose3d.h5
+            However, if the name is different, <pose_result_path> should
+            be modified accordingly.
+            Example: '../Fly001/001_Beh/behData/pose-3d'
+        file_name : str, optional
+            Key words for the file name, by default "pose3d.*"
+        convert_dict : bool, optional
+            If true converts the loaded file into a dictionary, by default True
+        pts2align : Dict[str, List[str]], optional
+            Region names and corresponding key points names to be aligned,
+            check data.py for an example, by default None
 
-    @property
-    def load_pose_data(self) -> pd.DataFrame:
-        """ Load pose results from the main directory."""
-        with open(self.pose_result_path, "rb") as f:
-            pose_3d = pickle.load(f)
-        return pose_3d
+        Returns
+        -------
+        AlignPose
+            Instance of the AlignPose class.
 
-    def convert_from_anipose_to_dict(self, pose_3d: NDArray) -> Dict[str, NDArray]:
-        """ Loads df3d data into a dictionary.
+        Raises
+        ------
+        FileNotFoundError
+            If file with a name that contains `file_name` does not exist in `main_dir`.
+        """
+        main_dir = Path(main_dir) if not isinstance(main_dir, Path) else main_dir
+        paths = list(main_dir.rglob(file_name))
+        if len(paths) > 0:
+            with open(paths[-1].as_posix(), "rb") as f:
+                pose_3d = pickle.load(f)
+        else:
+            raise FileNotFoundError(f"pose3d does not exits in {main_dir}")
+
+        if convert_dict:
+            pts2align = PTS2ALIGN if pts2align is None else pts2align
+            return cls(AlignPose.convert_from_anipose_to_dict(pose_3d, pts2align), **kwargs)
+
+        return cls(pose_3d, **kwargs)
+
+    @staticmethod
+    def convert_from_anipose_to_dict(
+            pose_3d: NDArray, pts2align: Dict[str, List[str]]) -> Dict[str, NDArray]:
+        """ Loads anipose data into a dictionary.
             Segment names are under data.py
         """
         points_3d_dict = {}
 
-        for segment in self.pts2align:
-            segment_kps = self.pts2align[segment]
-            temp_array = np.empty((self.trial_length, len(segment_kps), 3))
+        for segment in pts2align:
+            segment_kps = pts2align[segment]
+            temp_array = np.empty((pose_3d[f"{segment_kps[0]}_x"].shape[0], len(segment_kps), 3))
             for i, kp_name in enumerate(segment_kps):
                 temp_array[:, i, 0] = pose_3d[f"{kp_name}_x"]
                 temp_array[:, i, 1] = pose_3d[f"{kp_name}_y"]
@@ -128,7 +159,7 @@ class AlignPose:
 
         return points_3d_dict
 
-    def align_pose(self, save_pose_file: bool) -> Dict[str, NDArray]:
+    def align_pose(self, export_path: Optional[Union[str, Path]] = None) -> Dict[str, NDArray]:
         """ Aligns the leg and head key point positions.
             Saves the results of save_pose_file is True.
         """
@@ -145,19 +176,15 @@ class AlignPose:
             else:
                 continue
         # Take the neck as in the template as the other points are already aligned
-        aligned_pose["Neck"] = self.nmf_template["Neck"]
+        if 'Neck' in self.nmf_template:
+            aligned_pose["Neck"] = self.nmf_template["Neck"]
 
-        if save_pose_file:
-            export_path = self.main_dir / "pose3d_aligned.pkl"
-            save_file(out_fname=export_path, data=aligned_pose)
-            logging.info("Aligned pose is saved at %s", self.main_dir)
+        if export_path is not None:
+            export_full_path = export_path / "pose3d_aligned.pkl"
+            save_file(out_fname=export_full_path, data=aligned_pose)
+            logging.info("Aligned pose is saved at %s", export_path)
 
         return aligned_pose
-
-    @property
-    def trial_length(self) -> int:
-        """ Number of frames in the trial. """
-        return int(self.pose_data.shape[0])
 
     @property
     def thorax_mid_pts(self) -> NDArray:
@@ -199,7 +226,7 @@ class AlignPose:
         return nmf_size / fly_leg_size
 
     def find_stationary_indices(
-        self, array1: NDArray, threshold: float = 5e-5
+        self, array1: NDArray, threshold: Optional[float] = 5e-5
     ) -> NDArray:
         """ Find the indices in an array where the function value does not move much."""
         indices_stat = np.where((np.diff(np.diff(array1)) < threshold))
@@ -211,7 +238,6 @@ class AlignPose:
 
     def align_leg(self, leg_array: NDArray, leg_name: str) -> NDArray:
         """ Scales and translated the leg key point locations based on the model size/config."""
-        # TODO: we need to check the rotation
         aligned_array = np.empty_like(leg_array)
         fixed_coxa = AlignPose.get_fixed_pos(leg_array[:, 0, :])
 
@@ -246,8 +272,9 @@ class AlignPose:
             ant_tmp = self.nmf_size["Antenna"]
         else:
             raise KeyError(
-                "Nmf template dictionary does not contain a key name <Antenna_mid_thorax> or <Antenna>"
-                "Please check the dictionary you provided."
+                """Nmf template dictionary does not contain
+                a key name <Antenna_mid_thorax> or <Antenna>
+                Please check the dictionary you provided."""
             )
 
         stationary_indices = self.find_stationary_indices(antbase2thoraxmid_real)
