@@ -97,11 +97,11 @@ PTS2ALIGN = {
 def get_pts2align(path: str):
     """ Deletes the keys from the PTS2ALIGN dictionary."""
     pts_temp = PTS2ALIGN.copy()
-    if "_RF_" in path:
+    if "_RF" in path:
         del pts_temp["RF_leg"]
-    elif "_LF_" in path:
+    elif "_LF" in path:
         del pts_temp["LF_leg"]
-    elif "_RLF_" in path or "_LRF_" in path:
+    elif "_RLF" in path or "_LRF" in path:
         del pts_temp["LF_leg"]
         del pts_temp["RF_leg"]
 
