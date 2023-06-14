@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     # First solution, using Popen - in the second option you can limit the NO CORES,
     # in this case, I am not so sure
-    # print(' '.join(cmds_list[0]))
+    print(' '.join(cmds_list[0]))
     procs_list = [Popen(cmd, stdout=PIPE, stderr=PIPE) for cmd in cmds_list]
 
     for proc in procs_list:

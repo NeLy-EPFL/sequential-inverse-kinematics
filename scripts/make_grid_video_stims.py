@@ -4,7 +4,7 @@
     The video is saved in the same directory as the pose data if export_path is not provided.
 
     Example usage:
-    >>> python make_grid_video_stims.py --data_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos' --export_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
+    >>> get_plot_config '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d' --video_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/videos' --export_path '/Volumes/data2/GO/7cam/221223_aJO-GAL4xUAS-CsChr/Fly001/002_Beh/behData/pose-3d'
 
 """
 import argparse
@@ -13,6 +13,7 @@ import numpy as np
 
 import utils_video
 from nmf_ik.visualization import (video_frames_generator,
+                                  get_plot_config,
                                   plot_grid_generator,
                                   load_grid_plot_data)
 from nmf_ik.utils import (load_stim_data, get_stim_intervals, get_stim_array, get_fps_from_video)
@@ -66,36 +67,113 @@ if __name__ == '__main__':
 
     stim_beg_end = [(stim_intervals[i], stim_intervals[i+1] + 1) for i in range(0, len(stim_intervals), 2)]
 
-    # from IPython import embed; embed()
+    exp_type, plot_config = get_plot_config(DATA_PATH)
 
     joint_angles, aligned_pose = load_grid_plot_data(DATA_PATH)
 
-    points_aligned_all = np.concatenate(
-        (
-            aligned_pose["RF_leg"],
-            aligned_pose["LF_leg"],
-            aligned_pose["R_head"],
-            aligned_pose["L_head"],
-            np.tile(aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)).reshape(
-                -1, 1, 3
+
+    if exp_type == 'RLF':
+
+        points_aligned_all = np.concatenate(
+            (
+                # aligned_pose["RF_leg"],
+                # aligned_pose["LF_leg"],
+                aligned_pose["R_head"],
+                aligned_pose["L_head"],
+                np.tile(aligned_pose["Neck"], (aligned_pose["R_head"].shape[0], 1)).reshape(
+                    -1, 1, 3
+                ),
             ),
-        ),
-        axis=1,
-    )
+            axis=1,
+        )
 
-    KEY_POINTS_DICT = {
-        "Head roll": ([10,12], '.'),
-        "Neck": (np.arange(14, 15), "x"),
-        "RF": (np.arange(0, 5), "solid"),
-        "R Ant": (np.arange(10, 12), "o"),
-        "LF": (np.arange(5, 10), "solid"),
-        "L Ant": (np.arange(12, 14), "o"),
-    }
+        KEY_POINTS_DICT = {
+            "Head roll": ([0,2], '.'),
+            "Neck": (np.arange(4, 5), "x"),
+            "R Ant": (np.arange(0, 2), "o"),
+            "L Ant": (np.arange(2, 4), "o"),
+        }
+        KEY_POINTS_TRAIL = None
 
-    KEY_POINTS_TRAIL = {
-        "RF": (np.arange(3, 4), "x"),
-        "LF": (np.arange(8, 9), "x"),
-    }
+    elif exp_type == 'RF':
+
+        points_aligned_all = np.concatenate(
+            (
+                # aligned_pose["RF_leg"],
+                aligned_pose["LF_leg"],
+                aligned_pose["R_head"],
+                aligned_pose["L_head"],
+                np.tile(aligned_pose["Neck"], (aligned_pose["R_head"].shape[0], 1)).reshape(
+                    -1, 1, 3
+                ),
+            ),
+            axis=1,
+        )
+
+        KEY_POINTS_DICT = {
+            "Head roll": ([5,7], '.'),
+            "Neck": (np.arange(9, 10), "x"),
+            "R Ant": (np.arange(5, 7), "o"),
+            "LF": (np.arange(0, 5), "solid"),
+            "L Ant": (np.arange(7, 9), "o"),
+        }
+        KEY_POINTS_TRAIL =  {
+            "LF": (np.arange(3, 4), "x"),
+        }
+
+    elif exp_type == 'LF':
+
+        points_aligned_all = np.concatenate(
+            (
+                # aligned_pose["RF_leg"],
+                aligned_pose["RF_leg"],
+                aligned_pose["R_head"],
+                aligned_pose["L_head"],
+                np.tile(aligned_pose["Neck"], (aligned_pose["R_head"].shape[0], 1)).reshape(
+                    -1, 1, 3
+                ),
+            ),
+            axis=1,
+        )
+
+        KEY_POINTS_DICT = {
+            "Head roll": ([5,7], '.'),
+            "Neck": (np.arange(9, 10), "x"),
+            "R Ant": (np.arange(5, 7), "o"),
+            "RF": (np.arange(0, 5), "solid"),
+            "L Ant": (np.arange(7, 9), "o"),
+        }
+        KEY_POINTS_TRAIL =  {
+            "RF": (np.arange(3, 4), "x"),
+        }
+    else:
+        points_aligned_all = np.concatenate(
+            (
+                aligned_pose["RF_leg"],
+                aligned_pose["LF_leg"],
+                aligned_pose["R_head"],
+                aligned_pose["L_head"],
+                np.tile(aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)).reshape(
+                    -1, 1, 3
+                ),
+            ),
+            axis=1,
+        )
+
+        KEY_POINTS_DICT = {
+            "Head roll": ([10,12], '.'),
+            "Neck": (np.arange(14, 15), "x"),
+            "RF": (np.arange(0, 5), "solid"),
+            "R Ant": (np.arange(10, 12), "o"),
+            "LF": (np.arange(5, 10), "solid"),
+            "L Ant": (np.arange(12, 14), "o"),
+        }
+
+
+        KEY_POINTS_TRAIL = {
+            "RF": (np.arange(3, 4), "x"),
+            "LF": (np.arange(8, 9), "x"),
+        }
 
     angles = [
         "ThC_yaw",
@@ -143,7 +221,8 @@ if __name__ == '__main__':
             fps=fps,
             trail=int(fps/4),
             stim_lines=(stim_start, stim_end),
-            export_path=None
+            export_path=None,
+            **plot_config
         )
 
         out_video_name = str(video_name).replace('/','_') + f'_stim_{stim_ind}_grid_video.mp4'
