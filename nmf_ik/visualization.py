@@ -17,9 +17,12 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import mpl_toolkits.mplot3d.axes3d as p3
 
+import warnings
+warnings.filterwarnings("ignore")
+
 # Change the logging level here
 logging.basicConfig(
-    level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s"
+    level=logging.ERROR, format=" %(asctime)s - %(levelname)s- %(message)s"
 )
 
 
@@ -63,6 +66,37 @@ def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
     cap.release()
 
 
+def get_plot_config(data_path: Path):
+    """ Get experimental conditions from the data path.
+        Data path should look like:
+        '/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d'
+    """
+    plot_config = {}
+    trial_type = data_path.parts[-3]
+    if '_RLF' in trial_type:
+        exp_type = 'RLF'
+        plot_config['plot_head'] = True
+        plot_config['plot_right_leg'] = False
+        plot_config['plot_left_leg'] = False
+    elif '_LF' in trial_type:
+        exp_type = 'LF'
+        plot_config['plot_head'] = True
+        plot_config['plot_right_leg'] = True
+        plot_config['plot_left_leg'] = False
+    elif '_RF' in trial_type:
+        exp_type = 'RF'
+        plot_config['plot_head'] = True
+        plot_config['plot_right_leg'] = False
+        plot_config['plot_left_leg'] = True
+    else:
+        exp_type = 'Beh'
+        plot_config['plot_head'] = True
+        plot_config['plot_right_leg'] = True
+        plot_config['plot_left_leg'] = True
+
+    return exp_type, plot_config
+
+
 def get_frames_from_video_ffmpeg(path):
     """ Saves frames of a video using FFMPEG.
 
@@ -95,7 +129,8 @@ def load_grid_plot_data(data_path: Path) -> [Dict, Dict]:
         joint_angles = pd.read_pickle(data_path / "body_joint_angles.pkl")
     else:
         head_joint_angles = pd.read_pickle(data_path / "head_joint_angles.pkl")
-        leg_joint_angles = pd.read_pickle(data_path / "leg_joint_angles.pkl")
+        leg_joint_angles = pd.read_pickle(data_path / "leg_joint_angles.pkl") \
+            if (data_path / "leg_joint_angles.pkl").is_file() else {}
         joint_angles = {**head_joint_angles, **leg_joint_angles}
     aligned_pose = pd.read_pickle(data_path / "pose3d_aligned.pkl")
 
@@ -540,6 +575,7 @@ def plot_grid(
     trail: int = 30,
     stim_lines: List[int] = None,
     export_path: Path = None,
+    **kwargs
 ):
     """
     Plots an instance of the animal recording, 3D pose,
@@ -611,6 +647,9 @@ def plot_grid(
     Fig
         Figure.
     """
+    plot_right_leg = kwargs.pop('plot_right_leg', True)
+    plot_left_leg = kwargs.pop('plot_left_leg', True)
+    plot_head = kwargs.pop('plot_head', True)
 
     assert t_start <= t <= t_end, "t_start should be smaller than t_end, t should be in between"
     # import pylustrator
@@ -638,23 +677,27 @@ def plot_grid(
     ax_img_front.imshow(img_front, vmin=0, vmax=255, cmap='gray')
 
     plot_3d_points(ax1, aligned_pose, key_points=key_points_3d, t=t)
-    plot_trailing_kp(ax1, aligned_pose, key_points=key_points_3d_trail, trail=trail, t=t)
-    plot_joint_angle(ax2, joint_angles, angles_to_plot=head_angles_to_plot, until_t=t, stim_lines=stim_lines)
-    plot_joint_angle(
-        ax3,
-        joint_angles,
-        angles_to_plot=[
-            f"Angle_LF_{ja}" for ja in leg_angles_to_plot],
-        until_t=t,
-        stim_lines=stim_lines)
-    plot_joint_angle(
-        ax4,
-        joint_angles,
-        angles_to_plot=[
-            f"Angle_RF_{ja}" for ja in leg_angles_to_plot],
-        until_t=t,
-        show_legend=False,
-        stim_lines=stim_lines)
+    if key_points_3d_trail is not None:
+        plot_trailing_kp(ax1, aligned_pose, key_points=key_points_3d_trail, trail=trail, t=t)
+    if plot_head:
+        plot_joint_angle(ax2, joint_angles, angles_to_plot=head_angles_to_plot, until_t=t, stim_lines=stim_lines)
+    if plot_left_leg:
+        plot_joint_angle(
+            ax3,
+            joint_angles,
+            angles_to_plot=[
+                f"Angle_LF_{ja}" for ja in leg_angles_to_plot],
+            until_t=t,
+            stim_lines=stim_lines)
+    if plot_right_leg:
+        plot_joint_angle(
+            ax4,
+            joint_angles,
+            angles_to_plot=[
+                f"Angle_RF_{ja}" for ja in leg_angles_to_plot],
+            until_t=t,
+            show_legend=False,
+            stim_lines=stim_lines)
 
     ax_img_side.axis('off')
     ax_img_front.axis('off')
@@ -671,6 +714,8 @@ def plot_grid(
     # ax2 properties
     ax2.set_xlim((t_start, t_end))
     ax2.spines["bottom"].set_visible(False)
+    ax2.spines["top"].set_visible(False)
+    ax2.spines["right"].set_visible(False)
     ax2.set_xlim((t_start, t_end))
     ax2.set_ylim((-90, 70))
     ax2.set_xticks([])
@@ -680,6 +725,8 @@ def plot_grid(
     # ax3 properties
     ax3.set_xlim((t_start, t_end))
     ax3.spines["bottom"].set_visible(False)
+    ax3.spines["top"].set_visible(False)
+    ax3.spines["right"].set_visible(False)
     ax3.set_ylim((-160, 160))
     ax3.set_xticks([])
     ax3.set_yticks(ticks=[-160, 0, 160])
@@ -688,6 +735,8 @@ def plot_grid(
     # ax4 properties
     ax4.set_xlim((t_start, t_end))
     ax4.set_ylim((-160, 160))
+    ax4.spines["top"].set_visible(False)
+    ax4.spines["right"].set_visible(False)
     ax4.set_yticks(ticks=[-160, 0, 160])
     ax4.set_yticklabels(labels=[-160, 0, 160])
 
@@ -751,6 +800,7 @@ def plot_grid_generator(
     trail: int = 30,
     stim_lines: List[int] = None,
     export_path: Path = None,
+    **kwargs
 ):
     """ Generator for plotting grid."""
 
@@ -771,7 +821,8 @@ def plot_grid_generator(
             fps=fps,
             trail=trail,
             stim_lines=stim_lines,
-            export_path=export_path
+            export_path=export_path,
+            **kwargs
         )
         plt.close(fig)
         yield fig_to_array(fig)
