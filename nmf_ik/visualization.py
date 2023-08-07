@@ -73,7 +73,13 @@ def get_plot_config(data_path: Path):
     """
     plot_config = {}
     trial_type = data_path.parts[-3]
-    if '_RLF' in trial_type:
+    if '_RLF_coxa' in trial_type:
+        exp_type = 'coxa'
+        plot_config['plot_head'] = True
+        plot_config['plot_right_leg'] = True
+        plot_config['plot_left_leg'] = True
+        plot_config['azim'] = 23
+    elif '_RLF' in trial_type:
         exp_type = 'RLF'
         plot_config['plot_head'] = True
         plot_config['plot_right_leg'] = False
@@ -650,6 +656,7 @@ def plot_grid(
     plot_right_leg = kwargs.pop('plot_right_leg', True)
     plot_left_leg = kwargs.pop('plot_left_leg', True)
     plot_head = kwargs.pop('plot_head', True)
+    azim = kwargs.pop('azim', 7)
 
     assert t_start <= t <= t_end, "t_start should be smaller than t_end, t should be in between"
     # import pylustrator
@@ -702,7 +709,7 @@ def plot_grid(
     ax_img_side.axis('off')
     ax_img_front.axis('off')
     # ax1 properties
-    ax1.view_init(azim=7, elev=10)
+    ax1.view_init(azim=azim, elev=10)
     ax1.set_xlim3d([-0.45, 0.45])
     ax1.set_ylim3d([-0.6, 0.6])
     ax1.set_zlim3d([0.42, 1.1])

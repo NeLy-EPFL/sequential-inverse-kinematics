@@ -11,10 +11,10 @@ from nmf_ik.alignment import AlignPose
 from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
 from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
 from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, get_pts2align
-from nmf_ik.utils import save_file
+from nmf_ik.utils import save_file, load_data
 
 # Change the logging level here
-logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")
+logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s- %(message)s")
 
 NO_CORES = multiprocessing.cpu_count()
 
@@ -41,9 +41,12 @@ def run_pipeline(path):
     )
     head_joint_angles = class_hk.compute_head_angles(export_path=path)
 
-    # if (Path(path) / "body_joint_angles.pkl").is_file():
-    #     logging.info("Joint angles exist!!")
-    #     return
+    if (Path(path) / "leg_joint_angles.pkl").is_file():
+        logging.info("Leg joint angles exist!!")
+        leg_joint_angles = load_data(Path(path) / "leg_joint_angles.pkl")
+        body_joint_angles = {**head_joint_angles, **leg_joint_angles}
+        save_file(Path(path) / "body_joint_angles.pkl", body_joint_angles)
+        return
 
     if 'RLF' not in path:
         logging.info("Running leg IK")
@@ -65,26 +68,9 @@ if __name__ == "__main__":
 
     # main_dir = '/mnt/nas2/GO/7cam/221221_aJO-GAL4xUAS-CsChr/Fly001'
     main_dirs = [
-        '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly002',
-        # '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly003',
-        # '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly004',
-        # '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr/Fly005',
-        '/mnt/nas2/GO/7cam/220714_aJO-GAL4xUAS-CsChr',
-        '/mnt/nas2/GO/7cam/220807_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/220807_aJO-GAL4xUAS-CsChr/Fly002',
-        # '/mnt/nas2/GO/7cam/220807_aJO-GAL4xUAS-CsChr/Fly003',
-        '/mnt/nas2/GO/7cam/220808_aJO-GAL4xUAS-CsChr',
-        '/mnt/nas2/GO/7cam/220809_aJO-GAL4xUAS-CsChr',
-        '/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/220809_aJO-GAL4xUAS-CsChr/Fly002',
-        # '/mnt/nas2/GO/7cam/220809_aJO-GAL4xUAS-CsChr/Fly003',
-        # '/mnt/nas2/GO/7cam/221219_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/221221_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/221222_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/221223_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/221226_aJO-GAL4xUAS-CsChr',
-        # '/mnt/nas2/GO/7cam/221228_aJO-GAL4xUAS-CsChr',
+        '/mnt/nas2/GO/7cam/230725_aJO-GAL4xUAS-CsChr/Fly002',
+        '/mnt/nas2/GO/7cam/230806_aJO-GAL4xUAS-CsChr/Fly001',
+        '/mnt/nas2/GO/7cam/230806_aJO-GAL4xUAS-CsChr/Fly002',
     ]
 
 
