@@ -31,10 +31,16 @@ def run_pipeline(path):
         logging.info("Joint angles exist, deleting!!")
         (Path(path) / "body_joint_angles.pkl").unlink()
 
-    align = AlignPose(path, nmf_template=NMF_TEMPLATE, pts2align=PTS2ALIGN)
-    aligned_pos = align.align_pose(
-        save_pose_file=True,
+    align = AlignPose.from_file_path(
+        main_dir=path,
+        file_name="pose3d.h5",
+        convert_dict=True,
+        pts2align=PTS2ALIGN,
+        include_claw=False,
+        nmf_template=NMF_TEMPLATE,
     )
+
+    aligned_pos = align.align_pose(export_path=path)
 
     class_hk = HeadInverseKinematics(
         aligned_pos=aligned_pos,

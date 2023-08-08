@@ -112,9 +112,10 @@ def calculate_nmf_size(nmf_template: Dict[str, NDArray]) -> Dict[str, NDArray]:
                 nmf_template[f'LF_{segment_name}'] -
                 nmf_template[f'LF_{leg_segments[i+1]}'])
 
-    nmf_size['Antenna'] = np.linalg.norm(nmf_template['R_Antenna_base'] - nmf_template['R_Antenna_edge'])
-    nmf_size['Antenna_mid_thorax'] = np.linalg.norm(
-        nmf_template['R_Antenna_base'] - nmf_template['Thorax_mid'])
+    if 'R_Antenna_base' in nmf_template:
+        nmf_size['Antenna'] = np.linalg.norm(nmf_template['R_Antenna_base'] - nmf_template['R_Antenna_edge'])
+        nmf_size['Antenna_mid_thorax'] = np.linalg.norm(
+            nmf_template['R_Antenna_base'] - nmf_template['Thorax_mid'])
 
     return nmf_size
 

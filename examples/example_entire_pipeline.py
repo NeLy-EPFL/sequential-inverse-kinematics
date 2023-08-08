@@ -51,16 +51,17 @@ if __name__ == "__main__":
 
         logging.info("Running code in %s", DATA_PATH)
 
-        f_path = DATA_PATH / "pose3d.h5"
-        with open(f_path, "rb") as f:
-            data = pickle.load(f)
-
         start = time.time()
 
-        align = AlignPose(DATA_PATH, pts2align=PTS2ALIGN, nmf_template=NMF_TEMPLATE)
-        aligned_pos = align.align_pose(
-            save_pose_file=True,
+        align = AlignPose.from_file_path(
+            main_dir=DATA_PATH,
+            file_name="pose3d.h5",
+            convert_dict=True,
+            include_claw=False,
+            nmf_template=NMF_TEMPLATE,
         )
+
+        aligned_pos = align.align_pose(export_path=DATA_PATH)
 
         class_hk = HeadInverseKinematics(
             aligned_pos=aligned_pos,
