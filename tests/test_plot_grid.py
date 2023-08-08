@@ -16,21 +16,37 @@ from nmf_ik.visualization import (get_frames_from_video_ffmpeg,
 if __name__ == '__main__':
 
     DATA_PATH = Path(
-        '/mnt/nas2/GO/7cam/221221_aJO-GAL4xUAS-CsChr/Fly001/006_RF/behData/pose-3d'
+        '/mnt/nas2/GO/7cam/221219_aJO-GAL4xUAS-CsChr/Fly001/006_RLF_coxae/behData/pose-3d'
     )
 
     VIDEO_PATH_FRONT = Path(
-        '/mnt/nas2/GO/7cam/221221_aJO-GAL4xUAS-CsChr/Fly001/006_RF/behData/videos/camera_3.mp4')
+        '/mnt/nas2/GO/7cam/221219_aJO-GAL4xUAS-CsChr/Fly001/006_RLF_coxae/behData/videos/camera_3.mp4')
 
     VIDEO_PATH_SIDE = Path(
-        '/mnt/nas2/GO/7cam/221221_aJO-GAL4xUAS-CsChr/Fly001/006_RF/behData/videos/camera_5.mp4')
+        '/mnt/nas2/GO/7cam/221219_aJO-GAL4xUAS-CsChr/Fly001/006_RLF_coxae/behData/videos/camera_5.mp4')
 
     exp_type, plot_config = get_plot_config(DATA_PATH)
-
     joint_angles, aligned_pose = load_grid_plot_data(DATA_PATH)
 
     from IPython import embed; embed()
 
+    leg_joint_angles = [
+        "ThC_yaw",
+        "ThC_pitch",
+        "ThC_roll",
+        "CTr_pitch",
+        "CTr_roll",
+        "FTi_pitch",
+        "TiTa_pitch",
+    ]
+
+    head_angles_to_plot = [
+        "Angle_head_roll",
+        "Angle_head_pitch",
+        "Angle_head_yaw",
+        "Angle_antenna_pitch_L",
+        "Angle_antenna_pitch_R",
+    ]
 
     if exp_type == 'RLF':
 
@@ -106,6 +122,39 @@ if __name__ == '__main__':
         KEY_POINTS_TRAIL =  {
             "RF": (np.arange(3, 4), "x"),
         }
+    elif exp_type == 'coxa':
+        points_aligned_all = np.concatenate(
+            (
+                aligned_pose["RF_leg"],
+                aligned_pose["LF_leg"],
+                aligned_pose["R_head"],
+                aligned_pose["L_head"],
+                np.tile(aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)).reshape(
+                    -1, 1, 3
+                ),
+            ),
+            axis=1,
+        )
+
+        KEY_POINTS_DICT = {
+            "Head roll": ([10,12], '.'),
+            "Neck": (np.arange(14, 15), "x"),
+            "RF": (np.arange(0, 2), "."),
+            "R Ant": (np.arange(10, 12), "o"),
+            "LF": (np.arange(5, 7), "."),
+            "L Ant": (np.arange(12, 14), "o"),
+        }
+
+        KEY_POINTS_TRAIL = {
+            "RF": (np.arange(1, 2), "x"),
+            "LF": (np.arange(6, 7), "x"),
+        }
+
+        leg_joint_angles = [
+            "ThC_yaw",
+            "ThC_pitch",
+        ]
+
     else:
         points_aligned_all = np.concatenate(
             (
@@ -135,32 +184,17 @@ if __name__ == '__main__':
             "LF": (np.arange(8, 9), "x"),
         }
 
+
     from IPython import embed; embed()
 
-    leg_joint_angles = [
-        "ThC_yaw",
-        "ThC_pitch",
-        "ThC_roll",
-        "CTr_pitch",
-        "CTr_roll",
-        "FTi_pitch",
-        "TiTa_pitch",
-    ]
 
-    head_angles_to_plot = [
-        "Angle_head_roll",
-        "Angle_head_pitch",
-        "Angle_head_yaw",
-        "Angle_antenna_pitch_L",
-        "Angle_antenna_pitch_R",
-    ]
 
     # (DATA_PATH / 'grid_video').mkdir()
 
     t_start = 300
     t_end = 600
 
-    t = t_start + 290
+    t = t_start + 90
     fps = 100
     stim_lines=[350,500]
 
