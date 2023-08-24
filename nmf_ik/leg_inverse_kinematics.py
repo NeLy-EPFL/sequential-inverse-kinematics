@@ -174,17 +174,16 @@ class LegInverseKinematics(KinematicChain):
         if stage == 1:
             kinematic_chain = self.create_leg_chain(
                 stage=stage, leg_name=segment_name,
-                femur_orientation=femur_orientation
+            # femur_orientation=femur_orientation
             )
 
         # Start the IK process
         for t in trange(frames_no, disable=False):
             if stage in [2, 3, 4]:
                 kinematic_chain = self.create_leg_chain(
-                    stage=stage, leg_name=segment_name,
-                    angles=self.joint_angles_empty, t=t,
-                    femur_orientation=femur_orientation
-                )
+                    stage=stage, leg_name=segment_name, angles=self.joint_angles_empty, t=t,
+                    # femur_orientation=femur_orientation
+                    )
 
             initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
             joint_angles[t, :] = LegInverseKinematics.calculate_ik(
