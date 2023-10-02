@@ -43,8 +43,14 @@ from tqdm import trange
 from ikpy.chain import Chain
 
 from nmf_ik.utils import save_file
-from nmf_ik.kinematic_chain import KinematicChain
+USE_ALFIE = False
+if USE_ALFIE:
+    from nmf_ik.kinematic_chain_alfie import KinematicChain
+else:
+    from nmf_ik.kinematic_chain import KinematicChain
 from nmf_ik.data import BOUNDS, INITIAL_ANGLES
+
+import matplotlib.pyplot as plt
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
@@ -103,7 +109,7 @@ class LegInverseKinematics(KinematicChain):
         """Calculates the joint angles in the leg chain."""
         # don't take the last and first ones ¨
         return kinematic_chain.inverse_kinematics(
-            target_position=target_pos, initial_position=initial_angles
+            target_position=target_pos, initial_position=initial_angles, 
         )
 
     @staticmethod
@@ -161,6 +167,7 @@ class LegInverseKinematics(KinematicChain):
         # TODO: check scaling
         frames_no = end_effector_pos.shape[0]
         end_effector_pos_diff = end_effector_pos - origin
+        "print(end_effector_pos_diff)"
 
         # Initialize the arrays
         joint_angles = np.empty((frames_no, len(initial_angles)))
@@ -177,6 +184,8 @@ class LegInverseKinematics(KinematicChain):
             # femur_orientation=femur_orientation
             )
 
+        all_diffs = []
+
         # Start the IK process
         for t in trange(frames_no, disable=False):
             if stage in [2, 3, 4]:
@@ -189,11 +198,28 @@ class LegInverseKinematics(KinematicChain):
             joint_angles[t, :] = LegInverseKinematics.calculate_ik(
                 kinematic_chain, end_effector_pos_diff[t, :], initial_angles
             )
+            if stage == 1 or stage == 4:
+                fk =  LegInverseKinematics.calculate_fk(kinematic_chain, joint_angles[t, :])
+                all_diffs.append(np.linalg.norm(fk[-1] - end_effector_pos[t, :]))
 
             if stage == 4:
                 forward_kinematics[t, :] = (
                     LegInverseKinematics.calculate_fk(kinematic_chain, joint_angles[t, :]) + origin[t, :]
                 )
+        """if stage == 1 or stage == 4:
+            print(np.mean(all_diffs))"""
+        #if stage==1:
+            #plt.figure()
+            #ax = plt.subplot(111, projection='3d')
+            # for every frame plot fk and end effector and a line between them
+            #for t in range(frames_no):
+                #print(joint_angles[t, :].shape)
+                #fk =  LegInverseKinematics.calculate_fk(kinematic_chain, joint_angles[t, :]) + origin[t, :]
+                #print(fk.shape, end_effector_pos_diff[t, :].shape)
+                #ax.plot([fk[-1][0], end_effector_pos_diff[t, 0]],
+                #          [fk[-1][1], end_effector_pos_diff[t, 1]],
+                #            [fk[-1][2], end_effector_pos_diff[t, 2]], 'o-')
+            #plt.show(block=True)
 
         if stage == 1:
             self.joint_angles_empty[f'Angle_{segment_name}_ThC_yaw'] = joint_angles[:, 1]
@@ -257,9 +283,8 @@ class LegInverseKinematics(KinematicChain):
 
         joint_angles_dict = self.joint_angles_empty.copy()
 
-        export_path = Path(export_path) if not isinstance(export_path, Path) else export_path
-
         if export_path is not None:
+            export_path = Path(export_path) if not isinstance(export_path, Path) else export_path
             save_file(export_path / "forward_kinematics.pkl", forward_kinematics_dict)
             save_file(export_path / "leg_joint_angles.pkl", joint_angles_dict)
             # save_file(export_path.replace('aligned_pose','joint_angles'), joint_angles_dict)

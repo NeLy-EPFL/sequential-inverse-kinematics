@@ -43,6 +43,8 @@ def _leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool):
     if claw_is_ee:
         return nmf_size[leg_name]
 
+    print(nmf_size)
+
     return nmf_size[leg_name] - nmf_size[f'{leg_name}_Tarsus']
 
 
@@ -204,7 +206,7 @@ class AlignPose:
 
     def get_mean_length(self, segment_array: NDArray, segment_is_leg: bool) -> Dict[str, float]:
         """ Computes the mean length of a body segment. """
-        lengths = np.linalg.norm(np.diff(segment_array, axis=1), axis=2)
+        lengths = np.linalg.norm(np.diff(segment_array, axis=1), axis=2).T
 
         if segment_is_leg:
             segments = ["coxa", "femur", "tibia", "tarsus"]

@@ -100,17 +100,20 @@ def calculate_nmf_size(nmf_template: Dict[str, NDArray]) -> Dict[str, NDArray]:
     """
     nmf_size = {}
     leg_segments = ['Coxa', 'Femur', 'Tibia', 'Tarsus', 'Claw']  # empty is the entire leg
-    for i, segment_name in enumerate(leg_segments):
-        if segment_name == 'Claw':
-            nmf_size['RF'] = nmf_size['RF_Coxa'] + nmf_size['RF_Femur'] + nmf_size['RF_Tibia'] + nmf_size['RF_Tarsus']
-            nmf_size['LF'] = nmf_size['LF_Coxa'] + nmf_size['LF_Femur'] + nmf_size['LF_Tibia'] + nmf_size['LF_Tarsus']
-        else:
-            nmf_size[f'RF_{segment_name}'] = np.linalg.norm(
-                nmf_template[f'RF_{segment_name}'] -
-                nmf_template[f'RF_{leg_segments[i+1]}'])
-            nmf_size[f'LF_{segment_name}'] = np.linalg.norm(
-                nmf_template[f'LF_{segment_name}'] -
-                nmf_template[f'LF_{leg_segments[i+1]}'])
+    for anteropost_seg in ["F", "M", "H"]:
+        for i, segment_name in enumerate(leg_segments):
+            if segment_name == 'Claw':
+                nmf_size[f'R{anteropost_seg}'] = nmf_size[f'R{anteropost_seg}_Coxa'] + nmf_size[f'R{anteropost_seg}_Femur'] + \
+                    nmf_size[f'R{anteropost_seg}_Tibia'] + nmf_size[f'R{anteropost_seg}_Tarsus']
+                nmf_size[f'L{anteropost_seg}'] = nmf_size[f'L{anteropost_seg}_Coxa'] + nmf_size[f'L{anteropost_seg}_Femur'] + \
+                    nmf_size[f'L{anteropost_seg}_Tibia'] + nmf_size[f'L{anteropost_seg}_Tarsus']
+            else:
+                nmf_size[f'R{anteropost_seg}_{segment_name}'] = np.linalg.norm(
+                    nmf_template[f'R{anteropost_seg}_{segment_name}'] -
+                    nmf_template[f'R{anteropost_seg}_{leg_segments[i+1]}'])
+                nmf_size[f'L{anteropost_seg}_{segment_name}'] = np.linalg.norm(
+                    nmf_template[f'L{anteropost_seg}_{segment_name}'] -
+                    nmf_template[f'L{anteropost_seg}_{leg_segments[i+1]}'])
 
     if 'R_Antenna_base' in nmf_template:
         nmf_size['Antenna'] = np.linalg.norm(nmf_template['R_Antenna_base'] - nmf_template['R_Antenna_edge'])

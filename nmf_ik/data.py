@@ -16,6 +16,82 @@ INITIAL_ANGLES = {
         "stage_4": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0, 0.0]),
     },
     "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
+
+    "RM": {
+        "stage_1": np.array([0.0, 0.45, 0.37, -2.14]),
+        "stage_2": np.array([0.0, -0.32, 0.45, 0.37, -2.14, 1.4]),
+        "stage_3": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0]),
+        "stage_4": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0, 0.0]),
+    },
+
+    "LM": {
+        "stage_1": np.array([0.0, -0.45, 0.37, -2.14]),
+        "stage_2": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.4]),
+        "stage_3": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0]),
+        "stage_4": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0, 0.0]),
+    },
+
+    "RH": {
+        "stage_1": np.array([0.0, 0.45, 0.37, -2.14]),
+        "stage_2": np.array([0.0, -0.32, 0.45, 0.37, -2.14, 1.4]),
+        "stage_3": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0]),
+        "stage_4": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0, 0.0]),
+    },
+
+    "LH": {
+        "stage_1": np.array([0.0, -0.45, 0.37, -2.14]),
+        "stage_2": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.4]),
+        "stage_3": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0]),
+        "stage_4": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0, 0.0]),
+    },
+
+}
+
+BOUNDS_LOC = {
+    "RF_ThC_roll": (np.deg2rad(-130), np.deg2rad(-5)),
+    "RF_ThC_yaw": (np.deg2rad(-10), np.deg2rad(60)),
+    "RF_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
+    "RF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
+    "RF_CTr_roll": (np.deg2rad(-150), np.deg2rad(20)),
+    "RF_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
+    "RF_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
+    "LF_ThC_roll": (np.deg2rad(5), np.deg2rad(130)),
+    "LF_ThC_yaw": (np.deg2rad(-60), np.deg2rad(10)),
+    "LF_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
+    "LF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
+    "LF_CTr_roll": (np.deg2rad(20), np.deg2rad(150)),
+    "LF_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
+    "LF_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
+
+    "RM_ThC_roll": (np.deg2rad(-130), np.deg2rad(-5)),
+    "RM_ThC_yaw": (np.deg2rad(-10), np.deg2rad(60)),
+    "RM_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
+    "RM_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
+    "RM_CTr_roll": (np.deg2rad(-150), np.deg2rad(20)),
+    "RM_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
+    "RM_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
+    "LM_ThC_roll": (np.deg2rad(5), np.deg2rad(130)),
+    "LM_ThC_yaw": (np.deg2rad(-60), np.deg2rad(10)),
+    "LM_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
+    "LM_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
+    "LM_CTr_roll": (np.deg2rad(20), np.deg2rad(150)),
+    "LM_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
+    "LM_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
+
+    "RH_ThC_roll": (np.deg2rad(-130), np.deg2rad(-5)),
+    "RH_ThC_yaw": (np.deg2rad(-10), np.deg2rad(60)),
+    "RH_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
+    "RH_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
+    "RH_CTr_roll": (np.deg2rad(-150), np.deg2rad(20)),
+    "RH_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
+    "RH_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
+    "LH_ThC_roll": (np.deg2rad(5), np.deg2rad(130)),
+    "LH_ThC_yaw": (np.deg2rad(-60), np.deg2rad(10)),
+    "LH_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
+    "LH_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
+    "LH_CTr_roll": (np.deg2rad(20), np.deg2rad(150)),
+    "LH_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
+    "LH_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
 }
 
 BOUNDS = {
@@ -33,6 +109,7 @@ BOUNDS = {
     "LF_CTr_roll": (np.deg2rad(20), np.deg2rad(150)),
     "LF_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
     "LF_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
+
     "Head_roll": (np.deg2rad(-90), np.deg2rad(90)),
     "Head_pitch": (np.deg2rad(-40), np.deg2rad(70)),
     "Head_yaw": (np.deg2rad(-10), np.deg2rad(10)),
@@ -128,7 +205,7 @@ SKELETON = [
     "claw_L",
 ]
 
-NMF_TEMPLATE = {
+"""NMF_TEMPLATE = {
     "RF_Coxa": np.array([0.33, -0.17, 1.07]),
     "RF_Femur": np.array([0.33, -0.17, 0.67]),
     "RF_Tibia": np.array([0.33, -0.17, -0.02]),
@@ -156,7 +233,40 @@ NMF_TEMPLATE = {
     # "L_ant_notopleural": np.array([0.28, 0.39, 1.39]),
     "R_dorsal_hum": np.array([0.41, -0.37, 1.32]),
     # "R_ant_notopleural": np.array([0.30, -0.39, 1.39]),
-}
+}"""
+
+NMF_TEMPLATE = {'RF_Coxa': np.array([0.35, -0.27, 0.400]),
+                'RF_Femur': np.array([0.35, -0.27, -0.025]),
+                'RF_Tibia': np.array([0.35, -0.27, -0.731]),
+                'RF_Tarsus': np.array([0.35, -0.27, -1.249]),
+                'RF_Claw': np.array([0.35, -0.27, -1.912]),
+                'LF_Coxa': np.array([0.35, 0.27, 0.400]),
+                'LF_Femur': np.array([0.35, 0.27, -0.025]),
+                'LF_Tibia': np.array([0.35, 0.27, -0.731]),
+                'LF_Tarsus': np.array([0.35, 0.27, -1.249]),
+                'LF_Claw': np.array([0.35, 0.27, -1.912]),
+                'RM_Coxa': np.array([0, -0.125, 0]),
+                'RM_Femur': np.array([0, -0.125, -0.182]),
+                'RM_Tibia': np.array([0, -0.125, -0.965]),
+                'RM_Tarsus': np.array([0, -0.125, -1.633]),
+                'RM_Claw': np.array([0, -0.125, -2.328]),
+                'LM_Coxa': np.array([0, 0.125, 0]),
+                'LM_Femur': np.array([0, 0.125, -0.182]),
+                'LM_Tibia': np.array([0, 0.125, -0.965]),
+                'LM_Tarsus': np.array([0, 0.125, -1.633]),
+                'LM_Claw': np.array([0, 0.125, -2.328]),
+                'RH_Coxa': np.array([-0.215, -0.087, -0.073]),
+                'RH_Femur': np.array([-0.215, -0.087, -0.272]),
+                'RH_Tibia': np.array([-0.215, -0.087, -1.108]),
+                'RH_Tarsus': np.array([-0.215, -0.087, -1.793]),
+                'RH_Claw': np.array([-0.215, -0.087, -2.588]),
+                'LH_Coxa': np.array([-0.215, 0.087, -0.073]),
+                'LH_Femur': np.array([-0.215, 0.087, -0.272]),
+                'LH_Tibia': np.array([-0.215, 0.087, -1.108]),
+                'LH_Tarsus': np.array([-0.215, 0.087, -1.793]),
+                'LH_Claw': np.array([-0.215, 0.087, -2.588]),
+                'R_Antenna': np.array([0.25, -0.068, 0.67]),
+                'L_Antenna': np.array([0.25, 0.068, 0.67])}
 
 
 """
