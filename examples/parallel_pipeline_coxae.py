@@ -7,6 +7,7 @@ import time
 import multiprocessing
 
 from nmf_ik.alignment import AlignPose
+from nmf_ik.kinematic_chain import KinematicChain
 from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
 from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
 from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
@@ -57,7 +58,10 @@ def run_pipeline(path):
 
     class_seq_ik = LegInverseKinematics(
         aligned_pos=aligned_pos,
-        bounds=BOUNDS,
+        kinematic_chain_class=KinematicChain(
+            bounds_dof=BOUNDS,
+            nmf_size=None,
+        ),
         initial_angles=INITIAL_ANGLES
     )
     leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(export_path=path, stages=stages)
