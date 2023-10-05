@@ -3,17 +3,18 @@
 
     Example:
     >>> python example_entire_pipeline.py -p /mnt/nas/GO/7cam/220413_aJO-GAL4xUAS-CsChr/Fly001
+    >>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001
 """
-import pickle
 import logging
 from pathlib import Path
 import time
 import argparse
 
 from nmf_ik.alignment import AlignPose
+from nmf_ik.kinematic_chain import KinematicChain
 from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
 from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
-from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
+from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE
 from nmf_ik.utils import save_file
 
 # Change the logging level here
@@ -70,7 +71,12 @@ if __name__ == "__main__":
         head_joint_angles = class_hk.compute_head_angles(export_path=DATA_PATH)
 
         class_seq_ik = LegInverseKinematics(
-            aligned_pos=aligned_pos, bounds=BOUNDS, initial_angles=INITIAL_ANGLES
+            aligned_pos=aligned_pos,
+            kinematic_chain_class=KinematicChain(
+                bounds_dof=BOUNDS,
+                nmf_size=None,
+            ),
+            initial_angles=INITIAL_ANGLES
         )
         leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(export_path=DATA_PATH)
 
@@ -82,3 +88,13 @@ if __name__ == "__main__":
         total_time = (end - start) / 60.0
 
         print(f"Total time taken to execute the code: {total_time} mins")
+
+        # plot the joint angles
+        PLOT = True
+        if PLOT:
+            import matplotlib.pyplot as plt
+
+            for ja_name, ja_value in full_body_ik.items():
+                plt.plot(ja_value, label=ja_name, lw=2)
+            plt.legend()
+            plt.show()

@@ -15,30 +15,32 @@ class KinematicChain:
 
     Parameters
     ----------
-    nmf_size : Dict[str, float]
-        Dictionary that contains the size of different body parts.
     bounds_dof : Dict[str, NDArray]
         Dictionary that contains the bounds of joint degrees-of-freedom.
+    nmf_size : Dict[str, float], optional
+        Dictionary that contains the size of different body parts.
+        If None, then the default NMF_TEMPLATE is used to calculate the size.
     """
 
     def __init__(
         self,
-        nmf_size: Dict[str, float],
-        bounds_dof: Dict[str, NDArray]
+        bounds_dof: Dict[str, NDArray],
+        nmf_size: Dict[str, float] = None,
     ) -> None:
-        # NMF size is calculated internally
-        self.nmf_size = calculate_nmf_size(NMF_TEMPLATE) if nmf_size is None else nmf_size
+        # NMF size is calculated internally if size is not provided
+        self.nmf_size = calculate_nmf_size(NMF_TEMPLATE) \
+            if nmf_size is None else nmf_size
         self.bounds_dof = bounds_dof
 
     def __call__(self):
-        print('kinematic_chain is called.')
+        print("kinematic_chain is called.")
 
     def create_leg_chain(
         self,
         stage: int,
         leg_name: str,
         angles: Dict[str, NDArray] = None,
-        t: int = None,
+        t: int = 0,
     ) -> Chain:
         """Returns the respective leg chain based on the stage.
 
@@ -51,76 +53,48 @@ class KinematicChain:
         angles : Dict[str, NDArray], optional
             Joint angles calculated in the previous step, None at the first step, by default None
         t : int, optional
-            Time step, by default None
+            Time step, by default 0
 
         Returns
         -------
-        Chain
+        KinematicChain at the respective stage and time step.
+
+        Raises
+        ------
+        ValueError : If the stage number is not in (1,2,3,4)
+
         """
         if stage == 1:
             kinematic_chain = self.create_leg_chain_stage_1(leg_name)
         elif stage == 2:
-            kinematic_chain = self.create_leg_chain_stage_2(
-                leg_name, angles=angles, t=t
-            )
+            kinematic_chain = self.create_leg_chain_stage_2(leg_name, angles=angles, t=t)
         elif stage == 3:
-            kinematic_chain = self.create_leg_chain_stage_3(
-                leg_name, angles=angles, t=t
-            )
+            kinematic_chain = self.create_leg_chain_stage_3(leg_name, angles=angles, t=t)
         elif stage == 4:
-            kinematic_chain = self.create_leg_chain_stage_4(
-                leg_name, angles=angles, t=t
-            )
+            kinematic_chain = self.create_leg_chain_stage_4(leg_name, angles=angles, t=t)
         else:
             ValueError(f"Unknown stage number ({stage}) number is provided!")
         return kinematic_chain
 
-    # def create_head_chain(self, origin_translation: NDArray) -> Chain:
-    #     """Returns the head kinematic chain.
-
-    #     Returns
-    #     -------
-    #     Chain
-    #     """
-    #     origin_translation = (
-    #         self.nmf_template['R_Antenna_base'] + self.nmf_template['R_Antenna_base']) * 0.5 \
-    #             - self.nmf_template['Neck']
-
-    #     links = [
-    #         OriginLink(),
-    #         URDFLink(
-    #             name="Head_roll",
-    #             origin_translation=[0, 0, 0],
-    #             origin_orientation=[0, 0, 0],
-    #             rotation=[0, 0, 1],
-    #             joint_type="revolute",
-    #             bounds=self.bounds_dof["Head_roll"],
-    #         ),
-
-    #         URDFLink(
-    #             name="Head_pitch",
-    #             origin_translation=[0, 0, 0],
-    #             origin_orientation=[0, 0, 0],
-    #             rotation=[0, 1, 0],
-    #             joint_type="revolute",
-    #             bounds=self.bounds_dof["Head_pitch"],
-    #         ),
-    #         # We need to put origin orientation into account, that's why.
-    #         URDFLink(
-    #             name="Antenna_base",
-    #             origin_translation=origin_translation,
-    #             origin_orientation=[0, 0, 0],
-    #             rotation=[0, 1, 0],
-    #             bounds=(-np.pi, np.pi),
-    #         ),
-    #     ]
-    #     return Chain(name="head", links=links)
 
     def create_leg_chain_stage_1(
         self,
         leg_name: str,
     ) -> Chain:
-        """ Leg chain to calculate thorax/coxa pitch and yaw."""
+        """Leg chain to calculate thorax/coxa pitch and yaw.
+
+        Parameters
+        ----------
+        leg_name : str
+            Leg name, e.g., RF, LF, RM, LM, RH, LH
+
+        Returns
+        -------
+        Chain
+            Chain of the leg at stage 1, which calculates
+            thorax/coxa pitch and yaw joint angles and only
+            contains Coxa leg segment.
+        """
         kinematic_chain = [
             OriginLink(),
             URDFLink(
@@ -151,10 +125,21 @@ class KinematicChain:
 
         return Chain(name="chain_stage_1", links=kinematic_chain)
 
-    def create_leg_chain_stage_2(
-        self, leg_name: str, angles: Dict[str, NDArray], t: int
-    ) -> Chain:
-        """ Leg chain to calculate thorax/coxa roll and coxa/femur pitch."""
+    def create_leg_chain_stage_2(self, leg_name: str, angles: Dict[str, NDArray], t: int) -> Chain:
+        """Leg chain to calculate thorax/coxa roll and coxa/femur pitch.
+
+        Parameters
+        ----------
+        leg_name : str
+            Leg name, e.g., RF, LF, RM, LM, RH, LH
+
+        Returns
+        -------
+        Chain
+            Chain of the leg at stage 2, which calculates
+            thorax/coxa roll and coxa/femur pitch joint angles
+            and contains Coxa and Femur leg segments.
+        """
         kinematic_chain = [
             OriginLink(),
             URDFLink(
@@ -201,10 +186,21 @@ class KinematicChain:
 
         return Chain(name="chain_stage_2", links=kinematic_chain)
 
-    def create_leg_chain_stage_3(
-        self, leg_name: str, angles: Dict[str, NDArray], t: int
-    ) -> Chain:
-        """ Leg chain to calculate coxa/femur roll and femur/tibia pitch."""
+    def create_leg_chain_stage_3(self, leg_name: str, angles: Dict[str, NDArray], t: int) -> Chain:
+        """Leg chain to calculate coxa/femur roll and femur/tibia pitch.
+
+        Parameters
+        ----------
+        leg_name : str
+            Leg name, e.g., RF, LF, RM, LM, RH, LH
+
+        Returns
+        -------
+        Chain
+            Chain of the leg at stage 3, which calculates
+            coxa/femur roll and femur/tibia pitch joint angles
+            and contains Coxa, Femur and Tibia leg segments.
+        """
         kinematic_chain = [
             OriginLink(),
             URDFLink(
@@ -267,10 +263,21 @@ class KinematicChain:
 
         return Chain(name="chain_stage_3", links=kinematic_chain)
 
-    def create_leg_chain_stage_4(
-        self, leg_name: str, angles: Dict[str, NDArray], t: int
-    ) -> Chain:
-        """ Leg chain to calculate tibia/tarsus pitch."""
+    def create_leg_chain_stage_4(self, leg_name: str, angles: Dict[str, NDArray], t: int) -> Chain:
+        """Leg chain to calculate tibia/tarsus pitch.
+
+        Parameters
+        ----------
+        leg_name : str
+            Leg name, e.g., RF, LF, RM, LM, RH, LH
+
+        Returns
+        -------
+        Chain
+            Chain of the leg at stage 4, which calculates
+            coxa/femur roll and tibia/tarsus pitch joint angles and
+            contains the entire leg, i.e., Coxa, Femur, Tibia and Tarsus.
+        """
         kinematic_chain = [
             OriginLink(),
             URDFLink(

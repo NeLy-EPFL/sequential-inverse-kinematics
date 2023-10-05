@@ -8,6 +8,7 @@ import multiprocessing
 
 import nmf_ik
 from nmf_ik.alignment import AlignPose
+from nmf_ik.kinematic_chain import KinematicChain
 from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
 from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
 from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, get_pts2align
@@ -58,7 +59,12 @@ def run_pipeline(path):
         logging.info("Running leg IK")
 
         class_seq_ik = LegInverseKinematics(
-            aligned_pos=aligned_pos, bounds=BOUNDS, initial_angles=INITIAL_ANGLES
+            aligned_pos=aligned_pos,
+            kinematic_chain_class=KinematicChain(
+                bounds_dof=BOUNDS,
+                nmf_size=None,
+            ),
+            initial_angles=INITIAL_ANGLES
         )
         leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(export_path=Path(path))
 
@@ -79,7 +85,6 @@ if __name__ == "__main__":
         '/mnt/nas2/GO/7cam/230806_aJO-GAL4xUAS-CsChr/Fly001',
         '/mnt/nas2/GO/7cam/230806_aJO-GAL4xUAS-CsChr/Fly002',
     ]
-
 
     paths_to_run_ik = []
 
