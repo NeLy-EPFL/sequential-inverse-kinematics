@@ -234,8 +234,7 @@ class LegInverseKinematics:
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
-        assert stages == [1] or stages == [1, 2] or stages == [1, 2, 3] or stages == [1, 2, 3, 4]
-        "The list stages should start with 1 and strictly be incrementary"
+        assert max(stages) > 4 or all(np.diff(stages) == 1), "Maximum number of stages is 4 and the list should be strictly incremental."
         forward_kinematics_dict = {}
         joint_angles_dict = {}
 
