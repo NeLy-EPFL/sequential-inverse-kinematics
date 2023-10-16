@@ -106,12 +106,13 @@ def calculate_nmf_size(
         for leg in legs_list:
             # If Claw, calculate the length of the entire leg
             if segment_name == 'Claw':
-                nmf_size[leg] = nmf_size[f'{leg}_Coxa'] + nmf_size[f'{leg}_Femur'] + nmf_size[f'{leg}_Tibia'] + nmf_size[f'{leg}_Tarsus']
+                nmf_size[leg] = nmf_size[f'{leg}_Coxa'] + nmf_size[f'{leg}_Femur'] + \
+                    nmf_size[f'{leg}_Tibia'] + nmf_size[f'{leg}_Tarsus']
             else:
                 nmf_size[f'{leg}_{segment_name}'] = np.linalg.norm(
                     nmf_template[f'{leg}_{segment_name}'] -
                     nmf_template[f'{leg}_{leg_segments[i+1]}']
-                    )
+                )
     # Assuming right and left hand-side are symmetric, checking for one side is enough
     if 'R_Antenna_base' in nmf_template:
         nmf_size['Antenna'] = np.linalg.norm(nmf_template['R_Antenna_base'] - nmf_template['R_Antenna_edge'])

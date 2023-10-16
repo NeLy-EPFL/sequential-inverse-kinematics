@@ -76,7 +76,6 @@ class KinematicChain:
             ValueError(f"Unknown stage number ({stage}) number is provided!")
         return kinematic_chain
 
-
     def create_leg_chain_stage_1(
         self,
         leg_name: str,
@@ -349,7 +348,6 @@ class KinematicChain:
         return Chain(name="chain_stage_4", links=kinematic_chain)
 
 
-
 class KinematicChainYPR:
     """
     Create kinematic chains at different stages for the legs.
@@ -419,7 +417,6 @@ class KinematicChainYPR:
         else:
             ValueError(f"Unknown stage number ({stage}) number is provided!")
         return kinematic_chain
-
 
     def create_leg_chain_stage_1(
         self,

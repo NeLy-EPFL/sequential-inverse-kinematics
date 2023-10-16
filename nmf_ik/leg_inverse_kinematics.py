@@ -202,22 +202,29 @@ class LegInverseKinematics:
         names = [kc.name for kc in kinematic_chain.links]
 
         if stage == 1:
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_yaw"] = joint_angles[:, names.index(f"{segment_name}_ThC_yaw")]
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[:, names.index(f"{segment_name}_ThC_pitch")]
+            self.joint_angles_empty[f"Angle_{segment_name}_ThC_yaw"] = joint_angles[:, names.index(
+                f"{segment_name}_ThC_yaw")]
+            self.joint_angles_empty[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[:, names.index(
+                f"{segment_name}_ThC_pitch")]
             logging.debug("Stage 1 is completed!")
 
         elif stage == 2:
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_roll"] = joint_angles[:, names.index(f"{segment_name}_ThC_roll")]
-            self.joint_angles_empty[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[:, names.index(f"{segment_name}_CTr_pitch")]
+            self.joint_angles_empty[f"Angle_{segment_name}_ThC_roll"] = joint_angles[:, names.index(
+                f"{segment_name}_ThC_roll")]
+            self.joint_angles_empty[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[:, names.index(
+                f"{segment_name}_CTr_pitch")]
             logging.debug("Stage 2 is completed!")
 
         elif stage == 3:
-            self.joint_angles_empty[f"Angle_{segment_name}_CTr_roll"] = joint_angles[:, names.index(f"{segment_name}_CTr_roll")]
-            self.joint_angles_empty[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[:, names.index(f"{segment_name}_FTi_pitch")]
+            self.joint_angles_empty[f"Angle_{segment_name}_CTr_roll"] = joint_angles[:, names.index(
+                f"{segment_name}_CTr_roll")]
+            self.joint_angles_empty[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[:, names.index(
+                f"{segment_name}_FTi_pitch")]
             logging.debug("Stage 3 is completed!")
 
         elif stage == 4:
-            self.joint_angles_empty[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[:, names.index(f"{segment_name}_TiTa_pitch")]
+            self.joint_angles_empty[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[:, names.index(
+                f"{segment_name}_TiTa_pitch")]
             logging.debug("Stage 4 is completed!")
 
         return forward_kinematics
@@ -240,7 +247,8 @@ class LegInverseKinematics:
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
-        assert max(stages) > 4 or all(np.diff(stages) == 1), "Maximum number of stages is 4 and the list should be strictly incremental."
+        assert max(stages) > 4 or all(np.diff(stages) ==
+                                      1), "Maximum number of stages is 4 and the list should be strictly incremental."
         forward_kinematics_dict = {}
         joint_angles_dict = {}
 
@@ -274,11 +282,11 @@ class LegInverseKinematics:
             save_file(
                 export_path / "forward_kinematics.pkl",
                 forward_kinematics_dict
-                )
+            )
             save_file(
                 export_path / "leg_joint_angles.pkl",
                 joint_angles_dict
-                )
+            )
 
             logging.info("Files have been saved at %s", export_path)
 

@@ -687,7 +687,12 @@ def plot_grid(
     if key_points_3d_trail is not None:
         plot_trailing_kp(ax1, aligned_pose, key_points=key_points_3d_trail, trail=trail, t=t)
     if plot_head:
-        plot_joint_angle(ax2, joint_angles, angles_to_plot=head_angles_to_plot, until_t=t, stim_lines=stim_lines)
+        plot_joint_angle(
+            ax2,
+            joint_angles,
+            angles_to_plot=head_angles_to_plot,
+            until_t=t,
+            stim_lines=stim_lines)
     if plot_left_leg:
         plot_joint_angle(
             ax3,
