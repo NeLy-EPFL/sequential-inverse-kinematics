@@ -41,8 +41,11 @@ Z_AXIS = np.array([0, 0, 1])
 
 # Change the logging level here
 logging.basicConfig(
-    level=logging.INFO,
-    format=' %(asctime)s - %(levelname)s- %(message)s')
+    format=" %(asctime)s - %(levelname)s- %(message)s"
+)
+# Get the logger of the module
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class HeadInverseKinematics:
@@ -84,7 +87,7 @@ class HeadInverseKinematics:
             export_path = Path(export_path) if not isinstance(export_path, Path) else export_path
 
             save_file(export_path / 'head_joint_angles.pkl', head_angles)
-            logging.info('Head joint angles are saved at %s!', export_path)
+            logger.info('Head joint angles are saved at %s!', export_path)
 
         return head_angles
 

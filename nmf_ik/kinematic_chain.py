@@ -2,6 +2,7 @@
 from typing import Dict
 import numpy as np
 from nptyping import NDArray
+import warnings
 
 from ikpy.chain import Chain
 from ikpy.link import OriginLink, URDFLink
@@ -9,6 +10,8 @@ from ikpy.link import OriginLink, URDFLink
 from nmf_ik.data import NMF_TEMPLATE
 from nmf_ik.utils import calculate_nmf_size
 
+# Ignore the warnings
+warnings.filterwarnings("ignore")
 
 class KinematicChain:
     """Create kinematic chains at different stages for the legs.

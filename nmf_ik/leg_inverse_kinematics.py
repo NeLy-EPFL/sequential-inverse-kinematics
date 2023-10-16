@@ -46,11 +46,16 @@ from nmf_ik.utils import save_file
 from nmf_ik.kinematic_chain import KinematicChain
 from nmf_ik.data import BOUNDS, INITIAL_ANGLES
 
-# Suppress warnings
+# Ignore the warnings
 warnings.filterwarnings("ignore")
 
 # Change the logging level here
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s- %(message)s")
+logging.basicConfig(
+    format=" %(asctime)s - %(levelname)s- %(message)s"
+)
+# Get the logger of the module
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class LegInverseKinematics:
@@ -206,26 +211,26 @@ class LegInverseKinematics:
                 f"{segment_name}_ThC_yaw")]
             self.joint_angles_empty[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[:, names.index(
                 f"{segment_name}_ThC_pitch")]
-            logging.debug("Stage 1 is completed!")
+            logger.debug("Stage 1 is completed!")
 
         elif stage == 2:
             self.joint_angles_empty[f"Angle_{segment_name}_ThC_roll"] = joint_angles[:, names.index(
                 f"{segment_name}_ThC_roll")]
             self.joint_angles_empty[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[:, names.index(
                 f"{segment_name}_CTr_pitch")]
-            logging.debug("Stage 2 is completed!")
+            logger.debug("Stage 2 is completed!")
 
         elif stage == 3:
             self.joint_angles_empty[f"Angle_{segment_name}_CTr_roll"] = joint_angles[:, names.index(
                 f"{segment_name}_CTr_roll")]
             self.joint_angles_empty[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[:, names.index(
                 f"{segment_name}_FTi_pitch")]
-            logging.debug("Stage 3 is completed!")
+            logger.debug("Stage 3 is completed!")
 
         elif stage == 4:
             self.joint_angles_empty[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[:, names.index(
                 f"{segment_name}_TiTa_pitch")]
-            logging.debug("Stage 4 is completed!")
+            logger.debug("Stage 4 is completed!")
 
         return forward_kinematics
 
@@ -252,7 +257,7 @@ class LegInverseKinematics:
         forward_kinematics_dict = {}
         joint_angles_dict = {}
 
-        logging.info("Calculating joint angles and forward kinematics...")
+        logger.info("Calculating joint angles and forward kinematics...")
         for segment, segment_array in self.aligned_pos.items():
             if "leg" in segment.lower():
                 leg_name = segment[:2]
@@ -288,6 +293,6 @@ class LegInverseKinematics:
                 joint_angles_dict
             )
 
-            logging.info("Files have been saved at %s", export_path)
+            logger.info("Files have been saved at %s", export_path)
 
         return joint_angles_dict, forward_kinematics_dict

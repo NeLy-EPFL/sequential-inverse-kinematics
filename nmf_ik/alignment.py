@@ -27,8 +27,11 @@ from nmf_ik.utils import save_file, calculate_nmf_size
 
 # Change the logging level here
 logging.basicConfig(
-    level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s"
+    format=" %(asctime)s - %(levelname)s- %(message)s"
 )
+# Get the logger of the module
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def _get_mean_quantile(vector, quantile_diff=0.05):
@@ -182,7 +185,7 @@ class AlignPose:
         if export_path is not None:
             export_full_path = export_path / "pose3d_aligned.pkl"
             save_file(out_fname=export_full_path, data=aligned_pose)
-            logging.info("Aligned pose is saved at %s", export_path)
+            logger.info("Aligned pose is saved at %s", export_path)
 
         return aligned_pose
 
@@ -243,7 +246,7 @@ class AlignPose:
 
         mean_length = self.get_mean_length(leg_array, segment_is_leg=True)
         scale_factor = self.find_scale_leg(leg_name, mean_length)
-        logging.info("Scale factor for %s leg: %s", leg_name, scale_factor)
+        logger.info("Scale factor for %s leg: %s", leg_name, scale_factor)
 
         for i in range(0, 5):
             if i == 0:
@@ -285,7 +288,7 @@ class AlignPose:
             antbase2thoraxmid_real[stationary_indices]
         )
         scale_tip_ant = ant_tmp / _get_mean_quantile(ant_size)
-        logging.info(
+        logger.info(
             "Scale factor antenna base %s: %s, ant itself: %s", side, scale_base_ant, scale_tip_ant
         )
 

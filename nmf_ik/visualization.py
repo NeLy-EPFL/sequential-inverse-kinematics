@@ -3,6 +3,7 @@ import pickle
 import logging
 import time
 import subprocess
+import warnings
 from pathlib import Path
 from datetime import date
 from typing import Tuple, List, Dict
@@ -15,15 +16,17 @@ from matplotlib import animation
 from matplotlib.gridspec import GridSpec
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import mpl_toolkits.mplot3d.axes3d as p3
 
-import warnings
+# Ignore the warnings
 warnings.filterwarnings("ignore")
 
 # Change the logging level here
 logging.basicConfig(
-    level=logging.ERROR, format=" %(asctime)s - %(levelname)s- %(message)s"
+    format=" %(asctime)s - %(levelname)s- %(message)s"
 )
+# Get the logger of the module
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
@@ -208,7 +211,7 @@ def animate_3d_points(
         "savefig.edgecolor": "black"})
 
     fig = plt.figure()
-    ax3d = p3.Axes3D(fig)
+    ax3d = fig.add_subplot(projection='3d')
     ax3d.view_init(azim=azim, elev=elev)
     # First remove fill
     ax3d.xaxis.pane.fill = False
@@ -356,19 +359,19 @@ def animate_3d_points(
             key_points_second),
         interval=10,
         blit=False)
-    logging.info("Making animation...")
+    logger.info("Making animation...")
     export_path = str(export_path)
     export_path += (
         f".{format_video}" if not export_path.endswith((".mp4", ".avi", ".mov")) else ""
     )
     line_ani.save(export_path, fps=fps, dpi=300)
-    logging.info(f"Animation is saved at {export_path}")
+    logger.info(f"Animation is saved at {export_path}")
 
 
 def _plot_3d_points(points3d, key_points, export_path=None, t=0):
     """Plots 3D points."""
     fig = plt.figure(figsize=(5, 5))
-    ax3d = p3.Axes3D(fig)
+    ax3d = fig.add_subplot(projection='3d')
     ax3d.view_init(azim=0, elev=16)
 
     color_map_right = mcp.gen_color(cmap="RdPu", n=len(key_points))
