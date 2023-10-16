@@ -37,8 +37,8 @@ from nptyping import NDArray
 import warnings
 
 import numpy as np
-
 from tqdm import trange
+import matplotlib.pyplot as plt
 
 from ikpy.chain import Chain
 
@@ -50,7 +50,7 @@ from nmf_ik.data import BOUNDS, INITIAL_ANGLES
 warnings.filterwarnings("ignore")
 
 # Change the logging level here
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s- %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s- %(message)s")
 
 
 class LegInverseKinematics:
@@ -108,7 +108,7 @@ class LegInverseKinematics:
     @staticmethod
     def calculate_ik(kinematic_chain: Chain, target_pos: NDArray, initial_angles: NDArray = None) -> NDArray:
         """Calculates the joint angles in the leg chain."""
-        # don't take the last and first ones ¨
+        # don't take the last and first ones into account
         return kinematic_chain.inverse_kinematics(target_position=target_pos, initial_position=initial_angles)
 
     @staticmethod
@@ -198,20 +198,26 @@ class LegInverseKinematics:
                     LegInverseKinematics.calculate_fk(kinematic_chain, joint_angles[t, :]) + origin[t, :]
                 )
 
+        # Store the name of each link in the chain to access them easily
+        names = [kc.name for kc in kinematic_chain.links]
+
         if stage == 1:
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_yaw"] = joint_angles[:, 1]
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[:, 2]
+            self.joint_angles_empty[f"Angle_{segment_name}_ThC_yaw"] = joint_angles[:, names.index(f"{segment_name}_ThC_yaw")]
+            self.joint_angles_empty[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[:, names.index(f"{segment_name}_ThC_pitch")]
             logging.debug("Stage 1 is completed!")
+
         elif stage == 2:
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_roll"] = joint_angles[:, 1]
-            self.joint_angles_empty[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[:, -2]
+            self.joint_angles_empty[f"Angle_{segment_name}_ThC_roll"] = joint_angles[:, names.index(f"{segment_name}_ThC_roll")]
+            self.joint_angles_empty[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[:, names.index(f"{segment_name}_CTr_pitch")]
             logging.debug("Stage 2 is completed!")
+
         elif stage == 3:
-            self.joint_angles_empty[f"Angle_{segment_name}_CTr_roll"] = joint_angles[:, -3]
-            self.joint_angles_empty[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[:, -2]
+            self.joint_angles_empty[f"Angle_{segment_name}_CTr_roll"] = joint_angles[:, names.index(f"{segment_name}_CTr_roll")]
+            self.joint_angles_empty[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[:, names.index(f"{segment_name}_FTi_pitch")]
             logging.debug("Stage 3 is completed!")
+
         elif stage == 4:
-            self.joint_angles_empty[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[:, -2]
+            self.joint_angles_empty[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[:, names.index(f"{segment_name}_TiTa_pitch")]
             logging.debug("Stage 4 is completed!")
 
         return forward_kinematics
