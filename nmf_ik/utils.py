@@ -1,7 +1,7 @@
 """ Utilities. """
 from pathlib import Path
 import logging
-from typing import Dict
+from typing import Dict, List
 import pickle
 import numpy as np
 import cv2
@@ -94,24 +94,26 @@ def get_stim_intervals(stim_data):
     return stim_start_end
 
 
-def calculate_nmf_size(nmf_template: Dict[str, NDArray]) -> Dict[str, NDArray]:
-    """ Calculates body segment sizes from the template data.
-        For now only considers the front legs, antenna and antenna-mid thorax.
-    """
+def calculate_nmf_size(
+    nmf_template: Dict[str, NDArray],
+    legs_list: List[str] = ['RF', 'LF', 'RM', 'LM', 'RH', 'LH'],
+) -> Dict[str, NDArray]:
+    """ Calculates body segment sizes from the template data."""
     nmf_size = {}
-    leg_segments = ['Coxa', 'Femur', 'Tibia', 'Tarsus', 'Claw']  # empty is the entire leg
-    for i, segment_name in enumerate(leg_segments):
-        if segment_name == 'Claw':
-            nmf_size['RF'] = nmf_size['RF_Coxa'] + nmf_size['RF_Femur'] + nmf_size['RF_Tibia'] + nmf_size['RF_Tarsus']
-            nmf_size['LF'] = nmf_size['LF_Coxa'] + nmf_size['LF_Femur'] + nmf_size['LF_Tibia'] + nmf_size['LF_Tarsus']
-        else:
-            nmf_size[f'RF_{segment_name}'] = np.linalg.norm(
-                nmf_template[f'RF_{segment_name}'] -
-                nmf_template[f'RF_{leg_segments[i+1]}'])
-            nmf_size[f'LF_{segment_name}'] = np.linalg.norm(
-                nmf_template[f'LF_{segment_name}'] -
-                nmf_template[f'LF_{leg_segments[i+1]}'])
+    leg_segments = ['Coxa', 'Femur', 'Tibia', 'Tarsus', 'Claw']
 
+    for i, segment_name in enumerate(leg_segments):
+        for leg in legs_list:
+            # If Claw, calculate the length of the entire leg
+            if segment_name == 'Claw':
+                nmf_size[leg] = nmf_size[f'{leg}_Coxa'] + nmf_size[f'{leg}_Femur'] + \
+                    nmf_size[f'{leg}_Tibia'] + nmf_size[f'{leg}_Tarsus']
+            else:
+                nmf_size[f'{leg}_{segment_name}'] = np.linalg.norm(
+                    nmf_template[f'{leg}_{segment_name}'] -
+                    nmf_template[f'{leg}_{leg_segments[i+1]}']
+                )
+    # Assuming right and left hand-side are symmetric, checking for one side is enough
     if 'R_Antenna_base' in nmf_template:
         nmf_size['Antenna'] = np.linalg.norm(nmf_template['R_Antenna_base'] - nmf_template['R_Antenna_edge'])
         nmf_size['Antenna_mid_thorax'] = np.linalg.norm(
