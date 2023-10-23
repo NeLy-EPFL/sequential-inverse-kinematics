@@ -18,24 +18,42 @@ INITIAL_ANGLES = {
     "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
 }
 
+INITIAL_ANGLES_YPR = {
+    "RF": {
+        # Base ThC yaw pitch CTr pitch
+        "stage_1": np.array([0.0, 0.45, -0.07, -2.14]),
+        # Base ThC roll pitch yaw CTr pitch CTr roll
+        "stage_2": np.array([0.0, 0.45, -0.07, -0.32, -2.14, 1.4]),
+        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch
+        "stage_3": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0]),
+        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch TiTa pitch
+        "stage_4": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0, 0.0]),
+    },
+
+    "LF": {
+        "stage_1": np.array([0.0, -0.45, -0.07, -2.14]),
+        "stage_2": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.4]),
+        "stage_3": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0]),
+        "stage_4": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0, 0.0]),
+    },
+    "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
+}
+
 BOUNDS = {
-    "RF_ThC_roll": (np.deg2rad(-130), np.deg2rad(-5)),
-    "RF_ThC_yaw": (np.deg2rad(-10), np.deg2rad(60)),
+    "RF_ThC_roll": (np.deg2rad(-130), np.deg2rad(50)),
+    "RF_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
     "RF_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
-    "RF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
-    "RF_CTr_roll": (np.deg2rad(-150), np.deg2rad(20)),
+    "RF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(0)),
+    "RF_CTr_roll": (np.deg2rad(-150), np.deg2rad(0)),
     "RF_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
-    "RF_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
-    "LF_ThC_roll": (np.deg2rad(5), np.deg2rad(130)),
-    "LF_ThC_yaw": (np.deg2rad(-60), np.deg2rad(10)),
+    "RF_TiTa_pitch": (np.deg2rad(-150), np.deg2rad(0)),
+    "LF_ThC_roll": (np.deg2rad(-50), np.deg2rad(130)),
+    "LF_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
     "LF_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
-    "LF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(-20)),
-    "LF_CTr_roll": (np.deg2rad(20), np.deg2rad(150)),
+    "LF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(0)),
+    "LF_CTr_roll": (np.deg2rad(0), np.deg2rad(150)),
     "LF_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
-    "LF_TiTa_pitch": (np.deg2rad(-100), np.deg2rad(0)),
-    "Head_roll": (np.deg2rad(-90), np.deg2rad(90)),
-    "Head_pitch": (np.deg2rad(-40), np.deg2rad(70)),
-    "Head_yaw": (np.deg2rad(-10), np.deg2rad(10)),
+    "LF_TiTa_pitch": (np.deg2rad(-150), np.deg2rad(0)),
 }
 
 NMF_SIZE = {

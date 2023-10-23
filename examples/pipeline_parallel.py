@@ -14,13 +14,14 @@ import nmf_ik
 from nmf_ik.alignment import AlignPose
 from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
 from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
-from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, get_pts2align
+from nmf_ik.data import BOUNDS, NMF_TEMPLATE, get_pts2align
 from nmf_ik.utils import save_file, load_data
 
 # Change the logging level here
 logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s- %(message)s")
 
 NO_CORES = multiprocessing.cpu_count()
+
 
 def parse_args():
     """Argument parser."""
@@ -39,6 +40,7 @@ def parse_args():
     )
     return parser.parse_args()
 
+
 def worker_wrapper(arg):
     """ Provide kwargs during multiprocessing. """
     return run_pipeline(arg)
@@ -49,8 +51,10 @@ def run_pipeline(path, args):
 
     if args.ypr:
         from nmf_ik.kinematic_chain import KinematicChainYPR as KinematicChain
+        from nmf_ik.data import INITIAL_ANGLES_YPR as INITIAL_ANGLES
     else:
         from nmf_ik.kinematic_chain import KinematicChain
+        from nmf_ik.data import INITIAL_ANGLES
 
     logging.info("Running code in %s", path)
 
