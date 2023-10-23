@@ -13,6 +13,7 @@ from nmf_ik.utils import calculate_nmf_size
 # Ignore the warnings
 warnings.filterwarnings("ignore")
 
+
 class KinematicChain:
     """Create kinematic chains at different stages for the legs.
 
