@@ -1,14 +1,17 @@
 """
     Parallel running of the pipeline.
+
+    >>> python pipeline_parallel.py --overwrite --ypr
+
 """
 import logging
 from pathlib import Path
 import time
 import multiprocessing
+import argparse
 
 import nmf_ik
 from nmf_ik.alignment import AlignPose
-from nmf_ik.kinematic_chain import KinematicChain
 from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
 from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
 from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, get_pts2align
@@ -19,13 +22,35 @@ logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s- %
 
 NO_CORES = multiprocessing.cpu_count()
 
+def parse_args():
+    """Argument parser."""
+    parser = argparse.ArgumentParser(
+        description="Pipeline to visualize camera positions",
+    )
+    parser.add_argument(
+        "--overwrite",
+        action='store_true',
+        help="Overwrite the joint angles if already exists",
+    )
+    parser.add_argument(
+        "--ypr",
+        action='store_true',
+        help="Import YPR kinematic chain if true, else import the default kinematic chain",
+    )
+    return parser.parse_args()
 
 def worker_wrapper(arg):
     """ Provide kwargs during multiprocessing. """
     return run_pipeline(arg)
 
 
-def run_pipeline(path):
+def run_pipeline(path, args):
+    """ Run the entire pipeline in the path, using the args. """
+
+    if args.ypr:
+        from nmf_ik.kinematic_chain import KinematicChainYPR as KinematicChain
+    else:
+        from nmf_ik.kinematic_chain import KinematicChain
 
     logging.info("Running code in %s", path)
 
@@ -48,7 +73,7 @@ def run_pipeline(path):
     )
     head_joint_angles = class_hk.compute_head_angles(export_path=Path(path))
 
-    if (Path(path) / "leg_joint_angles.pkl").is_file():
+    if (Path(path) / "leg_joint_angles.pkl").is_file() and not args.overwrite:
         logging.info("Leg joint angles exist!!")
         leg_joint_angles = load_data(Path(path) / "leg_joint_angles.pkl")
         body_joint_angles = {**head_joint_angles, **leg_joint_angles}
@@ -66,7 +91,7 @@ def run_pipeline(path):
             ),
             initial_angles=INITIAL_ANGLES
         )
-        leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(export_path=Path(path))
+        leg_joint_angles, _ = class_seq_ik.run_ik_and_fk(export_path=Path(path))
 
         full_body_ik = {**head_joint_angles, **leg_joint_angles}
 
@@ -77,13 +102,12 @@ def run_pipeline(path):
 
 
 if __name__ == "__main__":
-    print(nmf_ik.__path__)
+    args = parse_args()
 
-    # main_dir = '/mnt/nas2/GO/7cam/221221_aJO-GAL4xUAS-CsChr/Fly001'
     main_dirs = [
-        '/mnt/nas2/GO/7cam/230725_aJO-GAL4xUAS-CsChr/Fly002',
-        '/mnt/nas2/GO/7cam/230806_aJO-GAL4xUAS-CsChr/Fly001',
-        '/mnt/nas2/GO/7cam/230806_aJO-GAL4xUAS-CsChr/Fly002',
+        '/mnt/nas2/GO/7cam/220713_aJO-GAL4xUAS-CsChr',
+        '/mnt/nas2/GO/7cam/220807_aJO-GAL4xUAS-CsChr',
+        '/mnt/nas2/GO/7cam/220809_aJO-GAL4xUAS-CsChr',
     ]
 
     paths_to_run_ik = []
@@ -99,7 +123,7 @@ if __name__ == "__main__":
             worker_wrapper,
             [
                 (
-                    str(path)
+                    str(path), args
                 )
                 for path in paths_to_run_ik
             ]
