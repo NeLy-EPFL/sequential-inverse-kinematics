@@ -1,44 +1,53 @@
 """ Data, constants, and paths. """
 import numpy as np
 
+# Initial angles for the inverse kinematics optimization
+# If you receive x0 is infeasible error from IKPy, you probably need to revise this part.
+# Common mistake is mixing up the order.
 INITIAL_ANGLES = {
     "RF": {
+        # Base ThC yaw pitch CTr pitch
         "stage_1": np.array([0.0, 0.45, 0.37, -2.14]),
+        # Base ThC roll pitch yaw CTr pitch CTr roll
         "stage_2": np.array([0.0, -0.32, 0.45, 0.37, -2.14, 1.4]),
+        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch
         "stage_3": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0]),
+        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch TiTa pitch
         "stage_4": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0, 0.0]),
     },
-
+    # Same order for the contralateral leg
     "LF": {
         "stage_1": np.array([0.0, -0.45, 0.37, -2.14]),
         "stage_2": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.4]),
         "stage_3": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0]),
         "stage_4": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0, 0.0]),
     },
-    "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
+    # "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
 }
 
 INITIAL_ANGLES_YPR = {
     "RF": {
         # Base ThC yaw pitch CTr pitch
         "stage_1": np.array([0.0, 0.45, -0.07, -2.14]),
-        # Base ThC roll pitch yaw CTr pitch CTr roll
+        # Base ThC yaw pitch roll CTr pitch CTr roll
         "stage_2": np.array([0.0, 0.45, -0.07, -0.32, -2.14, 1.4]),
-        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch
+        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch
         "stage_3": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0]),
-        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch TiTa pitch
+        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch TiTa pitch
         "stage_4": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0, 0.0]),
     },
-
+    # Same order for the contralateral leg
     "LF": {
         "stage_1": np.array([0.0, -0.45, -0.07, -2.14]),
         "stage_2": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.4]),
         "stage_3": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0]),
         "stage_4": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0, 0.0]),
     },
-    "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
+    # "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
 }
 
+# Lower bound of a DOF should be strictly lower than the initial angle.
+# Upper bound of a DOF should be strictly bigger than the initial angle.
 BOUNDS = {
     "RF_ThC_roll": (np.deg2rad(-130), np.deg2rad(50)),
     "RF_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
@@ -56,6 +65,7 @@ BOUNDS = {
     "LF_TiTa_pitch": (np.deg2rad(-150), np.deg2rad(0)),
 }
 
+# Size of the template body segments
 NMF_SIZE = {
     "RF_Coxa": 0.40,
     "RM_Coxa": 0.182,
@@ -91,6 +101,7 @@ NMF_SIZE = {
     "Antenna_mid_thorax": 0.9355746896961248,  # updated
 }
 
+# Key points to align, to be provided in the alignment.Align class
 PTS2ALIGN = {
     "R_head": ["base_anten_R", "tip_anten_R"],
     "RF_leg": [
@@ -126,6 +137,7 @@ def get_pts2align(path: str):
     return pts_temp
 
 
+# Key points that are used in alignment
 SKELETON = [
     "base_anten_R",
     "tip_anten_R",
@@ -146,6 +158,9 @@ SKELETON = [
     "claw_L",
 ]
 
+# Pose of each body landmark in the NeuroMechFly v0.0.6 model
+# Note that each leg segment represents the joint in the proximal part
+# For example, RF_Coxa means Thorax-Coxa jointß
 NMF_TEMPLATE = {
     "RF_Coxa": np.array([0.33, -0.17, 1.07]),
     "RF_Femur": np.array([0.33, -0.17, 0.67]),
@@ -175,15 +190,6 @@ NMF_TEMPLATE = {
     "R_dorsal_hum": np.array([0.41, -0.37, 1.32]),
     # "R_ant_notopleural": np.array([0.30, -0.39, 1.39]),
 }
-
-
-"""
-"L_dorsal_hum": np.array([0.404, 0.366, 1.299])
-"L_ant_notopleural": np.array([0.2623, 0.401, 1.349])
-"R_dorsal_hum": np.array([0.404, -0.366, 1.299])
-"R_ant_notopleural": np.array([0.2623, -0.401, 1.349])
-
-"""
 
 # TODO: double check this based on the resting pose.
 _NMF_TEMPLATE_OLD = {

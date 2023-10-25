@@ -25,7 +25,7 @@ requirements = [
 
 
 setup(
-    author="Gizem Ozdil",
+    author="Pembe Gizem Ozdil",
     author_email='pembe.ozdil@epfl.ch',
     python_requires='>=3.6',
     description="Inverse kinematics module for Drosophila",
@@ -43,6 +43,6 @@ setup(
     packages=find_packages(include=['nmf_ik', 'nmf_ik.*']),
     test_suite='tests',
     url='https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git',
-    version='0.0.2',
+    version='2.0.0',
     zip_safe=False,
 )

@@ -1,19 +1,67 @@
 """
 Code for aligning 3d pose to nmf template.
+The best practice for getting good alignment is to have an accurate 3D pose and
+a template whose key points are matching the tracked key points closely.
 
-Example usage:
+This class expects a 3D file in the following format:
+>>> pose_data_dict = {
+        'RF_leg': NDArray[N_frames,5,3],
+        'LF_leg': NDArray[N_frames,5,3],
+        'R_head': NDArray[N_frames,2,3],
+        'L_head': NDArray[N_frames,2,3],
+        'Neck': NDArray[N_frames,1,3],
+    }
 
->>> from pathlib import Path
->>> from nmf_ik.alignment import AlignPose
+Usage might differ based on the needs. For now, there are three cases that you
+can use the class with:
 
->>> DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
+Case 1: we have pose3d, and we would like to align it but first
+we need to convert the pose data into a dictionary format
+>>> DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
+>>> align = AlignPose.from_file_path(
+>>>     main_dir=DATA_PATH,
+>>>     file_name="pose3d.h5",
+>>>     legs_list=['RF','LF'],
+>>>     convert_dict=True,
+>>>     pts2align=PTS2ALIGN,
+>>>     include_claw=False,
+>>>     nmf_template=NMF_TEMPLATE,
+>>> )
+>>> aligned_pos = align.align_pose(export_path=DATA_PATH)
 
->>> align = AlignPose.from_file_path(DATA_PATH, convert_dict=True)
->>> aligned_pose = align.align_pose(export_path=DATA_PATH)
+Case 2: we have a dictionary format pose data, we just want to load and align it
+>>> DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
+>>> align = AlignPose.from_file_path(
+>>>     main_dir=DATA_PATH,
+>>>     file_name="converted_pose_dict.pkl",
+>>>     legs_list=['RF','LF'],
+>>>     convert_dict=False,
+>>>     pts2align=PTS2ALIGN,
+>>>     include_claw=False,
+>>>     nmf_template=NMF_TEMPLATE,
+>>> )
+>>> aligned_pos = align.align_pose(export_path=DATA_PATH)
+
+Case 3: we have the dictionary format pose data loaded already, we want to feed it
+to the class and align the pose. This assumes that the pose data is already aligned
+in the right format. If not, use the static method `convert_from_anipose`.
+>>> DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
+>>> f_path = DATA_PATH / "converted_pose_dict.pkl"
+>>> with open(f_path, "rb") as f:
+>>>     pose_data = pickle.load(f)
+>>> align = AlignPose(
+>>>     pose_data_dict=pose_data,
+>>>     legs_list=['RF','LF'],
+>>>     include_claw=False,
+>>>     nmf_template=NMF_TEMPLATE,
+>>> )
+>>> aligned_pos = align.align_pose(export_path=DATA_PATH)
+
 
 NOTES:
 ------
 Despite being extendable, this method is written with a special focus on forelegs and head.
+
 """
 from pathlib import Path
 from typing import Dict, List, Union, Optional
@@ -71,13 +119,13 @@ class AlignPose:
             'Neck': NDArray[N_frames,N_key_points,3],
         }
     legs_list : List[str]
-        List containing the leg names to operate on.
+        A list containing the leg names to operate on.
         Should follow the convention {F or M or H}{R or L}
         e.g., ['RF', 'LF']
     include_claw : bool, optional
-        True if claw is included in the scaling process, by default False
+        If True, claw is included in the scaling process, by default False
     nmf_template : Dict[str, NDArray], optional
-        Dictionary containing the positions of fly model body segments.
+        A dictionary containing the positions of fly model body segments.
         Check ./data.py for the default dictionary, by default None
 
     For the class usage examples, please refer to `example_alignment.py`
@@ -149,10 +197,39 @@ class AlignPose:
 
     @staticmethod
     def convert_from_anipose_to_dict(
-            pose_3d: NDArray, pts2align: Dict[str, List[str]]) -> Dict[str, NDArray]:
-        """ Loads anipose data into a dictionary.
-            Segment names are under data.py
+        pose_3d: Dict[str, NDArray],
+        pts2align: Dict[str, List[str]]
+    ) -> Dict[str, NDArray]:
+        """Loads anipose data into a dictionary.
+        Segment names are under data.py
+
+        Parameters
+        ----------
+        pose_3d : Dict[str, NDArray]
+            3D pose data from anipose.
+            It should have the following format:
+            >>> pose_3d = {
+                '{keypoint_name}_x' : NDArray[N_frames,],
+                '{keypoint_name}_y' : NDArray[N_frames,],
+                '{keypoint_name}_z' : NDArray[N_frames,],
+            }
+        pts2align : Dict[str, List[str]]
+            Segment names and corresponding key point names to be aligned,
+            check data.py for an example, by default None
+
+        Returns
+        -------
+        Dict[str, NDArray]
+            Pose data dictionary of the following format:
+            >>> pose_data_dict = {
+                'RF_leg': NDArray[N_frames,N_key_points,3],
+                'LF_leg': NDArray[N_frames,N_key_points,3],
+                'R_head': NDArray[N_frames,N_key_points,3],
+                'L_head': NDArray[N_frames,N_key_points,3],
+                'Neck': NDArray[N_frames,N_key_points,3],
+            }
         """
+
         points_3d_dict = {}
 
         for segment in pts2align:
@@ -168,8 +245,17 @@ class AlignPose:
         return points_3d_dict
 
     def align_pose(self, export_path: Optional[Union[str, Path]] = None) -> Dict[str, NDArray]:
-        """ Aligns the leg and head key point positions.
-            Saves the results of save_pose_file is True.
+        """Aligns the leg and head key point positions.
+
+        Parameters
+        ----------
+        export_path : Union[str, Path], optional
+            The path where the aligned pose data will be saved, if specified.
+
+        Returns
+        -------
+        Dict[str, NDArray]
+            A dictionary containing the aligned pose data.
         """
         aligned_pose = {}
         for segment, segment_array in self.pose_data_dict.items():
@@ -196,13 +282,13 @@ class AlignPose:
 
     @property
     def thorax_mid_pts(self) -> NDArray:
-        """ Middle point of right and left wing hinges. """
+        """ Gets the middle point of right and left wing hinges. """
         thorax_pts = self.pose_data_dict["Thorax"]
         return 0.5 * (thorax_pts[:, 0, :] + thorax_pts[:, -1, :])
 
     @staticmethod
     def get_fixed_pos(points_3d: NDArray) -> NDArray:
-        """ Fixed pose of a steady key point determined by the quantiles. """
+        """ Gets the fixed pose of a steady key point determined by the quantiles. """
         fixed_pos = [
             _get_mean_quantile(points_3d[:, 0]),
             _get_mean_quantile(points_3d[:, 1]),
@@ -245,7 +331,29 @@ class AlignPose:
         return indices_stat[0]
 
     def align_leg(self, leg_array: NDArray, leg_name: str) -> NDArray:
-        """ Scales and translated the leg key point locations based on the model size/config."""
+        """Scales and translates the leg key point locations based on the model size and configuration.
+
+        This method takes a 3D array of leg key point positions and scales and translates them to align with a
+        predefined model size and configuration. It accounts for the relative positions of key points and ensures
+        that the scaled leg key points match the model size.
+
+        Parameters
+        ----------
+        leg_array : NDArray
+            A 3D array containing the leg key point positions.
+        leg_name : str
+            A string indicating the name of the leg (e.g., 'RF' or 'LF') for alignment.
+
+        Returns
+        -------
+        NDArray
+            A new 3D array containing the scaled and aligned leg key point positions.
+
+        Notes
+        -----
+        - This method is used to align leg key point positions with a model of a fly's leg.
+        - It calculates the scale factor and multiplies the first 4 or 5 segments with the scale factor.
+        """
         aligned_array = np.empty_like(leg_array)
         fixed_coxa = AlignPose.get_fixed_pos(leg_array[:, 0, :])
 
@@ -269,7 +377,34 @@ class AlignPose:
         return aligned_array.copy()
 
     def align_head(self, head_array: NDArray, side: str) -> NDArray:
-        """ Scales and translated the head key point locations based on the model size/config."""
+        """Scales and translates the head key point locations based on the model size and configuration.
+
+        This method takes a 3D array of head key point positions and scales and translates them to align with a
+        predefined model size and configuration, such as a fly's head. It accounts for the relative positions of
+        key points and ensures that the scaled head key points match the model size.
+
+        Parameters
+        ----------
+        head_array : NDArray
+            A 3D array containing the head key point positions.
+        side : str
+            A string indicating the side of the head (e.g., 'R' or 'L') for alignment.
+
+        Returns
+        -------
+        NDArray
+            A new 3D array containing the scaled and aligned head key point positions.
+
+        Raises
+        ------
+        KeyError
+            If the 'nmf_template' dictionary does not contain the required key names, 'Antenna_mid_thorax' or 'Antenna'.
+
+        Notes
+        -----
+        - This method is used to align head key point positions with a model of a fly's head.
+        - It calculates the scale factor and translations necessary to match the model's head size and position.
+        """
         antbase2thoraxmid_real = _get_distance_btw_vecs(
             head_array[:, 0, :], self.thorax_mid_pts
         )

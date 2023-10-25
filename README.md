@@ -1,5 +1,17 @@
-# Inverse Kinematics for NeuroMechFly
-IKPy implementation of inverse kinematics based on the nmf biomechanical model.
+# Sequential Inverse Kinematics
+
+IKPy implementation of Inverse Kinematics using the NMF Biomechanical Model
+
+## Overview
+
+`sequential-inverse-kinematics` is a Python package that provides an implementation of Inverse Kinematics (IK) that is based on the open-source Python package (IKPy)[https://github.com/Phylliade/ikpy]. It aligns the 3D pose of the fly body parts anf computes the joint angles necessary to closely match the desired 3D pose.
+
+## Features
+
+* Align 3D poses to the NMF template model.
+* Calculate joint angles and positions to match a desired pose.
+* Visualize the results in 2D and 3D.
+
 
 ## Installation
 
@@ -63,7 +75,7 @@ Note that, although the leg joint angles are calculated based on the IKPy librar
 
 <summary>TO-DO</summary>
 
-  + [ ] Adaptation of code to locomotion
+  + [x] Adaptation of code to locomotion
   + [ ] Parallelization of leg inv kin calculation (code speed improvement)
   + [x] Head kinematics -> antennal pitch and head roll
 </details>
