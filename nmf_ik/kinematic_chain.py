@@ -1,5 +1,5 @@
 """ Module that contains a set of kinematic chains."""
-from typing import Dict
+from typing import Dict, List
 import numpy as np
 from nptyping import NDArray
 import warnings
@@ -29,10 +29,11 @@ class KinematicChain:
     def __init__(
         self,
         bounds_dof: Dict[str, NDArray],
+        legs_list: List[str],
         nmf_size: Dict[str, float] = None,
     ) -> None:
         # NMF size is calculated internally if size is not provided
-        self.nmf_size = calculate_nmf_size(NMF_TEMPLATE) \
+        self.nmf_size = calculate_nmf_size(NMF_TEMPLATE, legs_list) \
             if nmf_size is None else nmf_size
         self.bounds_dof = bounds_dof
 
@@ -371,10 +372,11 @@ class KinematicChainYPR:
     def __init__(
         self,
         bounds_dof: Dict[str, NDArray],
+        legs_list: List[str],
         nmf_size: Dict[str, float] = None,
     ) -> None:
         # NMF size is calculated internally if size is not provided
-        self.nmf_size = calculate_nmf_size(NMF_TEMPLATE) \
+        self.nmf_size = calculate_nmf_size(NMF_TEMPLATE, legs_list) \
             if nmf_size is None else nmf_size
         self.bounds_dof = bounds_dof
 

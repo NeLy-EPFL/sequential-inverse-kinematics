@@ -183,7 +183,7 @@ class LegInverseKinematics:
             )
 
         # Start the IK process
-        for t in trange(frames_no, disable=False, desc=f'Processing stage {stage}: '):
+        for t in trange(frames_no, disable=True, desc=f'Processing stage {stage}: '):
             if stage in [2, 3, 4]:
                 kinematic_chain = self.kc_class.create_leg_chain(
                     stage=stage,

@@ -70,6 +70,10 @@ class AlignPose:
             'L_head': NDArray[N_frames,N_key_points,3],
             'Neck': NDArray[N_frames,N_key_points,3],
         }
+    legs_list : List[str]
+        List containing the leg names to operate on.
+        Should follow the convention {F or M or H}{R or L}
+        e.g., ['RF', 'LF']
     include_claw : bool, optional
         True if claw is included in the scaling process, by default False
     nmf_template : Dict[str, NDArray], optional
@@ -82,13 +86,14 @@ class AlignPose:
     def __init__(
         self,
         pose_data_dict: Dict[str, NDArray],
+        legs_list: List[str],
         include_claw: Optional[bool] = False,
         nmf_template: Optional[Dict[str, NDArray]] = None,
     ):
         self.pose_data_dict = pose_data_dict
         self.include_claw = include_claw
         self.nmf_template = NMF_TEMPLATE if nmf_template is None else nmf_template
-        self.nmf_size = calculate_nmf_size(self.nmf_template)
+        self.nmf_size = calculate_nmf_size(self.nmf_template, legs_list)
 
     @classmethod
     def from_file_path(
