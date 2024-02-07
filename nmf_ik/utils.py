@@ -281,7 +281,7 @@ def df_to_nparray(data_frame, side, claw_is_end_effector, segment='F'):
     return position_array
 
 
-def dict_to_nparray_pose(pose_dict, claw_is_end_effector):
+def dict_to_nparray_pose(pose_dict, claw_is_end_effector, fix_coxa = True):
     """ Convert usual df3dPP dictionary format into a three dimensional array. """
 
     if claw_is_end_effector:
@@ -295,8 +295,12 @@ def dict_to_nparray_pose(pose_dict, claw_is_end_effector):
          3))  # timestep, key points, axes
 
     for i, kp in enumerate(key_points):
-        position_array[:, i, :] = np.array(
-            pose_dict[kp]['raw_pos_aligned'])
+        if kp == "Coxa" and fix_coxa:
+            position_array[:, i, :] = np.array(
+                pose_dict[kp]['fixed_pos_aligned'])
+        else:
+            position_array[:, i, :] = np.array(
+                pose_dict[kp]['raw_pos_aligned'])
 
     return position_array
 

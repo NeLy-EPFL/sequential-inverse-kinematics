@@ -194,6 +194,7 @@ def animate_3d_points(
     azim : int, optional
         Azimuth of 3D axis, by default 90
     """
+    
     # Dark background
     plt.rcParams.update({
         "axes.facecolor": "black",
@@ -208,7 +209,7 @@ def animate_3d_points(
         "savefig.edgecolor": "black"})
 
     fig = plt.figure()
-    ax3d = p3.Axes3D(fig)
+    ax3d = fig.add_subplot(111, projection="3d")
     ax3d.view_init(azim=azim, elev=elev)
     # First remove fill
     ax3d.xaxis.pane.fill = False
@@ -425,7 +426,7 @@ def _plot_3d_points(points3d, key_points, export_path=None, t=0):
     plt.show()
 
 
-def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
+def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0, label_prefix="", fix_lim=False, lw=1.7):
     """Plots 3D points at time t."""
 
     color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in key_points if 'R' in kp]) + 2)
@@ -448,9 +449,9 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
                 points3d[t, order, 0],
                 points3d[t, order, 1],
                 points3d[t, order, 2],
-                label=kp,
+                label="".join((label_prefix, kp)),
                 linestyle=ls,
-                linewidth=1.7,
+                linewidth=lw,
                 color=color,
             )
         else:
@@ -458,11 +459,18 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
                 points3d[t, order, 0],
                 points3d[t, order, 1],
                 points3d[t, order, 2],
-                label=kp,
+                label="".join((label_prefix, kp)),
                 marker=ls,
                 markersize=4.5,
+                linewidth=lw,
                 color=color,
             )
+        # two columns middle bottom
+        ax3d.legend(loc='lower center', ncol=4)
+        if fix_lim:
+            ax3d.set_xlim((-2, 2.0))
+            ax3d.set_ylim((-2, 2))
+            ax3d.set_zlim((-0.6, 0.8))
 
     if export_path is not None:
         plt.savefig(export_path, bbox_inches="tight")

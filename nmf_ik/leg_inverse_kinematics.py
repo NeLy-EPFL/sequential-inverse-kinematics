@@ -285,9 +285,21 @@ class LegInverseKinematics(KinematicChain):
 
         if export_path is not None:
             export_path = Path(export_path) if not isinstance(export_path, Path) else export_path
+<<<<<<< Updated upstream
             save_file(export_path / "forward_kinematics.pkl", forward_kinematics_dict)
             save_file(export_path / "leg_joint_angles.pkl", joint_angles_dict)
             # save_file(export_path.replace('aligned_pose','joint_angles'), joint_angles_dict)
+=======
+            save_file(
+                export_path / "forward_kinematics.pkl",
+                forward_kinematics_dict
+            )
+            save_file(
+                export_path / "leg_joint_angles.pkl",
+                joint_angles_dict
+            )
+
+>>>>>>> Stashed changes
             logging.info("Files have been saved at %s", export_path)
 
         return joint_angles_dict, forward_kinematics_dict
