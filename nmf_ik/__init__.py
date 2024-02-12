@@ -1,5 +1,0 @@
-__author__ = "Pembe Gizem Ozdil"
-__version__ = "2.0.0"
-__license__ = "MIT"
-__description__ = "Package for inverse kinematics calculation in Drosophila"
-__url__ = "https://github.com/NeLy-EPFL/sequential-inverse-kinematics"

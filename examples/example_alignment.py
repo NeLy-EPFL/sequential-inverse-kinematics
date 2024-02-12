@@ -5,8 +5,8 @@ import pickle
 import logging
 from pathlib import Path
 
-from nmf_ik.alignment import AlignPose
-from nmf_ik.data import NMF_TEMPLATE, PTS2ALIGN
+from seqikpy.alignment import AlignPose
+from seqikpy.data import NMF_TEMPLATE, PTS2ALIGN
 
 # Change the logging level here
 logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")

@@ -4,8 +4,8 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
-from nmf_ik.data import NMF_TEMPLATE
+from seqikpy.head_inverse_kinematics import HeadInverseKinematics
+from seqikpy.data import NMF_TEMPLATE
 
 DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
 

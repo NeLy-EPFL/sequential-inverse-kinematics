@@ -3,8 +3,8 @@
 Example usage:
 >>> import pickle
 >>> from pathlib import Path
->>> from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
->>> from nmf_ik.data import NMF_TEMPLATE
+>>> from seqikpy.head_inverse_kinematics import HeadInverseKinematics
+>>> from seqikpy.data import NMF_TEMPLATE
 
 >>> DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
 >>> f_path = DATA_PATH / "aligned_pose3d.h5"
@@ -32,7 +32,7 @@ from nptyping import NDArray
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-from nmf_ik.utils import save_file
+from seqikpy.utils import save_file
 
 X_AXIS = np.array([1, 0, 0])
 Y_AXIS = np.array([0, 1, 0])

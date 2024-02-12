@@ -70,8 +70,8 @@ import logging
 from nptyping import NDArray
 import numpy as np
 
-from nmf_ik.data import PTS2ALIGN, NMF_TEMPLATE
-from nmf_ik.utils import save_file, calculate_nmf_size
+from seqikpy.data import PTS2ALIGN, NMF_TEMPLATE
+from seqikpy.utils import save_file, calculate_nmf_size
 
 # Change the logging level here
 logging.basicConfig(

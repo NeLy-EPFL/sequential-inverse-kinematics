@@ -10,12 +10,12 @@ import time
 import multiprocessing
 import argparse
 
-import nmf_ik
-from nmf_ik.alignment import AlignPose
-from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
-from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
-from nmf_ik.data import BOUNDS, NMF_TEMPLATE, get_pts2align
-from nmf_ik.utils import save_file, load_data
+import seqikpy
+from seqikpy.alignment import AlignPose
+from seqikpy.leg_inverse_kinematics import LegInverseKinematics
+from seqikpy.head_inverse_kinematics import HeadInverseKinematics
+from seqikpy.data import BOUNDS, NMF_TEMPLATE, get_pts2align
+from seqikpy.utils import save_file, load_data
 
 # Change the logging level here
 logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s- %(message)s")
@@ -50,11 +50,11 @@ def run_pipeline(path, args):
     """ Run the entire pipeline in the path, using the args. """
 
     if args.ypr:
-        from nmf_ik.kinematic_chain import KinematicChainYPR as KinematicChain
-        from nmf_ik.data import INITIAL_ANGLES_YPR as INITIAL_ANGLES
+        from seqikpy.kinematic_chain import KinematicChainYPR as KinematicChain
+        from seqikpy.data import INITIAL_ANGLES_YPR as INITIAL_ANGLES
     else:
-        from nmf_ik.kinematic_chain import KinematicChain
-        from nmf_ik.data import INITIAL_ANGLES
+        from seqikpy.kinematic_chain import KinematicChain
+        from seqikpy.data import INITIAL_ANGLES
 
     logging.info("Running code in %s", path)
 

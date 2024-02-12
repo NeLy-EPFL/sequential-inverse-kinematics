@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 
-from nmf_ik.alignment import AlignPose
-from nmf_ik.inverse_kinematics_ap import InverseKinematics
+from seqikpy.alignment import AlignPose
+from seqikpy.inverse_kinematics_ap import InverseKinematics
 
 
 @pytest.fixture

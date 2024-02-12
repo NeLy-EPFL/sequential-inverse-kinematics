@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from nmf_ik.alignment import AlignPose
+from seqikpy.alignment import AlignPose
 
 
 @pytest.fixture

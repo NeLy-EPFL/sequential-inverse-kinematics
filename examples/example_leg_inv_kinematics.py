@@ -3,9 +3,9 @@ import pickle
 from pathlib import Path
 import time
 
-from nmf_ik.kinematic_chain import KinematicChain
-from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
-from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE
+from seqikpy.kinematic_chain import KinematicChain
+from seqikpy.leg_inverse_kinematics import LegInverseKinematics
+from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE
 
 
 DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')

@@ -4,8 +4,8 @@
 Example usage:
 >>> import pickle
 >>> from pathlib import Path
->>> from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
->>> from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE
+>>> from seqikpy.leg_inverse_kinematics import LegInverseKinematics
+>>> from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE
 
 
 >>> DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
@@ -42,9 +42,9 @@ import matplotlib.pyplot as plt
 
 from ikpy.chain import Chain
 
-from nmf_ik.utils import save_file
-from nmf_ik.kinematic_chain import KinematicChain
-from nmf_ik.data import BOUNDS, INITIAL_ANGLES
+from seqikpy.utils import save_file
+from seqikpy.kinematic_chain import KinematicChain
+from seqikpy.data import BOUNDS, INITIAL_ANGLES
 
 # Ignore the warnings
 warnings.filterwarnings("ignore")

@@ -6,12 +6,12 @@ from pathlib import Path
 import time
 import multiprocessing
 
-from nmf_ik.alignment import AlignPose
-from nmf_ik.kinematic_chain import KinematicChain
-from nmf_ik.leg_inverse_kinematics import LegInverseKinematics
-from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
-from nmf_ik.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
-from nmf_ik.utils import save_file
+from seqikpy.alignment import AlignPose
+from seqikpy.kinematic_chain import KinematicChain
+from seqikpy.leg_inverse_kinematics import LegInverseKinematics
+from seqikpy.head_inverse_kinematics import HeadInverseKinematics
+from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
+from seqikpy.utils import save_file
 
 # Change the logging level here
 logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")

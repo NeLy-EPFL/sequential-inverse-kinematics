@@ -31,18 +31,18 @@ setup(
     description="Inverse kinematics module for Drosophila",
     entry_points={
         'console_scripts': [
-            'nmfik-cli=nmf_ik.cli:main',
+            'seqikpy-cli=seqikpy.cli:main',
         ],
     },
     dependency_links=["https://github.com/gizemozd/ikpy.git"],
     install_requires=requirements,
-    license="MIT license",
+    license="Apache 2.0 License",
     long_description=readme + '\n\n',
     include_package_data=True,
-    name='nmf_ik',
-    packages=find_packages(include=['nmf_ik', 'nmf_ik.*']),
+    name='seqIKPy',
+    packages=find_packages(include=['seqikpy', 'seqikpy.*']),
     test_suite='tests',
     url='https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git',
-    version='2.0.0',
+    version='1.0.0',
     zip_safe=False,
 )

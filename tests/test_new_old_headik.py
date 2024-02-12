@@ -1,6 +1,6 @@
-from nmf_ik.data import NMF_TEMPLATE
-from nmf_ik.head_inverse_kinematics import HeadInverseKinematics
-import nmf_ik
+from seqikpy.data import NMF_TEMPLATE
+from seqikpy.head_inverse_kinematics import HeadInverseKinematics
+import seqikpy
 import pandas as pd
 import numpy as np
 from pathlib import Path
