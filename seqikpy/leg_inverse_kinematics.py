@@ -31,7 +31,7 @@ class LegInvKinBase(ABC):
     aligned_pos : Dict[str, NDArray]
         Aligned pose from the AlignPose class.
         Should have the following structure:
-            '<side><segment>_leg' : np.array([frames, 5, 3])}
+            "<side><segment>_leg" : np.array([frames, 5, 3])}
     kinematic_chain : KinematicChainBase
         Kinematic chain of the leg.
     initial_angles : Dict[str, NDArray], optional
@@ -60,7 +60,7 @@ class LegInvKinBase(ABC):
     def calculate_ik(self, kinematic_chain: Chain, target_pos: NDArray,
                      initial_angles: NDArray = None) -> NDArray:
         """Calculates the joint angles in the leg chain."""
-        # don't take the last and first ones into account
+        # don"t take the last and first ones into account
         return kinematic_chain.inverse_kinematics(
             target_position=target_pos,
             initial_position=initial_angles
@@ -141,7 +141,7 @@ class LegInvKinSeq(LegInvKinBase):
     aligned_pos : Dict[str, NDArray]
         Aligned pose from the AlignPose class.
         Should have the following structure:
-            '<side><segment>_leg' : np.array([frames, 5, 3])}
+            "<side><segment>_leg" : np.array([frames, 5, 3])}
     kinematic_chain : KinematicChainSeq
         Kinematic chain of the leg.
     initial_angles : Dict[str, NDArray], optional
@@ -157,7 +157,7 @@ class LegInvKinSeq(LegInvKinBase):
     >>> from seqikpy.data import BOUNDS, INITIAL_ANGLES
     >>> from seqikpy.utils import load_file
 
-    >>> DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
+    >>> DATA_PATH = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
     >>> f_path = DATA_PATH / "pose3d_aligned.pkl"
 
     >>> aligned_pos = load_file(f_path)
@@ -252,7 +252,7 @@ class LegInvKinSeq(LegInvKinBase):
             )
 
         # Start the inverse kinematics calculation
-        for t in trange(frames_no, disable=hide_progress_bar, desc=f'Processing stage {stage}'):
+        for t in trange(frames_no, disable=hide_progress_bar, desc=f"Processing stage {stage}"):
             # Get the kinematic chain for the other stages
             if stage in [2, 3, 4]:
                 kinematic_chain = self.kinematic_chain_class.create_leg_chain(
@@ -356,7 +356,7 @@ class LegInvKinSeq(LegInvKinBase):
         for segment_name, segment_array in self.aligned_pos.items():
             if "leg" in segment_name.lower():
                 # If segment name is RF_leg so the leg name is RF
-                leg_name = segment_name.split('_')[0]
+                leg_name = segment_name.split("_")[0]
 
                 # If leg_name is not in nmf_size, then continue
                 if not leg_name in self.kinematic_chain_class.nmf_size:
@@ -411,7 +411,7 @@ class LegInvKinGeneric(LegInvKinBase):
     aligned_pos : Dict[str, NDArray]
         Aligned pose from the AlignPose class.
         Should have the following structure:
-            '<side><segment>_leg' : np.array([frames, 5, 3])}
+            "<side><segment>_leg" : np.array([frames, 5, 3])}
     kinematic_chain : KinematicChainGeneric
         Kinematic chain of the leg.
     initial_angles : Dict[str, NDArray], optional
@@ -427,7 +427,7 @@ class LegInvKinGeneric(LegInvKinBase):
     >>> from seqikpy.data import BOUNDS, INITIAL_ANGLES
     >>> from seqikpy.utils import load_file
 
-    >>> DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
+    >>> DATA_PATH = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
     >>> f_path = DATA_PATH / "pose3d_aligned.pkl"
 
     >>> aligned_pos = load_file(f_path)
@@ -511,7 +511,7 @@ class LegInvKinGeneric(LegInvKinBase):
         )
 
         # Start the inverse kinematics calculation
-        for t in trange(frames_no, disable=hide_progress_bar, desc=f'Calculating IK {segment_name}'):
+        for t in trange(frames_no, disable=hide_progress_bar, desc=f"Calculating IK {segment_name}"):
             # For the first frame, use the given initial angles, for the rest
             # use the calculated joint angles from the previous time step
             initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
@@ -528,7 +528,7 @@ class LegInvKinGeneric(LegInvKinBase):
         link_names = [link.name for link in kinematic_chain.links]
         # Store the joint angles based on the stage number
         for link_name in link_names:
-            if 'Base' in link_name or 'Claw' in link_name:
+            if "Base" in link_name or "Claw" in link_name:
                 continue
             self.joint_angles_dict[f"Angle_{link_name}"] = joint_angles[
                 :, link_names.index(link_name)
@@ -563,7 +563,7 @@ class LegInvKinGeneric(LegInvKinBase):
         for segment_name, segment_array in self.aligned_pos.items():
             if "leg" in segment_name.lower():
                 # If segment name is RF_leg so the leg name is RF
-                leg_name = segment_name.split('_')[0]
+                leg_name = segment_name.split("_")[0]
 
                 # If leg_name is not in nmf_size, then continue
                 if not leg_name in self.kinematic_chain_class.nmf_size:

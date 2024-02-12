@@ -1,31 +1,7 @@
 """ Data, constants, and paths. """
 import numpy as np
 
-# Initial angles for the inverse kinematics optimization
-# If you receive x0 is infeasible error from IKPy, you probably need to revise this part.
-# Common mistake is mixing up the order.
 INITIAL_ANGLES = {
-    "RF": {
-        # Base ThC yaw pitch CTr pitch
-        "stage_1": np.array([0.0, 0.45, 0.37, -2.14]),
-        # Base ThC roll pitch yaw CTr pitch CTr roll
-        "stage_2": np.array([0.0, -0.32, 0.45, 0.37, -2.14, 1.4]),
-        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch
-        "stage_3": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0]),
-        # Base ThC roll pitch yaw CTr pitch CTr roll FTi pitch TiTa pitch
-        "stage_4": np.array([0.0, -0.32, 0.45, 0.37, -2.14, -1.25, 1.48, 0.0, 0.0]),
-    },
-    # Same order for the contralateral leg
-    "LF": {
-        "stage_1": np.array([0.0, -0.45, 0.37, -2.14]),
-        "stage_2": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.4]),
-        "stage_3": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0]),
-        "stage_4": np.array([0.0, 0.32, -0.45, 0.37, -2.14, 1.25, 1.48, 0.0, 0.0]),
-    },
-    # "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
-}
-
-INITIAL_ANGLES_YPR = {
     "RF": {
         # Base ThC yaw pitch CTr pitch
         "stage_1": np.array([0.0, 0.45, -0.07, -2.14]),
@@ -94,11 +70,11 @@ NMF_SIZE = {
     "RF": 2.26,
     "RM": 2.328,
     "RH": 2.515,
-    "LF": 2.26,  #  leg is updated
+    "LF": 2.26,
     "LM": 2.328,
     "LH": 2.515,
-    "Antenna": 0.2745906043549196,  #  updated
-    "Antenna_mid_thorax": 0.9355746896961248,  # updated
+    "Antenna": 0.2745906043549196,
+    "Antenna_mid_thorax": 0.9355746896961248,
 }
 
 # Key points to align, to be provided in the alignment.Align class
@@ -160,7 +136,7 @@ SKELETON = [
 
 # Pose of each body landmark in the NeuroMechFly v0.0.6 model
 # Note that each leg segment represents the joint in the proximal part
-# For example, RF_Coxa means Thorax-Coxa jointß
+# For example, RF_Coxa means Thorax-Coxa joint
 NMF_TEMPLATE = {
     "RF_Coxa": np.array([0.33, -0.17, 1.07]),
     "RF_Femur": np.array([0.33, -0.17, 0.67]),
@@ -189,35 +165,4 @@ NMF_TEMPLATE = {
     # "L_ant_notopleural": np.array([0.28, 0.39, 1.39]),
     "R_dorsal_hum": np.array([0.41, -0.37, 1.32]),
     # "R_ant_notopleural": np.array([0.30, -0.39, 1.39]),
-}
-
-# TODO: double check this based on the resting pose.
-_NMF_TEMPLATE_OLD = {
-    "RF_Coxa": np.array([0.33, -0.18, 1.03]),
-    "RF_Femur": np.array([0.33, -0.18, 0.64]),
-    "RF_Tibia": np.array([0.33, -0.18, -0.06]),
-    "RF_Tarsus": np.array([0.33, -0.18, -0.58]),
-    "RF_Claw": np.array([0.35, -0.27, -1.12]),
-    "LF_Coxa": np.array([0.33, 0.18, 1.03]),
-    "LF_Femur": np.array([0.33, 0.18, 0.64]),
-    "LF_Tibia": np.array([0.33, 0.18, -0.06]),
-    "LF_Tarsus": np.array([0.33, 0.18, -0.58]),
-    "LF_Claw": np.array([0.33, 0.18, -1.12]),
-    "R_Antenna_base": np.array([0.98, -0.1, 1.40]),
-    "L_Antenna_base": np.array([0.98, 0.1, 1.40]),
-    "R_Antenna_edge": np.array([1.01, -0.08, 1.12]),
-    "L_Antenna_edge": np.array([1.01, 0.08, 1.12]),
-    "Labellum": np.array([0.75, 0.0, 0.81]),
-    "R_post_vertical": np.array([0.7, -0.2, 1.59]),
-    "L_post_vertical": np.array([0.7, 0.2, 1.59]),
-    "R_ant_orb": np.array([0.88, -0.18, 1.49]),
-    "L_ant_orb": np.array([0.88, 0.18, 1.49]),
-    "R_wing": np.array([0.01, -0.4, 1.31]),
-    "L_wing": np.array([0.01, 0.4, 1.31]),
-    "Neck": np.array([0.52, 0.0, 1.3]),
-    "Thorax_mid": np.array([0.01, 0.0, 1.31]),
-    "L_dorsal_hum": np.array([0.404, 0.366, 1.299]),
-    "L_ant_notopleural": np.array([0.2623, 0.401, 1.349]),
-    "R_dorsal_hum": np.array([0.404, -0.366, 1.299]),
-    "R_ant_notopleural": np.array([0.2623, -0.401, 1.349]),
 }
