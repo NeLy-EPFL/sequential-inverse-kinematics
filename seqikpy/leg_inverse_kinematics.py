@@ -1,123 +1,73 @@
-# pylint: disable = C0103, W0311
-""" Script to calculate inverse kinematics from aligned pose based on ikpy.
+""" Script to calculate inverse kinematics from 3D pose based on IKPy."""
 
-Example usage:
->>> import pickle
->>> from pathlib import Path
->>> from seqikpy.leg_inverse_kinematics import LegInverseKinematics
->>> from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE
-
-
->>> DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
->>> f_path = DATA_PATH / "aligned_pose3d.h5"
->>> with open(f_path, "rb") as f:
->>>     data = pickle.load(f)
-
->>> seq_ik = LegInverseKinematics(
-    aligned_pos=aligned_pos,
-    nmf_template=NMF_TEMPLATE,
-    nmf_size=NMF_SIZE,
-    bounds=BOUNDS,
-    initial_angles=INITIAL_ANGLES
-)
->>> leg_joint_angles, forward_kinematics = seq_ik.run_ik_and_fk(export_path=DATA_PATH)
-
-Note that there are two kinds of kinematic_chain classes for now.
-One with the original configuration where there is no trochanter, the other one is
-with the offset introduced by trochanter. If you want to manually change the inherited
-class, just change the import in this file.
-
-"""
-
-import pickle
+from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Tuple, Union, List
+from typing import Dict, Tuple, Union, List, Literal, Optional
 import logging
-from nptyping import NDArray
 import warnings
+from nptyping import NDArray
 
 import numpy as np
 from tqdm import trange
-import matplotlib.pyplot as plt
-
 from ikpy.chain import Chain
 
 from seqikpy.utils import save_file
+from seqikpy.data import INITIAL_ANGLES
 from seqikpy.kinematic_chain import KinematicChain
-from seqikpy.data import BOUNDS, INITIAL_ANGLES
 
 # Ignore the warnings
 warnings.filterwarnings("ignore")
 
-# Change the logging level here
 logging.basicConfig(
-    format=" %(asctime)s - %(levelname)s- %(message)s"
+    format=" %(asctime)s - %(levelname)s- %(message)s",
+    handlers=[logging.StreamHandler()]
 )
-# Get the logger of the module
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
-class LegInverseKinematics:
-    """
-    Class to calculate inverse kinematics for leg joints.
+class LegInvKinBase(ABC):
+    """Abstract class to calculate inverse kinematics for leg joints.
 
     Parameters
     ----------
     aligned_pos : Dict[str, NDArray]
         Aligned pose from the AlignPose class.
         Should have the following structure:
-            {'{which_leg}_leg' : np.array([frames, 5, 3])}
-        If you want to load the aligned pose from the pkl file,
-        use the classmethod load_from_pkl.
+            '<side><segment>_leg' : np.array([frames, 5, 3])}
     kinematic_chain : KinematicChain
         Kinematic chain of the leg.
-    nmf_template : Dict[str, NDArray], optional
-        Dictionary that contains the location of body segments.
-        If not provided, the default bounds will be used.
-    bounds : Dict[str, NDArray], optional
-        Dictionary that contains the bounds of joint degrees-of-freedom.
-        If not provided, the default bounds will be used.
     initial_angles : Dict[str, NDArray], optional
         Initial angles of DOFs.
-        If not provided, the default bounds will be used.
+        If not provided, the default values from data.py will be used.
+    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
+        Logging level as a string, by default "INFO"
     """
 
     def __init__(
         self,
         aligned_pos: Dict[str, NDArray],
         kinematic_chain_class: KinematicChain,
-        # nmf_size: Dict[str, float] = None,
-        # bounds: Dict[str, NDArray] = None,
-        initial_angles: Dict[str, NDArray] = None,
+        initial_angles: Optional[Dict[str, NDArray]] = None,
+        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ):
         self.aligned_pos = aligned_pos
-        self.kc_class = kinematic_chain_class
-        # TODO: Think about the below, for now commented
-        # self.mean_segment_size = get_mean_length_of_segments(self.aligned_pos)
-        # self.leg_length = get_leg_length(self.mean_segment_size)
-        # self.bounds_dof = BOUNDS if bounds is None else bounds
+        self.kinematic_chain_class = kinematic_chain_class
         self.initial_angles = INITIAL_ANGLES if initial_angles is None else initial_angles
-        self.joint_angles_empty = {}
 
-    @classmethod
-    def load_data_from_pkl(cls, data_path: Union[str, Path], file_name: str = "*aligned.pkl", **kwargs):
-        """Loads aligned pose dictionary."""
+        # Get the logger of the module
+        self.logger = logging.getLogger(self.__class__.__name__)
+        numeric_level = getattr(logging, log_level.upper(), None)
+        self.logger.setLevel(numeric_level)
 
-        data_path = Path(data_path) if not isinstance(data_path, Path) else data_path
-
-        with open(list(data_path.glob(file_name))[0].as_posix(), "rb") as f:
-            aligned_pos = pickle.load(f)
-        return cls(aligned_pos, **kwargs)
-
-    @staticmethod
-    def calculate_ik(kinematic_chain: Chain, target_pos: NDArray, initial_angles: NDArray = None) -> NDArray:
+    def calculate_ik(self, kinematic_chain: Chain, target_pos: NDArray,
+                     initial_angles: NDArray = None) -> NDArray:
         """Calculates the joint angles in the leg chain."""
         # don't take the last and first ones into account
-        return kinematic_chain.inverse_kinematics(target_position=target_pos, initial_position=initial_angles)
+        return kinematic_chain.inverse_kinematics(
+            target_position=target_pos,
+            initial_position=initial_angles
+        )
 
-    @staticmethod
-    def calculate_fk(kinematic_chain: Chain, joint_angles: NDArray) -> NDArray:
+    def calculate_fk(self, kinematic_chain: Chain, joint_angles: NDArray) -> NDArray:
         """Calculates the forward kinematics from the joint dof angles."""
         fk = kinematic_chain.forward_kinematics(joint_angles, full_kinematics=True)
         end_effector_positions = np.zeros((len(kinematic_chain.links), 3))
@@ -125,174 +75,489 @@ class LegInverseKinematics:
             end_effector_positions[link, :] = fk[link][:3, 3]
         return end_effector_positions
 
-    @staticmethod
-    def get_scale_factor(vector: NDArray, length: float) -> float:
+    def get_scale_factor(self, vector: NDArray, length: float) -> float:
         """Gets scale the ratio between two vectors."""
         vector_diff = np.linalg.norm(np.diff(vector, axis=0), axis=1)
         norm_sum = np.sum(vector_diff)
         return length / norm_sum
 
-    def calculate_ik_for_trial(
+    @abstractmethod
+    def calculate_ik_stage(
         self,
         end_effector_pos: NDArray,
         origin: NDArray,
         initial_angles: NDArray,
-        stage: int = 1,
-        segment_name: str = "",
-        femur_orientation: float = 0,
+        segment_name: str,
+        *args,
+        **kwargs
     ) -> NDArray:
-        """For a given trial pose data, calculates the inverse kinematics
-        by using a sequential inverse kinematics method.
+        """For a given trial pose data, calculates the inverse kinematics.
 
         Parameters
         ----------
         end_effector_pos : NDArray
-            3D array containing the position of the end eff pos
+            3D array containing the position of the end effector pos
         origin : NDArray
-            Origin of the kinematic chain, i.e. Thorax Coxa
+            Origin of the kinematic chain, i.e., Thorax-Coxa joint
         initial_angles : NDArray
-            Initial angles for the optimization
-        stage : int, optional
-            Stage of the sequential kinematic chain, by default None
-        segment_name : str, optional
-            Leg side, i.e. LF or RF, by default None
+            Initial angles for the optimization seed
+        segment_name : str
+            Leg side, i.e., RF, LF, RM, LM, RH, LH
 
         Returns
         -------
         NDArray
-            Forward kinematics. Returns a non-empty array at the 4th stage.
+            Array containing the cartesian coordinates of the joint positions.
+            The joint angles are saved in a class attribute
         """
-        # TODO: check scaling
-        frames_no = end_effector_pos.shape[0]
-        end_effector_pos_diff = end_effector_pos - origin
 
-        # Initialize the arrays
-        joint_angles = np.empty((frames_no, len(initial_angles)))
-        forward_kinematics = np.empty((frames_no, len(initial_angles), 3))
-
-        femur_orientation = 1 * femur_orientation if "RF" in segment_name else -1 * femur_orientation
-
-        if origin.size == 3:
-            origin = np.tile(origin, (frames_no, 1))
-
-        if stage == 1:
-            kinematic_chain = self.kc_class.create_leg_chain(
-                stage=stage,
-                leg_name=segment_name,
-                # femur_orientation=femur_orientation
-            )
-
-        # Start the IK process
-        for t in trange(frames_no, disable=True, desc=f'Processing stage {stage}: '):
-            if stage in [2, 3, 4]:
-                kinematic_chain = self.kc_class.create_leg_chain(
-                    stage=stage,
-                    leg_name=segment_name,
-                    angles=self.joint_angles_empty,
-                    t=t,
-                    # femur_orientation=femur_orientation
-                )
-
-            initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
-            joint_angles[t, :] = LegInverseKinematics.calculate_ik(
-                kinematic_chain, end_effector_pos_diff[t, :], initial_angles
-            )
-
-            if stage == 4:
-                forward_kinematics[t, :] = (
-                    LegInverseKinematics.calculate_fk(kinematic_chain, joint_angles[t, :]) + origin[t, :]
-                )
-
-        # Store the name of each link in the chain to access them easily
-        names = [kc.name for kc in kinematic_chain.links]
-
-        if stage == 1:
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_yaw"] = joint_angles[:, names.index(
-                f"{segment_name}_ThC_yaw")]
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[:, names.index(
-                f"{segment_name}_ThC_pitch")]
-            logger.debug("Stage 1 is completed!")
-
-        elif stage == 2:
-            self.joint_angles_empty[f"Angle_{segment_name}_ThC_roll"] = joint_angles[:, names.index(
-                f"{segment_name}_ThC_roll")]
-            self.joint_angles_empty[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[:, names.index(
-                f"{segment_name}_CTr_pitch")]
-            logger.debug("Stage 2 is completed!")
-
-        elif stage == 3:
-            self.joint_angles_empty[f"Angle_{segment_name}_CTr_roll"] = joint_angles[:, names.index(
-                f"{segment_name}_CTr_roll")]
-            self.joint_angles_empty[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[:, names.index(
-                f"{segment_name}_FTi_pitch")]
-            logger.debug("Stage 3 is completed!")
-
-        elif stage == 4:
-            self.joint_angles_empty[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[:, names.index(
-                f"{segment_name}_TiTa_pitch")]
-            logger.debug("Stage 4 is completed!")
-
-        return forward_kinematics
-
+    @abstractmethod
     def run_ik_and_fk(
         self,
         export_path: Union[Path, str] = None,
-        stages: List[int] = [1, 2, 3, 4],
-        femur_orientation: float = 0
+        **kwargs
     ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
         """Runs inverse and forward kinematics for leg joints.
 
         Parameters
         ----------
         export_path : Union[Path, str], optional
-            Path where the results will be saved, by default None
+            Path where the results will be saved,
+            if None, nothing is saveed, by default None
 
         Returns
+        -------
         Tuple[Dict[str,NDArray], Dict[str,NDArray]]
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
-        assert max(stages) > 4 or all(np.diff(stages) ==
-                                      1), "Maximum number of stages is 4 and the list should be strictly incremental."
-        forward_kinematics_dict = {}
-        joint_angles_dict = {}
 
-        logger.info("Calculating joint angles and forward kinematics...")
-        for segment, segment_array in self.aligned_pos.items():
-            if "leg" in segment.lower():
-                leg_name = segment[:2]
+
+class LegInvKinSeq(LegInvKinBase):
+    """Class to calculate inverse kinematics for leg joints in a
+    sequential manner. This method finds the optimal joint angles
+    within the bounds to match each koint as closely as possible.
+
+    Parameters
+    ----------
+    aligned_pos : Dict[str, NDArray]
+        Aligned pose from the AlignPose class.
+        Should have the following structure:
+            '<side><segment>_leg' : np.array([frames, 5, 3])}
+    kinematic_chain : KinematicChain
+        Kinematic chain of the leg.
+    initial_angles : Dict[str, NDArray], optional
+        Initial angles of DOFs.
+        If not provided, the default values from data.py will be used.
+    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
+        Logging level as a string, by default "INFO"
+
+    Example usage:
+    >>> from pathlib import Path
+    >>> from seqikpy.kinematic_chain import KinematicChain
+    >>> from seqikpy.leg_inverse_kinematics import LegInvKinSeq
+    >>> from seqikpy.data import BOUNDS, INITIAL_ANGLES
+    >>> from seqikpy.utils import load_file
+
+    >>> DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
+    >>> f_path = DATA_PATH / "pose3d_aligned.pkl"
+
+    >>> aligned_pos = load_file(f_path)
+
+    >>> seq_ik = LegInvKinSeq(
+            aligned_pos=aligned_pos,
+            kinematic_chain_class=KinematicChain(
+                bounds_dof=BOUNDS,
+                legs_list=["RF", "LF"],
+                nmf_size=None,
+            ),
+            initial_angles=INITIAL_ANGLES
+        )
+
+    >>> leg_joint_angles, forward_kinematics = seq_ik.run_ik_and_fk(
+            export_path=DATA_PATH,
+            hide_progress_bar=False
+        )
+
+    """
+
+    def __init__(
+        self,
+        aligned_pos: Dict[str, NDArray],
+        kinematic_chain_class: KinematicChain,
+        initial_angles: Optional[Dict[str, NDArray]] = None,
+        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
+    ):
+        super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
+        # Create an empty dict for joint angles
+        self.joint_angles_dict = {}
+
+    def calculate_ik_stage(
+        self,
+        end_effector_pos: NDArray,
+        origin: NDArray,
+        initial_angles: NDArray,
+        segment_name: str,
+        stage: int,
+        hide_progress_bar: Optional[bool] = False,
+    ) -> NDArray:
+        """For a given trial pose data, calculates the inverse kinematics.
+
+        Parameters
+        ----------
+        end_effector_pos : NDArray
+            3D array containing the position of the end effector pos
+        origin : NDArray
+            Origin of the kinematic chain, i.e., Thorax-Coxa joint
+        initial_angles : NDArray
+            Initial angles for the optimization seed
+        segment_name : str
+            Leg side, i.e., RF, LF, RM, LM, RH, LH
+        stage: int
+            Stage in the sequential calculation, should be between 1 and 4
+
+        Returns
+        -------
+        NDArray
+            Array containing the cartesian coordinates of the joint positions.
+            The joint angles are saved in a class attribute
+        """
+        if not segment_name in ["RF", "LF", "RM", "LM", "RH", "LH"]:
+            raise ValueError(f"Segment name ({segment_name}) is not valid.")
+
+        if not 1 <= stage <= 4:
+            raise ValueError(f"Stage ({stage}) should be between 1 and 4.")
+
+        frames_no = end_effector_pos.shape[0]
+        end_effector_pos_diff = end_effector_pos - origin
+
+        # Joint angles shape: (number of frames, number of DOFs)
+        joint_angles = np.empty((frames_no, len(initial_angles)))
+        # Forward kinematics shape: (number of frames, number of
+        # joints in the kinematics chain, axes-x,y,z)
+        forward_kinematics = np.empty((frames_no, len(initial_angles), 3))
+
+        # if the origin is a vector, convert it to a matrix
+        if origin.size == 3:
+            origin = np.tile(origin, (frames_no, 1))
+
+        # Get the kinematic chain for Stage 1
+        if stage == 1:
+            kinematic_chain = self.kinematic_chain_class.create_leg_chain(
+                stage=stage,
+                leg_name=segment_name,
+            )
+
+        # Start the inverse kinematics calculation
+        for t in trange(frames_no, disable=hide_progress_bar, desc=f'Processing stage {stage}: '):
+            # Get the kinematic chain for the other stages
+            if stage in [2, 3, 4]:
+                kinematic_chain = self.kinematic_chain_class.create_leg_chain(
+                    stage=stage,
+                    leg_name=segment_name,
+                    angles=self.joint_angles_dict,
+                    t=t,
+                )
+
+            # For the first frame, use the given initial angles, for the rest
+            # use the calculated joint angles from the previous time step
+            initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
+            # Calculate the inverse kinematics
+            joint_angles[t, :] = self.calculate_ik(
+                kinematic_chain, end_effector_pos_diff[t, :], initial_angles
+            )
+
+            # Calculate the forward kinematics for the last stage only
+            if stage == 4:
+                forward_kinematics[t, :] = (
+                    self.calculate_fk(kinematic_chain, joint_angles[t, :]) + origin[t, :]
+                )
+
+        # Link names
+        link_names = [link.name for link in kinematic_chain.links]
+
+        # Store the joint angles based on the stage number
+        # Stage 1: Thorax-Coxa pitch and yaw
+        if stage == 1:
+            self.joint_angles_dict[f"Angle_{segment_name}_ThC_yaw"] = joint_angles[
+                :, link_names.index(f"{segment_name}_ThC_yaw")
+            ]
+            self.joint_angles_dict[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_ThC_pitch")
+            ]
+            self.logger.debug("Stage 1 is completed!")
+        # Stage 2: Thorax-Coxa roll, Coxa-Trochanter pitch
+        elif stage == 2:
+            self.joint_angles_dict[f"Angle_{segment_name}_ThC_roll"] = joint_angles[
+                :, link_names.index(f"{segment_name}_ThC_roll")
+            ]
+            self.joint_angles_dict[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_CTr_pitch")
+            ]
+            self.logger.debug("Stage 2 is completed!")
+        # Stage 3: Coxa-Trochanter roll, Femur-Tibia pitch
+        elif stage == 3:
+            self.joint_angles_dict[f"Angle_{segment_name}_CTr_roll"] = joint_angles[
+                :, link_names.index(f"{segment_name}_CTr_roll")
+            ]
+            self.joint_angles_dict[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_FTi_pitch")
+            ]
+            self.logger.debug("Stage 3 is completed!")
+        # Stage 4: Tibia-Tarsus pitch
+        elif stage == 4:
+            self.joint_angles_dict[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_TiTa_pitch")
+            ]
+            self.logger.debug("Stage 4 is completed!")
+
+        return forward_kinematics
+
+    def run_ik_and_fk(
+        self,
+        export_path: Union[Path, str] = None,
+        stages: List[int] = (1, 2, 3, 4),
+        hide_progress_bar: Optional[bool] = True,
+    ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
+        """Runs inverse and forward kinematics for leg joints.
+
+        Parameters
+        ----------
+        export_path : Union[Path, str], optional
+            Path where the results will be saved,
+            if None, nothing is saveed, by default None
+        stages : List[int], optional
+            Stages to run the inverse kinematics.
+
+        Returns
+        -------
+        Tuple[Dict[str,NDArray], Dict[str,NDArray]]
+            Two dictionaries containing joint angles and forward
+            kinematics, respectively.
+        """
+        if max(stages) > 4 or not all(np.diff(stages) == 1):
+            raise ValueError(
+                "Maximum stage number is 4 and the list should be strictly incremental."
+            )
+        forward_kinematics_dict = {}
+
+        self.logger.info("Computing joint angles and forward kinematics...")
+        for segment_name, segment_array in self.aligned_pos.items():
+            if "leg" in segment_name.lower():
+                # If segment name is RF_leg so the leg name is RF
+                leg_name = segment_name.split('_')[0]
+
+                # If leg_name is not in nmf_size, then continue
+                if not leg_name in self.kinematic_chain_class.nmf_size:
+                    self.logger.warning(
+                        "Leg %s is not in the kinematic chain, continuing...", leg_name
+                    )
+                    continue
+
+                # First key point of the segment array is the origin
+                # of the kinematic chain, i.e., Thorax-Coxa joint
                 origin = segment_array[:, 0, :]
 
                 for stage in stages:
+                    # for each stage, the end effector is the corresponding joint
                     end_effector_pos = segment_array[:, stage, :]
-                    init_ang = self.initial_angles[segment[:2]][f"stage_{stage}"]
+                    initial_angles = self.initial_angles[leg_name][f"stage_{stage}"]
 
-                    forward_kinematics_dict[segment] = self.calculate_ik_for_trial(
+                    forward_kinematics_dict[segment_name] = self.calculate_ik_stage(
                         end_effector_pos=end_effector_pos,
                         origin=origin,
-                        initial_angles=init_ang,
+                        initial_angles=initial_angles,
                         stage=stage,
                         segment_name=leg_name,
-                        femur_orientation=femur_orientation,
+                        hide_progress_bar=hide_progress_bar
                     )
-
             else:
+                self.logger.debug("Segment %s is not a leg, continuing...", segment_name)
                 continue
 
-        joint_angles_dict = self.joint_angles_empty.copy()
-
-        export_path = Path(export_path) if not isinstance(export_path, Path) else export_path
+        self.logger.debug("Joint angles and forward kinematics are computed.")
 
         if export_path is not None:
             save_file(
-                export_path / "forward_kinematics.pkl",
+                Path(export_path) / "forward_kinematics.pkl",
                 forward_kinematics_dict
             )
             save_file(
-                export_path / "leg_joint_angles.pkl",
-                joint_angles_dict
+                Path(export_path) / "leg_joint_angles.pkl",
+                self.joint_angles_dict
+            )
+            self.logger.info("Joint angles and forward kinematics are saved at %s", export_path)
+
+        return self.joint_angles_dict, forward_kinematics_dict
+
+
+class LegInvKinGeneric(LegInvKinBase):
+    """Class to calculate inverse kinematics for leg joints in a
+    generic manner to only match the given end effector.
+
+    Parameters
+    ----------
+    aligned_pos : Dict[str, NDArray]
+        Aligned pose from the AlignPose class.
+        Should have the following structure:
+            '<side><segment>_leg' : np.array([frames, 5, 3])}
+    kinematic_chain : KinematicChain
+        Kinematic chain of the leg.
+    initial_angles : Dict[str, NDArray], optional
+        Initial angles of DOFs.
+        If not provided, the default values from data.py will be used.
+    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
+        Logging level as a string, by default "INFO"
+    """
+
+    def __init__(
+        self,
+        aligned_pos: Dict[str, NDArray],
+        kinematic_chain_class: KinematicChain,
+        initial_angles: Optional[Dict[str, NDArray]] = None,
+        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
+    ):
+        super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
+        # Create an empty dict for joint angles
+        self.joint_angles_dict = {}
+
+    def calculate_ik_stage(
+        self,
+        end_effector_pos: NDArray,
+        origin: NDArray,
+        initial_angles: NDArray,
+        segment_name: str,
+        hide_progress_bar: Optional[bool] = False,
+    ) -> NDArray:
+        """For a given trial pose data, calculates the inverse kinematics.
+
+        Parameters
+        ----------
+        end_effector_pos : NDArray
+            3D array containing the position of the end effector pos
+        origin : NDArray
+            Origin of the kinematic chain, i.e., Thorax-Coxa joint
+        initial_angles : NDArray
+            Initial angles for the optimization seed
+        segment_name : str
+            Leg side, i.e., RF, LF, RM, LM, RH, LH
+
+        Returns
+        -------
+        NDArray
+            Array containing the cartesian coordinates of the joint positions.
+            The joint angles are saved in a class attribute
+        """
+        if not segment_name in ["RF", "LF", "RM", "LM", "RH", "LH"]:
+            raise ValueError(f"Segment name ({segment_name}) is not valid.")
+
+        frames_no = end_effector_pos.shape[0]
+        end_effector_pos_diff = end_effector_pos - origin
+
+        # Joint angles shape: (number of frames, number of DOFs)
+        joint_angles = np.empty((frames_no, len(initial_angles)))
+        # Forward kinematics shape: (number of frames, number of
+        # joints in the kinematics chain, axes-x,y,z)
+        forward_kinematics = np.empty((frames_no, len(initial_angles), 3))
+
+        # if the origin is a vector, convert it to a matrix
+        if origin.size == 3:
+            origin = np.tile(origin, (frames_no, 1))
+
+        # Generic IK, the kinematic chain is the entire leg
+        kinematic_chain = self.kinematic_chain_class.create_leg_chain(
+            leg_name=segment_name,
+        )
+
+        # Start the inverse kinematics calculation
+        for t in trange(frames_no, disable=hide_progress_bar, desc=f'Calculating IK {segment_name}:'):
+            # For the first frame, use the given initial angles, for the rest
+            # use the calculated joint angles from the previous time step
+            initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
+            # Calculate the inverse kinematics
+            joint_angles[t, :] = self.calculate_ik(
+                kinematic_chain, end_effector_pos_diff[t, :], initial_angles
             )
 
-            logger.info("Files have been saved at %s", export_path)
+            forward_kinematics[t, :] = (
+                self.calculate_fk(kinematic_chain, joint_angles[t, :]) + origin[t, :]
+            )
 
-        return joint_angles_dict, forward_kinematics_dict
+        # Link names
+        link_names = [link.name for link in kinematic_chain.links]
+
+        # Store the joint angles based on the stage number
+        for link_name in link_names:
+            self.joint_angles_dict[f"Angle_{segment_name}_{link_name}"] = joint_angles[
+                :, link_names.index(link_name)
+            ]
+
+        return forward_kinematics
+
+    def run_ik_and_fk(
+        self,
+        export_path: Union[Path, str] = None,
+        hide_progress_bar: Optional[bool] = True,
+    ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
+        """Runs inverse and forward kinematics for leg joints.
+
+        Parameters
+        ----------
+        export_path : Union[Path, str], optional
+            Path where the results will be saved,
+            if None, nothing is saveed, by default None
+
+        Returns
+        -------
+        Tuple[Dict[str,NDArray], Dict[str,NDArray]]
+            Two dictionaries containing joint angles and forward
+            kinematics, respectively.
+        """
+        forward_kinematics_dict = {}
+
+        self.logger.info("Computing joint angles and forward kinematics...")
+        for segment_name, segment_array in self.aligned_pos.items():
+            if "leg" in segment_name.lower():
+                # If segment name is RF_leg so the leg name is RF
+                leg_name = segment_name.split('_')[0]
+
+                # If leg_name is not in nmf_size, then continue
+                if not leg_name in self.kinematic_chain_class.nmf_size:
+                    self.logger.warning(
+                        "Leg %s is not in the kinematic chain, continuing...", leg_name
+                    )
+                    continue
+
+                # First key point of the segment array is the origin
+                # of the kinematic chain, i.e., Thorax-Coxa joint
+                origin = segment_array[:, 0, :]
+
+                # for the generic IK, endeffector is the claw
+                end_effector_pos = segment_array[:, -1, :]
+                initial_angles = self.initial_angles[leg_name]["stage_4"]
+
+                forward_kinematics_dict[segment_name] = self.calculate_ik_stage(
+                    end_effector_pos=end_effector_pos,
+                    origin=origin,
+                    initial_angles=initial_angles,
+                    segment_name=leg_name,
+                    hide_progress_bar=hide_progress_bar
+                )
+            else:
+                self.logger.debug("Segment %s is not a leg, continuing...", segment_name)
+                continue
+
+        self.logger.debug("Joint angles and forward kinematics are computed.")
+
+        if export_path is not None:
+            save_file(
+                Path(export_path) / "forward_kinematics.pkl",
+                forward_kinematics_dict
+            )
+            save_file(
+                Path(export_path) / "leg_joint_angles.pkl",
+                self.joint_angles_dict
+            )
+            self.logger.info("Joint angles and forward kinematics are saved at %s", export_path)
+
+        return self.joint_angles_dict, forward_kinematics_dict
