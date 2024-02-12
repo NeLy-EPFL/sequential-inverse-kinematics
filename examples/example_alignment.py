@@ -7,6 +7,7 @@ from pathlib import Path
 
 from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
 from seqikpy.data import NMF_TEMPLATE, PTS2ALIGN
+from seqikpy.utils import load_file
 
 # # Change the logging level here
 # logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")
@@ -56,8 +57,7 @@ if __name__ == "__main__":
 
     f_path = DATA_PATH / "converted_pose_dict.pkl"
 
-    with open(f_path, "rb") as f:
-        pose_data = pickle.load(f)
+    pose_data = load_file(f_path)
 
     align = AlignPose(
         pose_data_dict=pose_data,
