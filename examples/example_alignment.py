@@ -5,11 +5,11 @@ import pickle
 import logging
 from pathlib import Path
 
-from seqikpy.alignment import AlignPose
+from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
 from seqikpy.data import NMF_TEMPLATE, PTS2ALIGN
 
-# Change the logging level here
-logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")
+# # Change the logging level here
+# logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")
 
 
 if __name__ == "__main__":
@@ -21,10 +21,12 @@ if __name__ == "__main__":
     align = AlignPose.from_file_path(
         main_dir=DATA_PATH,
         file_name="pose3d.h5",
-        convert_dict=True,
+        legs_list=["RF", "LF"],
+        convert_func=convert_from_anipose_to_dict,
         pts2align=PTS2ALIGN,
         include_claw=False,
         nmf_template=NMF_TEMPLATE,
+        log_level="INFO"
     )
 
     aligned_pos = align.align_pose(export_path=DATA_PATH)
@@ -36,10 +38,12 @@ if __name__ == "__main__":
     align = AlignPose.from_file_path(
         main_dir=DATA_PATH,
         file_name="converted_pose_dict.pkl",
-        convert_dict=False,
+        legs_list=["RF", "LF"],
+        convert_func=None,
         pts2align=PTS2ALIGN,
         include_claw=False,
         nmf_template=NMF_TEMPLATE,
+        log_level="INFO"
     )
 
     aligned_pos = align.align_pose(export_path=DATA_PATH)
@@ -57,8 +61,10 @@ if __name__ == "__main__":
 
     align = AlignPose(
         pose_data_dict=pose_data,
+        legs_list=["RF", "LF"],
         include_claw=False,
         nmf_template=NMF_TEMPLATE,
+        log_level="INFO"
     )
 
     aligned_pos = align.align_pose(export_path=DATA_PATH)

@@ -64,7 +64,7 @@ in the right format. If not, use the static method `convert_from_anipose`.
 
 """
 from pathlib import Path
-from typing import Dict, List, Union, Optional, Literal
+from typing import Dict, List, Union, Optional, Literal, Callable
 import pickle
 import logging
 
@@ -98,6 +98,63 @@ def _leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool):
 def _get_distance_btw_vecs(vector1, vector2):
     """ Calculates the distance between two vectors. """
     return np.linalg.norm(vector1 - vector2, axis=1)
+
+
+def convert_from_anipose_to_dict(
+    pose_3d: Dict[str, NDArray],
+    pts2align: Dict[str, List[str]]
+) -> Dict[str, NDArray]:
+    """Loads anipose 3D pose data into a dictionary.
+    See data.py for a mapping from keypoint name to segment name.
+
+    Parameters
+    ----------
+    pose_3d : Dict[str, NDArray]
+        3D pose data from anipose.
+        It should have the following format:
+        >>> pose_3d = {
+            '{keypoint_name}_x' : NDArray[N_frames,],
+            '{keypoint_name}_y' : NDArray[N_frames,],
+            '{keypoint_name}_z' : NDArray[N_frames,],
+        }
+    pts2align : Dict[str, List[str]]
+        Segment names and corresponding key point names to be aligned,
+        check data.py for an example, by default None
+
+    Returns
+    -------
+    Dict[str, NDArray]
+        Pose data dictionary of the following format:
+        >>> pose_data_dict = {
+            'RF_leg': NDArray[N_frames,N_key_points,3],
+            'LF_leg': NDArray[N_frames,N_key_points,3],
+            'R_head': NDArray[N_frames,N_key_points,3],
+            'L_head': NDArray[N_frames,N_key_points,3],
+            'Neck': NDArray[N_frames,N_key_points,3],
+        }
+    """
+
+    points_3d_dict = {}
+
+    for segment in pts2align:
+        segment_kps = pts2align[segment]
+        temp_array = np.empty((pose_3d[f"{segment_kps[0]}_x"].shape[0], len(segment_kps), 3))
+        for i, kp_name in enumerate(segment_kps):
+            temp_array[:, i, 0] = pose_3d[f"{kp_name}_x"]
+            temp_array[:, i, 1] = pose_3d[f"{kp_name}_y"]
+            temp_array[:, i, 2] = pose_3d[f"{kp_name}_z"]
+
+        points_3d_dict[segment] = temp_array.copy()
+
+    return points_3d_dict
+
+
+def convert_from_df3d_to_dict(
+    pose_3d: Dict[str, NDArray],
+    pts2align: Dict[str, List[str]]
+) -> Dict[str, NDArray]:
+    # TODO
+    pass
 
 
 class AlignPose:
@@ -155,7 +212,7 @@ class AlignPose:
     def from_file_path(
         cls, main_dir: Union[str, Path],
         file_name: Optional[str] = "pose3d.*",
-        convert_dict: Optional[bool] = True,
+        convert_func: Optional[Callable] = None,
         pts2align: Optional[Dict[str, List[str]]] = None,
         **kwargs
     ):
@@ -173,8 +230,9 @@ class AlignPose:
             Example: '../Fly001/001_Beh/behData/pose-3d'
         file_name : str, optional
             Key words for the file name, by default "pose3d.*"
-        convert_dict : bool, optional
-            If true converts the loaded file into a dictionary, by default True
+        convert_func : Callable, optional
+            Function to convert the loaded pose into the required format,
+            set by the user, by default None
         pts2align : Dict[str, List[str]], optional
             Region names and corresponding key points names to be aligned,
             check data.py for an example, by default None
@@ -197,60 +255,12 @@ class AlignPose:
         else:
             raise FileNotFoundError(f"{file_name} does not exits in {main_dir}")
 
-        if convert_dict:
+        if convert_func is not None:
             pts2align = PTS2ALIGN if pts2align is None else pts2align
-            return cls(AlignPose.convert_from_anipose_to_dict(pose_3d, pts2align), **kwargs)
+            converted_dict = convert_func(pose_3d, pts2align)
+            return cls(converted_dict, **kwargs)
 
         return cls(pose_3d, **kwargs)
-
-    @staticmethod
-    def convert_from_anipose_to_dict(
-        pose_3d: Dict[str, NDArray],
-        pts2align: Dict[str, List[str]]
-    ) -> Dict[str, NDArray]:
-        """Loads anipose 3D pose data into a dictionary.
-        See data.py for a mapping from keypoint name to segment name.
-
-        Parameters
-        ----------
-        pose_3d : Dict[str, NDArray]
-            3D pose data from anipose.
-            It should have the following format:
-            >>> pose_3d = {
-                '{keypoint_name}_x' : NDArray[N_frames,],
-                '{keypoint_name}_y' : NDArray[N_frames,],
-                '{keypoint_name}_z' : NDArray[N_frames,],
-            }
-        pts2align : Dict[str, List[str]]
-            Segment names and corresponding key point names to be aligned,
-            check data.py for an example, by default None
-
-        Returns
-        -------
-        Dict[str, NDArray]
-            Pose data dictionary of the following format:
-            >>> pose_data_dict = {
-                'RF_leg': NDArray[N_frames,N_key_points,3],
-                'LF_leg': NDArray[N_frames,N_key_points,3],
-                'R_head': NDArray[N_frames,N_key_points,3],
-                'L_head': NDArray[N_frames,N_key_points,3],
-                'Neck': NDArray[N_frames,N_key_points,3],
-            }
-        """
-
-        points_3d_dict = {}
-
-        for segment in pts2align:
-            segment_kps = pts2align[segment]
-            temp_array = np.empty((pose_3d[f"{segment_kps[0]}_x"].shape[0], len(segment_kps), 3))
-            for i, kp_name in enumerate(segment_kps):
-                temp_array[:, i, 0] = pose_3d[f"{kp_name}_x"]
-                temp_array[:, i, 1] = pose_3d[f"{kp_name}_y"]
-                temp_array[:, i, 2] = pose_3d[f"{kp_name}_z"]
-
-            points_3d_dict[segment] = temp_array.copy()
-
-        return points_3d_dict
 
     def align_pose(
         self,
@@ -343,7 +353,11 @@ class AlignPose:
 
         return indices_stat[0]
 
-    def align_leg(self, leg_array: NDArray, leg_name: str) -> NDArray:
+    def align_leg(
+        self,
+        leg_array: NDArray,
+        leg_name: Literal["RF", "LF", "RM", "LM", "RH", "LH"]
+    ) -> NDArray:
         """Scales and translates the leg key point locations based on the model size and configuration.
 
         This method takes a 3D array of leg key point positions and scales and translates them to align with a
