@@ -5,9 +5,9 @@ a template whose key points are matching the tracked key points closely.
 
 This class expects a 3D file in the following format:
 >>> pose_data_dict = {
-        "<side (R,L)><segment (F, M, H)>_leg": NDArray[N_frames,5,3],
-        "<side (R,L)>_head": NDArray[N_frames,2,3],
-        "Neck": NDArray[N_frames,1,3],
+        "<side (R,L)><segment (F, M, H)>_leg": np.ndarray[N_frames,5,3],
+        "<side (R,L)>_head": np.ndarray[N_frames,2,3],
+        "Neck": np.ndarray[N_frames,1,3],
     }
 
 Usage might differ based on the needs. For now, there are three cases that you
@@ -69,7 +69,6 @@ import pickle
 import logging
 
 import numpy as np
-from nptyping import NDArray
 
 from seqikpy.data import PTS2ALIGN, NMF_TEMPLATE
 from seqikpy.utils import save_file, calculate_body_size, dict_to_nparray_pose
@@ -101,21 +100,21 @@ def _get_distance_btw_vecs(vector1, vector2):
 
 
 def convert_from_anipose_to_dict(
-    pose_3d: Dict[str, NDArray],
+    pose_3d: Dict[str, np.ndarray],
     pts2align: Dict[str, List[str]]
-) -> Dict[str, NDArray]:
+) -> Dict[str, np.ndarray]:
     """Loads anipose 3D pose data into a dictionary.
     See data.py for a mapping from keypoint name to segment name.
 
     Parameters
     ----------
-    pose_3d : Dict[str, NDArray]
+    pose_3d : Dict[str, np.ndarray]
         3D pose data from anipose.
         It should have the following format:
         >>> pose_3d = {
-            "{keypoint_name}_x" : NDArray[N_frames,],
-            "{keypoint_name}_y" : NDArray[N_frames,],
-            "{keypoint_name}_z" : NDArray[N_frames,],
+            "{keypoint_name}_x" : np.ndarray[N_frames,],
+            "{keypoint_name}_y" : np.ndarray[N_frames,],
+            "{keypoint_name}_z" : np.ndarray[N_frames,],
         }
     pts2align : Dict[str, List[str]]
         Segment names and corresponding key point names to be aligned,
@@ -123,14 +122,14 @@ def convert_from_anipose_to_dict(
 
     Returns
     -------
-    Dict[str, NDArray]
+    Dict[str, np.ndarray]
         Pose data dictionary of the following format:
         >>> pose_data_dict = {
-            "RF_leg": NDArray[N_frames,N_key_points,3],
-            "LF_leg": NDArray[N_frames,N_key_points,3],
-            "R_head": NDArray[N_frames,N_key_points,3],
-            "L_head": NDArray[N_frames,N_key_points,3],
-            "Neck": NDArray[N_frames,N_key_points,3],
+            "RF_leg": np.ndarray[N_frames,N_key_points,3],
+            "LF_leg": np.ndarray[N_frames,N_key_points,3],
+            "R_head": np.ndarray[N_frames,N_key_points,3],
+            "L_head": np.ndarray[N_frames,N_key_points,3],
+            "Neck": np.ndarray[N_frames,N_key_points,3],
             ...
         }
     """
@@ -151,18 +150,18 @@ def convert_from_anipose_to_dict(
 
 
 def convert_from_df3d_to_dict(
-    pose_3d: NDArray,
-    pts2align: Dict[str, NDArray]
-) -> Dict[str, NDArray]:
+    pose_3d: np.ndarray,
+    pts2align: Dict[str, np.ndarray]
+) -> Dict[str, np.ndarray]:
     """Loads DeepFly3D data into a dictionary.
     See the original DeepFly3D repository for indices of
     key points for each segment.
 
     Parameters
     ----------
-    pose_3d : NDArray
+    pose_3d : np.ndarray
         Array (N, N_key_points, 3) containing 3D pose data.
-    pts2align : Dict[str, NDArray]
+    pts2align : Dict[str, np.ndarray]
         Dictionary mapping segment names to key point indices.
         Should be in the following format:
         >>> pts2align = {
@@ -176,7 +175,7 @@ def convert_from_df3d_to_dict(
 
     Returns
     -------
-    Dict[str, NDArray]
+    Dict[str, np.ndarray]
         Pose data dictionary as described above.
 
     """
@@ -189,14 +188,14 @@ def convert_from_df3d_to_dict(
 
 
 def convert_from_df3dpp_to_dict(
-    pose_3d: Dict[str, Dict[str, NDArray]],
+    pose_3d: Dict[str, Dict[str, np.ndarray]],
     pts2align: Optional[List[str]] = None
-) -> Dict[str, NDArray]:
+) -> Dict[str, np.ndarray]:
     """Load DeepFly3DPostProcessing data into a dictionary.
 
     Parameters
     ----------
-    pose_3d : Dict[str, Dict[str, NDArray]]
+    pose_3d : Dict[str, Dict[str, np.ndarray]]
         3D pose data from DeepFly3DPostProcessing.
         See the original repository for details.
     pts2align : Optional[List[str]], optional
@@ -206,7 +205,7 @@ def convert_from_df3dpp_to_dict(
 
     Returns
     -------
-    Dict[str, NDArray]
+    Dict[str, np.ndarray]
         Pose data dictionary as described above.
     """
     points_3d_dict = {}
@@ -227,17 +226,17 @@ class AlignPose:
 
     Parameters
     ----------
-    pose_data_dict : Dict[str, NDArray]
+    pose_data_dict : Dict[str, np.ndarray]
         3D pose put in a dictionary that has the following structure defined
         by PTS2ALIGN (see data.py for more details):
 
         Example format:
             pose_data_dict = {
-                "RF_leg": NDArray[N_frames,N_key_points,3],
-                "LF_leg": NDArray[N_frames,N_key_points,3],
-                "R_head": NDArray[N_frames,N_key_points,3],
-                "L_head": NDArray[N_frames,N_key_points,3],
-                "Neck": NDArray[N_frames,N_key_points,3],
+                "RF_leg": np.ndarray[N_frames,N_key_points,3],
+                "LF_leg": np.ndarray[N_frames,N_key_points,3],
+                "R_head": np.ndarray[N_frames,N_key_points,3],
+                "L_head": np.ndarray[N_frames,N_key_points,3],
+                "Neck": np.ndarray[N_frames,N_key_points,3],
             }
     legs_list : List[str]
         A list containing the leg names to operate on.
@@ -245,7 +244,7 @@ class AlignPose:
         e.g., ["RF", "LF", "RM", "LM", "RH", "LH"]
     include_claw : bool, optional
         If True, claw is included in the scaling process, by default False
-    body_template : Dict[str, NDArray], optional
+    body_template : Dict[str, np.ndarray], optional
         A dictionary containing the positions of fly model body segments.
         Check ./data.py for the default dictionary, by default None
     body_size : Dict[str, float], optional
@@ -263,10 +262,10 @@ class AlignPose:
 
     def __init__(
         self,
-        pose_data_dict: Dict[str, NDArray],
+        pose_data_dict: Dict[str, np.ndarray],
         legs_list: List[str],
         include_claw: Optional[bool] = False,
-        body_template: Optional[Dict[str, NDArray]] = None,
+        body_template: Optional[Dict[str, np.ndarray]] = None,
         body_size: Optional[Dict[str, float]] = None,
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
@@ -341,7 +340,7 @@ class AlignPose:
     def align_pose(
         self,
         export_path: Optional[Union[str, Path]] = None
-    ) -> Dict[str, NDArray]:
+    ) -> Dict[str, np.ndarray]:
         """Aligns the leg and head key point positions.
 
         Parameters
@@ -351,7 +350,7 @@ class AlignPose:
 
         Returns
         -------
-        Dict[str, NDArray]
+        Dict[str, np.ndarray]
             A dictionary containing the aligned pose data.
         """
         aligned_pose = {}
@@ -379,14 +378,14 @@ class AlignPose:
         return aligned_pose
 
     @property
-    def thorax_mid_pts(self) -> NDArray:
+    def thorax_mid_pts(self) -> np.ndarray:
         """ Gets the middle point of right and left wing hinges. """
         assert "Thorax" in self.pose_data_dict, "To align the head, you need to have a `Thorax` key point"
         thorax_pts = self.pose_data_dict["Thorax"]
         return 0.5 * (thorax_pts[:, 0, :] + thorax_pts[:, -1, :])
 
     @staticmethod
-    def get_fixed_pos(points_3d: NDArray) -> NDArray:
+    def get_fixed_pos(points_3d: np.ndarray) -> np.ndarray:
         """ Gets the fixed pose of a steady key point determined by the quantiles. """
         fixed_pos = [
             _get_mean_quantile(points_3d[:, 0]),
@@ -395,7 +394,7 @@ class AlignPose:
         ]
         return np.array(fixed_pos)
 
-    def get_mean_length(self, segment_array: NDArray, segment_is_leg: bool) -> Dict[str, float]:
+    def get_mean_length(self, segment_array: np.ndarray, segment_is_leg: bool) -> Dict[str, float]:
         """ Computes the mean length of a body segment. """
         lengths = np.linalg.norm(np.diff(segment_array, axis=1), axis=2)
 
@@ -419,8 +418,8 @@ class AlignPose:
         return nmf_size / fly_leg_size
 
     def find_stationary_indices(
-        self, array: NDArray, threshold: Optional[float] = 5e-5
-    ) -> NDArray:
+        self, array: np.ndarray, threshold: Optional[float] = 5e-5
+    ) -> np.ndarray:
         """ Find the indices in an array where the function value does not move significantly."""
         indices_stat = np.where((np.diff(np.diff(array)) < threshold))
         assert (
@@ -431,9 +430,9 @@ class AlignPose:
 
     def align_leg(
         self,
-        leg_array: NDArray,
+        leg_array: np.ndarray,
         leg_name: Literal["RF", "LF", "RM", "LM", "RH", "LH"]
-    ) -> NDArray:
+    ) -> np.ndarray:
         """Scales and translates the leg key point locations based on the model size and configuration.
 
         This method takes a 3D array of leg key point positions and scales and translates them to align with a
@@ -442,14 +441,14 @@ class AlignPose:
 
         Parameters
         ----------
-        leg_array : NDArray
+        leg_array : np.ndarray
             A 3D array containing the leg key point positions.
         leg_name : str
             A string indicating the name of the leg (e.g., "RF", "LF", ...) for alignment.
 
         Returns
         -------
-        NDArray
+        np.ndarray
             A new 3D array containing the scaled and aligned leg key point positions.
 
         Notes
@@ -482,7 +481,7 @@ class AlignPose:
 
         return aligned_array.copy()
 
-    def align_head(self, head_array: NDArray, side: str) -> NDArray:
+    def align_head(self, head_array: np.ndarray, side: str) -> np.ndarray:
         """Scales and translates the head key point locations based on the model size and configuration.
 
         This method takes a 3D array of head key point positions and scales and translates
@@ -492,14 +491,14 @@ class AlignPose:
 
         Parameters
         ----------
-        head_array : NDArray
+        head_array : np.ndarray
             A 3D array containing the head key point positions.
         side : str
             A string indicating the side of the head (e.g., "R" or "L") for alignment.
 
         Returns
         -------
-        NDArray
+        np.ndarray
             A new 3D array containing the scaled and aligned head key point positions.
 
         Raises

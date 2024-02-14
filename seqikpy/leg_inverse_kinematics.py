@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Dict, Tuple, Union, Literal, Optional
 import logging
 import warnings
-from nptyping import NDArray
 
 import numpy as np
 from tqdm import trange
@@ -28,13 +27,13 @@ class LegInvKinBase(ABC):
 
     Parameters
     ----------
-    aligned_pos : Dict[str, NDArray]
+    aligned_pos : Dict[str, np.ndarray]
         Aligned pose from the AlignPose class.
         Should have the following structure:
             "<side><segment>_leg" : np.array([frames, 5, 3])}
     kinematic_chain : KinematicChainBase
         Kinematic chain of the leg.
-    initial_angles : Dict[str, NDArray], optional
+    initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
         If not provided, the default values from data.py will be used.
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
@@ -43,9 +42,9 @@ class LegInvKinBase(ABC):
 
     def __init__(
         self,
-        aligned_pos: Dict[str, NDArray],
+        aligned_pos: Dict[str, np.ndarray],
         kinematic_chain_class: KinematicChainBase,
-        initial_angles: Optional[Dict[str, NDArray]] = None,
+        initial_angles: Optional[Dict[str, np.ndarray]] = None,
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         self.aligned_pos = aligned_pos
@@ -57,8 +56,8 @@ class LegInvKinBase(ABC):
         numeric_level = getattr(logging, log_level.upper(), None)
         self.logger.setLevel(numeric_level)
 
-    def calculate_ik(self, kinematic_chain: Chain, target_pos: NDArray,
-                     initial_angles: NDArray = None) -> NDArray:
+    def calculate_ik(self, kinematic_chain: Chain, target_pos: np.ndarray,
+                     initial_angles: np.ndarray = None) -> np.ndarray:
         """Calculates the joint angles in the leg chain."""
         # don"t take the last and first ones into account
         return kinematic_chain.inverse_kinematics(
@@ -66,7 +65,7 @@ class LegInvKinBase(ABC):
             initial_position=initial_angles
         )
 
-    def calculate_fk(self, kinematic_chain: Chain, joint_angles: NDArray) -> NDArray:
+    def calculate_fk(self, kinematic_chain: Chain, joint_angles: np.ndarray) -> np.ndarray:
         """Calculates the forward kinematics from the joint dof angles."""
         fk = kinematic_chain.forward_kinematics(joint_angles, full_kinematics=True)
         end_effector_positions = np.zeros((len(kinematic_chain.links), 3))
@@ -74,7 +73,7 @@ class LegInvKinBase(ABC):
             end_effector_positions[link, :] = fk[link][:3, 3]
         return end_effector_positions
 
-    def get_scale_factor(self, vector: NDArray, length: float) -> float:
+    def get_scale_factor(self, vector: np.ndarray, length: float) -> float:
         """Gets scale the ratio between two vectors."""
         vector_diff = np.linalg.norm(np.diff(vector, axis=0), axis=1)
         norm_sum = np.sum(vector_diff)
@@ -83,28 +82,28 @@ class LegInvKinBase(ABC):
     @abstractmethod
     def calculate_ik_stage(
         self,
-        end_effector_pos: NDArray,
-        origin: NDArray,
-        initial_angles: NDArray,
+        end_effector_pos: np.ndarray,
+        origin: np.ndarray,
+        initial_angles: np.ndarray,
         segment_name: str,
         **kwargs
-    ) -> NDArray:
+    ) -> np.ndarray:
         """For a given trial pose data, calculates the inverse kinematics.
 
         Parameters
         ----------
-        end_effector_pos : NDArray
+        end_effector_pos : np.ndarray
             3D array containing the position of the end effector pos
-        origin : NDArray
+        origin : np.ndarray
             Origin of the kinematic chain, i.e., Thorax-Coxa joint
-        initial_angles : NDArray
+        initial_angles : np.ndarray
             Initial angles for the optimization seed
         segment_name : str
             Leg side, i.e., RF, LF, RM, LM, RH, LH
 
         Returns
         -------
-        NDArray
+        np.ndarray
             Array containing the cartesian coordinates of the joint positions.
             The joint angles are saved in a class attribute
         """
@@ -114,7 +113,7 @@ class LegInvKinBase(ABC):
         self,
         export_path: Union[Path, str] = None,
         **kwargs
-    ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
+    ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
         """Runs inverse and forward kinematics for leg joints.
 
         Parameters
@@ -125,7 +124,7 @@ class LegInvKinBase(ABC):
 
         Returns
         -------
-        Tuple[Dict[str,NDArray], Dict[str,NDArray]]
+        Tuple[Dict[str,np.ndarray], Dict[str,np.ndarray]]
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
@@ -138,13 +137,13 @@ class LegInvKinSeq(LegInvKinBase):
 
     Parameters
     ----------
-    aligned_pos : Dict[str, NDArray]
+    aligned_pos : Dict[str, np.ndarray]
         Aligned pose from the AlignPose class.
         Should have the following structure:
             "<side><segment>_leg" : np.array([frames, 5, 3])}
     kinematic_chain : KinematicChainSeq
         Kinematic chain of the leg.
-    initial_angles : Dict[str, NDArray], optional
+    initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
         If not provided, the default values from data.py will be used.
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
@@ -181,9 +180,9 @@ class LegInvKinSeq(LegInvKinBase):
 
     def __init__(
         self,
-        aligned_pos: Dict[str, NDArray],
+        aligned_pos: Dict[str, np.ndarray],
         kinematic_chain_class: KinematicChainSeq,
-        initial_angles: Optional[Dict[str, NDArray]] = None,
+        initial_angles: Optional[Dict[str, np.ndarray]] = None,
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
@@ -192,21 +191,21 @@ class LegInvKinSeq(LegInvKinBase):
 
     def calculate_ik_stage(
         self,
-        end_effector_pos: NDArray,
-        origin: NDArray,
-        initial_angles: NDArray,
+        end_effector_pos: np.ndarray,
+        origin: np.ndarray,
+        initial_angles: np.ndarray,
         segment_name: str,
         **kwargs
-    ) -> NDArray:
+    ) -> np.ndarray:
         """For a given trial pose data, calculates the inverse kinematics.
 
         Parameters
         ----------
-        end_effector_pos : NDArray
+        end_effector_pos : np.ndarray
             3D array containing the position of the end effector pos
-        origin : NDArray
+        origin : np.ndarray
             Origin of the kinematic chain, i.e., Thorax-Coxa joint
-        initial_angles : NDArray
+        initial_angles : np.ndarray
             Initial angles for the optimization seed
 
         Kwargs
@@ -218,7 +217,7 @@ class LegInvKinSeq(LegInvKinBase):
 
         Returns
         -------
-        NDArray
+        np.ndarray
             Array containing the cartesian coordinates of the joint positions.
             The joint angles are saved in a class attribute
         """
@@ -321,7 +320,7 @@ class LegInvKinSeq(LegInvKinBase):
         self,
         export_path: Union[Path, str] = None,
         **kwargs
-    ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
+    ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
         """Runs inverse and forward kinematics for leg joints.
 
         Parameters
@@ -339,7 +338,7 @@ class LegInvKinSeq(LegInvKinBase):
 
         Returns
         -------
-        Tuple[Dict[str,NDArray], Dict[str,NDArray]]
+        Tuple[Dict[str,np.ndarray], Dict[str,np.ndarray]]
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
@@ -408,13 +407,13 @@ class LegInvKinGeneric(LegInvKinBase):
 
     Parameters
     ----------
-    aligned_pos : Dict[str, NDArray]
+    aligned_pos : Dict[str, np.ndarray]
         Aligned pose from the AlignPose class.
         Should have the following structure:
             "<side><segment>_leg" : np.array([frames, 5, 3])}
     kinematic_chain : KinematicChainGeneric
         Kinematic chain of the leg.
-    initial_angles : Dict[str, NDArray], optional
+    initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
         If not provided, the default values from data.py will be used.
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
@@ -450,9 +449,9 @@ class LegInvKinGeneric(LegInvKinBase):
 
     def __init__(
         self,
-        aligned_pos: Dict[str, NDArray],
+        aligned_pos: Dict[str, np.ndarray],
         kinematic_chain_class: KinematicChainGeneric,
-        initial_angles: Optional[Dict[str, NDArray]] = None,
+        initial_angles: Optional[Dict[str, np.ndarray]] = None,
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
@@ -461,21 +460,21 @@ class LegInvKinGeneric(LegInvKinBase):
 
     def calculate_ik_stage(
         self,
-        end_effector_pos: NDArray,
-        origin: NDArray,
-        initial_angles: NDArray,
+        end_effector_pos: np.ndarray,
+        origin: np.ndarray,
+        initial_angles: np.ndarray,
         segment_name: str,
         **kwargs
-    ) -> NDArray:
+    ) -> np.ndarray:
         """For a given trial pose data, calculates the inverse kinematics.
 
         Parameters
         ----------
-        end_effector_pos : NDArray
+        end_effector_pos : np.ndarray
             3D array containing the position of the end effector pos
-        origin : NDArray
+        origin : np.ndarray
             Origin of the kinematic chain, i.e., Thorax-Coxa joint
-        initial_angles : NDArray
+        initial_angles : np.ndarray
             Initial angles for the optimization seed
         segment_name : str
             Leg side, i.e., RF, LF, RM, LM, RH, LH
@@ -483,7 +482,7 @@ class LegInvKinGeneric(LegInvKinBase):
 
         Returns
         -------
-        NDArray
+        np.ndarray
             Array containing the cartesian coordinates of the joint positions.
             The joint angles are saved in a class attribute
         """
@@ -540,7 +539,7 @@ class LegInvKinGeneric(LegInvKinBase):
         self,
         export_path: Union[Path, str] = None,
         **kwargs
-    ) -> Tuple[Dict[str, NDArray], Dict[str, NDArray]]:
+    ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
         """Runs inverse and forward kinematics for leg joints.
 
         Parameters
@@ -551,7 +550,7 @@ class LegInvKinGeneric(LegInvKinBase):
 
         Returns
         -------
-        Tuple[Dict[str,NDArray], Dict[str,NDArray]]
+        Tuple[Dict[str,np.ndarray], Dict[str,np.ndarray]]
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """

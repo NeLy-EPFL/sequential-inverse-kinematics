@@ -83,7 +83,7 @@ def make_video(
             break
 
     video_writer.release()
-    logging.info('Video is saved at %s', video_path)
+    logging.info("Video is saved at %s", video_path)
 
 
 def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
@@ -129,36 +129,36 @@ def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
 def get_plot_config(data_path: Path):
     """ Get experimental conditions from the data path.
         Data path should look like:
-        '/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d'
+        "/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d"
     """
     plot_config = {}
     trial_type = data_path.parts[-3]
-    if '_RLF_coxa' in trial_type:
-        exp_type = 'coxa'
-        plot_config['plot_head'] = True
-        plot_config['plot_right_leg'] = True
-        plot_config['plot_left_leg'] = True
-        plot_config['azim'] = 23
-    elif '_RLF' in trial_type:
-        exp_type = 'RLF'
-        plot_config['plot_head'] = True
-        plot_config['plot_right_leg'] = False
-        plot_config['plot_left_leg'] = False
-    elif '_LF' in trial_type:
-        exp_type = 'LF'
-        plot_config['plot_head'] = True
-        plot_config['plot_right_leg'] = True
-        plot_config['plot_left_leg'] = False
-    elif '_RF' in trial_type:
-        exp_type = 'RF'
-        plot_config['plot_head'] = True
-        plot_config['plot_right_leg'] = False
-        plot_config['plot_left_leg'] = True
+    if "_RLF_coxa" in trial_type:
+        exp_type = "coxa"
+        plot_config["plot_head"] = True
+        plot_config["plot_right_leg"] = True
+        plot_config["plot_left_leg"] = True
+        plot_config["azim"] = 23
+    elif "_RLF" in trial_type:
+        exp_type = "RLF"
+        plot_config["plot_head"] = True
+        plot_config["plot_right_leg"] = False
+        plot_config["plot_left_leg"] = False
+    elif "_LF" in trial_type:
+        exp_type = "LF"
+        plot_config["plot_head"] = True
+        plot_config["plot_right_leg"] = True
+        plot_config["plot_left_leg"] = False
+    elif "_RF" in trial_type:
+        exp_type = "RF"
+        plot_config["plot_head"] = True
+        plot_config["plot_right_leg"] = False
+        plot_config["plot_left_leg"] = True
     else:
-        exp_type = 'Beh'
-        plot_config['plot_head'] = True
-        plot_config['plot_right_leg'] = True
-        plot_config['plot_left_leg'] = True
+        exp_type = "Beh"
+        plot_config["plot_head"] = True
+        plot_config["plot_right_leg"] = True
+        plot_config["plot_left_leg"] = True
 
     return exp_type, plot_config
 
@@ -172,9 +172,9 @@ def get_frames_from_video_ffmpeg(path):
         Video path.
         This path appended with a `_frames` folder will be used to save the frames.
     """
-    write_path = path.parents[0] / str(path.name).replace('.mp4', '_frames')
+    write_path = path.parents[0] / str(path.name).replace(".mp4", "_frames")
     write_path.mkdir()
-    cmd = ['ffmpeg', '-i', str(path), '-r', '1', str(write_path / 'frame_%d.jpg')]
+    cmd = ["ffmpeg", "-i", str(path), "-r", "1", str(write_path / "frame_%d.jpg")]
     subprocess.run(cmd, check=True)
 
 
@@ -214,7 +214,7 @@ def animate_3d_points(
     format_video: str = "mp4",
     elev: int = 10,
     azim: int = 90,
-    title: str = '',
+    title: str = "",
     marker_types: Dict[str, str] = None
 ) -> None:
     """Makes an animation of 3D pose.
@@ -244,7 +244,7 @@ def animate_3d_points(
     azim : int, optional
         Azimuth of the point of view, by default 90
     title : str, optional
-        Title of the video, by default ''
+        Title of the video, by default ""
     marker_types : Dict[str, str], optional
         Marker types for each key point, by default None
     """
@@ -269,7 +269,7 @@ def animate_3d_points(
         }
 
     fig = plt.figure()
-    ax3d = fig.add_subplot(projection='3d')
+    ax3d = fig.add_subplot(projection="3d")
     ax3d.view_init(azim=azim, elev=elev)
     # First remove fill
     ax3d.xaxis.pane.fill = False
@@ -277,9 +277,9 @@ def animate_3d_points(
     ax3d.zaxis.pane.fill = True
 
     # Now set color to white (or whatever is "invisible")
-    ax3d.xaxis.pane.set_edgecolor('black')
-    ax3d.yaxis.pane.set_edgecolor('black')
-    ax3d.zaxis.pane.set_edgecolor('black')
+    ax3d.xaxis.pane.set_edgecolor("black")
+    ax3d.yaxis.pane.set_edgecolor("black")
+    ax3d.zaxis.pane.set_edgecolor("black")
 
     color_map_right = mcp.gen_color(cmap="Reds", n=len(points3d))
     color_map_left = mcp.gen_color(cmap="Blues", n=len(points3d))
@@ -293,7 +293,7 @@ def animate_3d_points(
         order = points3d_array.shape[1]
 
         if order > 3:
-            if 'L' in kp:
+            if "L" in kp:
                 color = color_map_left[j]
                 j += 1
             else:
@@ -335,7 +335,7 @@ def animate_3d_points(
             order = points3d_second_array.shape[1]
 
             if order > 4:
-                if 'L' in kp:
+                if "L" in kp:
                     color = color_map_left[j]
                     j += 1
                 else:
@@ -377,10 +377,10 @@ def animate_3d_points(
     ax3d.set_yticks([])
     ax3d.set_zticks([])
 
-    ax3d.tick_params(axis='x', color='black')
-    ax3d.tick_params(axis='y', color='black')
-    ax3d.tick_params(axis='z', color='black')
-    # ax3d.set_axis_off('z')
+    ax3d.tick_params(axis="x", color="black")
+    ax3d.tick_params(axis="y", color="black")
+    ax3d.tick_params(axis="z", color="black")
+    # ax3d.set_axis_off("z")
 
     ax3d.set_xticklabels([])
     ax3d.set_yticklabels([])
@@ -389,7 +389,7 @@ def animate_3d_points(
     # ax3d.set_xlabel("x")
     # ax3d.set_ylabel("y")
     # ax3d.set_zlabel("z")
-    ax3d.set_title(title, loc='center')
+    ax3d.set_title(title, loc="center")
     # ax3d.legend(bbox_to_anchor=(1.2, 0.9), frameon=False)
 
     def update(frame, lines, points3d, lines_second, points3d_second):
@@ -440,22 +440,22 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
             "Neck": "x",
         }
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in points3d if 'R' in kp]) + 1)
-    color_map_left = mcp.gen_color(cmap="Blues", n=len([kp for kp in points3d if 'L' in kp]) + 1)
+    color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in points3d if "R" in kp]) + 1)
+    color_map_left = mcp.gen_color(cmap="Blues", n=len([kp for kp in points3d if "L" in kp]) + 1)
 
     i, j = 1, 1
 
     for kp, points3d_array in points3d.items():
         order = points3d_array.shape[1]
 
-        if 'R' in kp:
+        if "R" in kp:
             color = color_map_right[i]
             i += 1
-        elif 'L' in kp:
+        elif "L" in kp:
             color = color_map_left[j]
             j += 1
         else:
-            color = 'lightgrey'
+            color = "lightgrey"
 
         if order > 3:
             ax3d.plot(
@@ -491,14 +491,14 @@ def plot_trailing_kp(ax3d, points3d, segments_to_plot, export_path=None, t=0, tr
     i, j = 1, 1
     for kp, ind in segments_to_plot.items():
 
-        if 'R' in kp:
+        if "R" in kp:
             color = color_map_right[i]
             i += 1
-        elif 'L' in kp:
+        elif "L" in kp:
             color = color_map_left[j]
             j += 1
         else:
-            color = 'grey'
+            color = "grey"
 
         ax3d.scatter(
             points3d[kp][max(0, t - trail):t, ind, 0],
@@ -553,8 +553,8 @@ def plot_joint_angle(
 
         label = " ".join((joint_name.split("_")[-2], joint_name.split("_")[-1]))
 
-        if label in ['pitch R', 'pitch L', 'yaw R', 'yaw L', 'roll R', 'roll L']:
-            label = 'ant. ' + label
+        if label in ["pitch R", "pitch L", "yaw R", "yaw L", "roll R", "roll L"]:
+            label = "ant. " + label
 
         convert2deg = 180 / np.pi if degrees else 1
 
@@ -568,7 +568,7 @@ def plot_joint_angle(
         )
 
     if stim_lines is not None:
-        ax.vlines(stim_lines, -200, 200, 'red', lw=0.5)
+        ax.vlines(stim_lines, -200, 200, "red", lw=0.5)
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -660,10 +660,10 @@ def plot_grid(
     Fig
         Figure.
     """
-    plot_right_leg = kwargs.pop('plot_right_leg', True)
-    plot_left_leg = kwargs.pop('plot_left_leg', True)
-    plot_head = kwargs.pop('plot_head', True)
-    azim = kwargs.pop('azim', 7)
+    plot_right_leg = kwargs.pop("plot_right_leg", True)
+    plot_left_leg = kwargs.pop("plot_left_leg", True)
+    plot_head = kwargs.pop("plot_head", True)
+    azim = kwargs.pop("azim", 7)
 
     assert t_start <= t <= t_end, "t_start should be smaller than t_end, t should be in between"
     # import pylustrator
@@ -686,9 +686,9 @@ def plot_grid(
 
     # load the image
 
-    # img = cv2.imread(str(img_path / f'frame_{t}.jpg'), 0)
-    ax_img_side.imshow(img_side, vmin=0, vmax=255, cmap='gray')
-    ax_img_front.imshow(img_front, vmin=0, vmax=255, cmap='gray')
+    # img = cv2.imread(str(img_path / f"frame_{t}.jpg"), 0)
+    ax_img_side.imshow(img_side, vmin=0, vmax=255, cmap="gray")
+    ax_img_front.imshow(img_front, vmin=0, vmax=255, cmap="gray")
 
     plot_3d_points(ax1, aligned_pose, marker_types=marker_types_3d, t=t)
     if key_points_to_trail is not None:
@@ -718,8 +718,8 @@ def plot_grid(
             show_legend=False,
             stim_lines=stim_lines)
 
-    ax_img_side.axis('off')
-    ax_img_front.axis('off')
+    ax_img_side.axis("off")
+    ax_img_front.axis("off")
     # ax1 properties
     ax1.view_init(azim=azim, elev=10)
     ax1.set_xlim3d([-0.45, 0.45])
@@ -766,16 +766,16 @@ def plot_grid(
     # #% start: automatic generated code from pylustrator
     fig.set_size_inches(22.710000 / 2.54, 11.430000 / 2.54, forward=True)
     fig.text(
-        0.3865, 0.9184, 'Head and antennae joint angles (deg)', transform=fig.transFigure,
+        0.3865, 0.9184, "Head and antennae joint angles (deg)", transform=fig.transFigure,
     )
     fig.text(
         0.3865, 0.6346,
-        'Left front leg joint angles (deg)',
+        "Left front leg joint angles (deg)",
         transform=fig.transFigure,
     )  # id=fig.texts[0].new
     fig.text(
         0.3865, 0.3502,
-        'Right front leg joint angles (deg)',
+        "Right front leg joint angles (deg)",
         transform=fig.transFigure,
     )  # id=fig.texts[1].new
 
@@ -798,7 +798,7 @@ def plot_grid(
 
     if export_path is not None:
         fig.savefig(export_path, bbox_inches="tight")
-        print(f'Figure saved at {str(export_path)}')
+        print(f"Figure saved at {str(export_path)}")
 
     return fig
 

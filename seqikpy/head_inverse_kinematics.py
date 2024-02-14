@@ -29,7 +29,6 @@ from collections import namedtuple
 from pathlib import Path
 import logging
 from typing import Dict, Union, Literal, Optional
-from nptyping import NDArray
 
 import numpy as np
 from scipy.spatial.transform import Rotation as R
@@ -56,12 +55,12 @@ class HeadInverseKinematics:
 
     Parameters
     ----------
-    aligned_pos : Dict[str, NDArray]
+    aligned_pos : Dict[str, np.ndarray]
         Aligned pose dictionary.
         In principle, it should have body parts (R_head) as keys,
         and arrays (N,2 for the head) as values.
         Check the sample data for more detailed example.
-    body_template : Dict[str, NDArray]
+    body_template : Dict[str, np.ndarray]
         Dictionary containing the positions of fly model body segments.
         Check data.py for the default dictionary.
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
@@ -69,8 +68,8 @@ class HeadInverseKinematics:
     """
 
     def __init__(
-        self, aligned_pos: Dict[str, NDArray],
-        body_template: Dict[str, NDArray],
+        self, aligned_pos: Dict[str, np.ndarray],
+        body_template: Dict[str, np.ndarray],
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         self.aligned_pos = aligned_pos
@@ -105,7 +104,7 @@ class HeadInverseKinematics:
         self,
         export_path: Union[str, Path] = None,
         compute_ant_angles: Optional[bool] = True,
-    ) -> Dict[str, NDArray]:
+    ) -> Dict[str, np.ndarray]:
         """Calculates the head & antennal joint angles
 
         Parameters
@@ -117,7 +116,7 @@ class HeadInverseKinematics:
 
         Returns
         -------
-        Dict[str, NDArray]
+        Dict[str, np.ndarray]
             Dicitonary containing the head joint angles, saved
             in export path if provided
         """
@@ -142,27 +141,27 @@ class HeadInverseKinematics:
 
         return head_angles
 
-    def get_head_vector(self, side: Literal["R", "L"]) -> NDArray:
+    def get_head_vector(self, side: Literal["R", "L"]) -> np.ndarray:
         """Vector ((N,3) array) from <side> antenna base (or any head key point) to neck."""
         return self.aligned_pos["Neck"][:,0,:] - self.aligned_pos[f"{side}_head"][:, 0, :]
 
-    def get_head_vector_mid(self) -> NDArray:
+    def get_head_vector_mid(self) -> np.ndarray:
         """ Vector ((N,3) array) from mid antenna base (or any head key point) to neck."""
         return (self.aligned_pos["R_head"][:, 0, :] + self.aligned_pos["L_head"]
                 [:, 0, :]) * 0.5 - self.aligned_pos["Neck"][:,0,:]
 
-    def get_head_vector_horizontal(self) -> NDArray:
+    def get_head_vector_horizontal(self) -> np.ndarray:
         """ Vector ((N,3) array) from right antenna base (or any head key point)
         to left antenna base (or any head key point).
         """
         return self.aligned_pos["L_head"][:, 0, :] - self.aligned_pos["R_head"][:, 0, :]
 
-    def get_ant_vector(self, side: Literal["R", "L"]) -> NDArray:
+    def get_ant_vector(self, side: Literal["R", "L"]) -> np.ndarray:
         """ Vector ((N,3) array) from antenna base to antenna edge."""
         return self.aligned_pos[f"{side}_head"][:, 1, :] - self.aligned_pos[f"{side}_head"][:, 0, :]
 
     @staticmethod
-    def angle_between_segments(v1: NDArray, v2: NDArray, rot_axis: NDArray) -> float:
+    def angle_between_segments(v1: np.ndarray, v2: np.ndarray, rot_axis: np.ndarray) -> float:
         """ Calculates the angle between two vectors based on the cos formula.
         It reverses the sign of the angle if determinant of the matrix having
         two vectors and the rotation axis is negative.
@@ -183,7 +182,7 @@ class HeadInverseKinematics:
 
         return np.arccos(np.einsum("ij,ij->i", v1_norm, v2_norm)) * mask
 
-    def compute_head_pitch(self) -> NDArray:
+    def compute_head_pitch(self) -> np.ndarray:
         """ Calculates the head pitch angle (rad) from head mid vector
         projected onto sagittal plane to the anteroposterior plane.
         Furthermore, it sums the angle with the resting joint angle of the head pitch.
@@ -202,7 +201,7 @@ class HeadInverseKinematics:
 
         return angle + self.rest_head_pitch
 
-    def compute_head_roll(self) -> NDArray:
+    def compute_head_roll(self) -> np.ndarray:
         """ Calculates the head roll angle (rad) from horizontal axis
         to head horizontal vector projected onto transverse plane.
 
@@ -221,7 +220,7 @@ class HeadInverseKinematics:
 
         return angle
 
-    def compute_head_yaw(self) -> NDArray:
+    def compute_head_yaw(self) -> np.ndarray:
         """ Calculates the head yaw angle (rad) from horizontal axis
         to head horizontal vector projected onto frontal plane.
 
@@ -240,7 +239,7 @@ class HeadInverseKinematics:
 
         return angle
 
-    def compute_antenna_pitch(self, side: Literal["R", "L"], head_roll: NDArray) -> NDArray:
+    def compute_antenna_pitch(self, side: Literal["R", "L"], head_roll: np.ndarray) -> np.ndarray:
         """ Calculates the head pitch angle (rad) from head vector
         projected onto sagittal plane to antenna vector (from base ant to edge).
         Furthermore, it subtracts the angle with the resting joint angle of the antenna pitch.
@@ -276,7 +275,7 @@ class HeadInverseKinematics:
 
         return angle - self.rest_antenna_pitch
 
-    def compute_antenna_yaw(self, side: Literal["R", "L"], head_roll: NDArray) -> NDArray:
+    def compute_antenna_yaw(self, side: Literal["R", "L"], head_roll: np.ndarray) -> np.ndarray:
         """ Calculates the antenna yaw angle (rad) from the lateral head vector
         projected onto transverse plane to antenna vector (from base ant to edge)
         projected, again, on the transverse plane.
@@ -329,12 +328,12 @@ class HeadInverseKinematics:
 
         return HeadInverseKinematics.angle_between_segments(head_vector, Axes.X_AXIS, Axes.Y_AXIS)
 
-    def derotate_vector(self, head_roll_angle: float, vector_to_derotate: NDArray) -> NDArray:
+    def derotate_vector(self, head_roll_angle: float, vector_to_derotate: np.ndarray) -> np.ndarray:
         """Rotates a vector by the inverse amount of `head_roll_angle` along the x axis."""
         # counter-clockwise rotation in its coordinate system
         rotation = R.from_euler("x", -head_roll_angle, degrees=False)
         return rotation.apply(vector_to_derotate)
 
-    def get_plane(self, row: NDArray, n_row: int) -> NDArray:
+    def get_plane(self, row: np.ndarray, n_row: int) -> np.ndarray:
         """ Construct an array by repeating row n_row many times."""
         return np.tile(row, (n_row, 1))

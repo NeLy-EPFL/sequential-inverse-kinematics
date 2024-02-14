@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 from typing import Dict, List
 import warnings
-from nptyping import NDArray
 
 import numpy as np
 from ikpy.chain import Chain
@@ -30,7 +29,7 @@ class KinematicChainBase(ABC):
 
     Parameters
     ----------
-    bounds_dof : Dict[str, NDArray]
+    bounds_dof : Dict[str, np.ndarray]
         Dictionary that contains the bounds of joint degrees-of-freedom.
     legs_list : List[str]
         List of legs for which the kinematic chains are created.
@@ -41,7 +40,7 @@ class KinematicChainBase(ABC):
 
     def __init__(
         self,
-        bounds_dof: Dict[str, NDArray],
+        bounds_dof: Dict[str, np.ndarray],
         legs_list: List[str],
         body_size: Dict[str, float] = None,
     ) -> None:
@@ -81,7 +80,7 @@ class KinematicChainSeq(KinematicChainBase):
 
     Parameters
     ----------
-    bounds_dof : Dict[str, NDArray]
+    bounds_dof : Dict[str, np.ndarray]
         Dictionary that contains the bounds of joint degrees-of-freedom.
     legs_list : List[str]
         List of legs for which the kinematic chains are created.
@@ -109,7 +108,7 @@ class KinematicChainSeq(KinematicChainBase):
 
         Kwargs
         ------
-        angles : Dict[str, NDArray]
+        angles : Dict[str, np.ndarray]
             Joint angles calculated in the previous step,
             None at the first step, by default None
         stage : int
@@ -197,7 +196,7 @@ class KinematicChainSeq(KinematicChainBase):
 
         return Chain(name="chain_stage_1", links=kinematic_chain)
 
-    def create_leg_chain_stage_2(self, leg_name: str, angles: Dict[str, NDArray], t: int) -> Chain:
+    def create_leg_chain_stage_2(self, leg_name: str, angles: Dict[str, np.ndarray], t: int) -> Chain:
         """Leg chain to calculate thorax/coxa roll and coxa/femur pitch.
 
         Parameters
@@ -258,7 +257,7 @@ class KinematicChainSeq(KinematicChainBase):
 
         return Chain(name="chain_stage_2", links=kinematic_chain)
 
-    def create_leg_chain_stage_3(self, leg_name: str, angles: Dict[str, NDArray], t: int) -> Chain:
+    def create_leg_chain_stage_3(self, leg_name: str, angles: Dict[str, np.ndarray], t: int) -> Chain:
         """Leg chain to calculate coxa/femur roll and femur/tibia pitch.
 
         Parameters
@@ -335,7 +334,7 @@ class KinematicChainSeq(KinematicChainBase):
 
         return Chain(name="chain_stage_3", links=kinematic_chain)
 
-    def create_leg_chain_stage_4(self, leg_name: str, angles: Dict[str, NDArray], t: int) -> Chain:
+    def create_leg_chain_stage_4(self, leg_name: str, angles: Dict[str, np.ndarray], t: int) -> Chain:
         """Leg chain to calculate tibia/tarsus pitch.
 
         Parameters
@@ -427,7 +426,7 @@ class KinematicChainGeneric(KinematicChainBase):
 
     Parameters
     ----------
-    bounds_dof : Dict[str, NDArray]
+    bounds_dof : Dict[str, np.ndarray]
         Dictionary that contains the bounds of joint degrees-of-freedom.
     legs_list : List[str]
         List of legs for which the kinematic chains are created.
@@ -450,7 +449,7 @@ class KinematicChainGeneric(KinematicChainBase):
         ----------
         leg_name : str
             Name of the leg, RF or LF
-        angles : Dict[str, NDArray], optional
+        angles : Dict[str, np.ndarray], optional
             Joint angles calculated in the previous step,
             None at the first step, by default None
 
