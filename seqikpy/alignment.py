@@ -28,7 +28,7 @@ simply set `convert` to True.
 >>>     convert_dict=True,
 >>>     pts2align=PTS2ALIGN,
 >>>     include_claw=False,
->>>     nmf_template=NMF_TEMPLATE,
+>>>     body_template=NMF_TEMPLATE,
 >>> )
 >>> aligned_pos = align.align_pose(export_path=data_path)
 
@@ -42,7 +42,7 @@ Case 2: we have a pose data in the required data structure, we just want to load
 >>>     convert_dict=False,
 >>>     pts2align=PTS2ALIGN,
 >>>     include_claw=False,
->>>     nmf_template=NMF_TEMPLATE,
+>>>     body_template=NMF_TEMPLATE,
 >>> )
 >>> aligned_pos = align.align_pose(export_path=data_path)
 
@@ -58,7 +58,7 @@ in the right format. If not, use the static method `convert_from_anipose`.
 >>>     pose_data_dict=pose_data,
 >>>     legs_list=["RF","LF"],
 >>>     include_claw=False,
->>>     nmf_template=NMF_TEMPLATE,
+>>>     body_template=NMF_TEMPLATE,
 >>> )
 >>> aligned_pos = align.align_pose(export_path=data_path)
 
@@ -72,7 +72,7 @@ import numpy as np
 from nptyping import NDArray
 
 from seqikpy.data import PTS2ALIGN, NMF_TEMPLATE
-from seqikpy.utils import save_file, calculate_nmf_size, dict_to_nparray_pose
+from seqikpy.utils import save_file, calculate_body_size, dict_to_nparray_pose
 
 logging.basicConfig(
     format=" %(asctime)s - %(levelname)s- %(message)s",
@@ -216,7 +216,7 @@ def convert_from_df3dpp_to_dict(
 
     for segment in pts2align:
         points_3d_dict[segment] = dict_to_nparray_pose(
-            pose_3d, claw_is_end_effector=True
+            pose_3d[segment], claw_is_end_effector=True
         )
 
     return points_3d_dict
@@ -245,9 +245,16 @@ class AlignPose:
         e.g., ["RF", "LF", "RM", "LM", "RH", "LH"]
     include_claw : bool, optional
         If True, claw is included in the scaling process, by default False
-    nmf_template : Dict[str, NDArray], optional
+    body_template : Dict[str, NDArray], optional
         A dictionary containing the positions of fly model body segments.
         Check ./data.py for the default dictionary, by default None
+    body_size : Dict[str, float], optional
+        A dictionary containing the  limb size of the fly.
+        If the user wants to scale the animal data to match the
+        biomechanical model, then `body_size` should be the same as
+        the model body size. Otherwise, the user should calculate the
+        animal's body size.
+        Check ./data.py for an example.
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
         Logging level as a string, by default "INFO"
 
@@ -259,14 +266,18 @@ class AlignPose:
         pose_data_dict: Dict[str, NDArray],
         legs_list: List[str],
         include_claw: Optional[bool] = False,
-        nmf_template: Optional[Dict[str, NDArray]] = None,
+        body_template: Optional[Dict[str, NDArray]] = None,
+        body_size: Optional[Dict[str, float]] = None,
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         self.pose_data_dict = pose_data_dict
         self.include_claw = include_claw
-        self.nmf_template = NMF_TEMPLATE if nmf_template is None else nmf_template
+        self.body_template = NMF_TEMPLATE if body_template is None else body_template
         # Calculate the size of the limbs from the template
-        self.nmf_size = calculate_nmf_size(self.nmf_template, legs_list)
+        if body_size is None:
+            self.body_size = calculate_body_size(self.body_template, legs_list)
+        else:
+            self.body_size = body_size
 
         # Get the logger of the module
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -357,8 +368,8 @@ class AlignPose:
                 self.logger.debug("%s is not aligned", segment)
                 continue
         # Take the neck as in the template as the other points are already aligned
-        if "Neck" in self.nmf_template:
-            aligned_pose["Neck"] = self.nmf_template["Neck"]
+        if "Neck" in self.body_template:
+            aligned_pose["Neck"] = self.body_template["Neck"]
 
         if export_path is not None:
             export_full_path = export_path / "pose3d_aligned.pkl"
@@ -401,7 +412,7 @@ class AlignPose:
 
     def find_scale_leg(self, leg_name: str, mean_length: Dict) -> float:
         """ Computes the ratio between the model size and the real fly size. """
-        nmf_size = _leg_length_model(self.nmf_size, leg_name, self.include_claw)
+        nmf_size = _leg_length_model(self.body_size, leg_name, self.include_claw)
         fly_leg_size = mean_length["coxa"] + mean_length["femur"] + mean_length["tibia"]
         fly_leg_size += mean_length["tarsus"] if self.include_claw else 0
 
@@ -458,14 +469,14 @@ class AlignPose:
                 # Translate the 3D pose coxa to the template coxa position
                 aligned_array[:, i, :] = (
                     np.zeros_like(leg_array[:, i, :])
-                    + self.nmf_template[f"{leg_name}_Coxa"]
+                    + self.body_template[f"{leg_name}_Coxa"]
                 )
             else:
                 # Scale the length of the leg and
                 # move the leg to the predefined coxa pos
                 pos_aligned = (leg_array[:, i, :] - fixed_coxa).reshape(
                     -1, 3
-                ) * scale_factor + self.nmf_template[f"{leg_name}_Coxa"]
+                ) * scale_factor + self.body_template[f"{leg_name}_Coxa"]
 
                 aligned_array[:, i, :] = pos_aligned
 
@@ -494,7 +505,7 @@ class AlignPose:
         Raises
         ------
         KeyError
-            If the "nmf_template" dictionary does not contain the required key names,
+            If the "body_template" dictionary does not contain the required key names,
             "Antenna_mid_thorax" or "Antenna".
 
         Notes
@@ -508,9 +519,9 @@ class AlignPose:
         )
         ant_size = self.get_mean_length(head_array, segment_is_leg=False)["antenna"]
 
-        if self.nmf_size["Antenna_mid_thorax"] and self.nmf_size["Antenna"]:
-            antbase2thoraxmid_tmp = self.nmf_size["Antenna_mid_thorax"]
-            ant_tmp = self.nmf_size["Antenna"]
+        if self.body_size["Antenna_mid_thorax"] and self.body_size["Antenna"]:
+            antbase2thoraxmid_tmp = self.body_size["Antenna_mid_thorax"]
+            ant_tmp = self.body_size["Antenna"]
         else:
             raise KeyError(
                 """Nmf template dictionary does not contain
@@ -533,9 +544,9 @@ class AlignPose:
         aligned_array = np.empty_like(head_array)
         aligned_array[:, 0, :] = (
             head_array[:, 0, :] - antenna_origin_fixed
-        ) * scale_base_ant + self.nmf_template[f"{side}_Antenna_base"]
+        ) * scale_base_ant + self.body_template[f"{side}_Antenna_base"]
         aligned_array[:, 1, :] = (
             head_array[:, 1, :] - antenna_origin_fixed
-        ) * scale_tip_ant + self.nmf_template[f"{side}_Antenna_base"]
+        ) * scale_tip_ant + self.body_template[f"{side}_Antenna_base"]
 
         return aligned_array.copy()

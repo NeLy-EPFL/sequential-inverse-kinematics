@@ -11,7 +11,7 @@ from ikpy.chain import Chain
 from ikpy.link import OriginLink, URDFLink
 
 from seqikpy.data import NMF_TEMPLATE
-from seqikpy.utils import calculate_nmf_size
+from seqikpy.utils import calculate_body_size
 
 # Ignore the warnings
 warnings.filterwarnings("ignore")
@@ -34,7 +34,7 @@ class KinematicChainBase(ABC):
         Dictionary that contains the bounds of joint degrees-of-freedom.
     legs_list : List[str]
         List of legs for which the kinematic chains are created.
-    nmf_size : Dict[str, float], optional
+    body_size : Dict[str, float], optional
         Dictionary that contains the size of different body parts,
         by default None
     """
@@ -43,13 +43,13 @@ class KinematicChainBase(ABC):
         self,
         bounds_dof: Dict[str, NDArray],
         legs_list: List[str],
-        nmf_size: Dict[str, float] = None,
+        body_size: Dict[str, float] = None,
     ) -> None:
         # NMF size is calculated internally if size is not provided
-        self.nmf_size = calculate_nmf_size(
+        self.body_size = calculate_body_size(
             NMF_TEMPLATE,
             legs_list
-        ) if nmf_size is None else nmf_size
+        ) if body_size is None else body_size
         self.bounds_dof = bounds_dof
 
     def __call__(self):
@@ -85,7 +85,7 @@ class KinematicChainSeq(KinematicChainBase):
         Dictionary that contains the bounds of joint degrees-of-freedom.
     legs_list : List[str]
         List of legs for which the kinematic chains are created.
-    nmf_size : Dict[str, float], optional
+    body_size : Dict[str, float], optional
         Dictionary that contains the size of different body parts,
         by default None
 
@@ -187,7 +187,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_CTr_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Coxa"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Coxa"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -240,7 +240,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_CTr_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Coxa"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Coxa"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -248,7 +248,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_FTi_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Femur"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Femur"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -301,7 +301,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_CTr_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Coxa"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Coxa"]],
                 origin_orientation=[0, angles[f"Angle_{leg_name}_CTr_pitch"][t], 0],
                 rotation=None,
                 joint_type="fixed",
@@ -317,7 +317,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_FTi_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Femur"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Femur"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -325,7 +325,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_TiTa_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Tibia"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Tibia"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -378,7 +378,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_CTr_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Coxa"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Coxa"]],
                 origin_orientation=[0, angles[f"Angle_{leg_name}_CTr_pitch"][t], 0],
                 rotation=None,
                 joint_type="fixed",
@@ -394,7 +394,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_FTi_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Femur"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Femur"]],
                 origin_orientation=[0, angles[f"Angle_{leg_name}_FTi_pitch"][t], 0],
                 rotation=None,
                 joint_type="fixed",
@@ -402,7 +402,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_TiTa_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Tibia"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Tibia"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -410,7 +410,7 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_Claw",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Tarsus"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Tarsus"]],
                 origin_orientation=[0, 0, 0],
                 rotation=[0, 0, 0],
                 joint_type="revolute",
@@ -431,7 +431,7 @@ class KinematicChainGeneric(KinematicChainBase):
         Dictionary that contains the bounds of joint degrees-of-freedom.
     legs_list : List[str]
         List of legs for which the kinematic chains are created.
-    nmf_size : Dict[str, float], optional
+    body_size : Dict[str, float], optional
         Dictionary that contains the size of different body parts,
         by default None
     """
@@ -489,7 +489,7 @@ class KinematicChainGeneric(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_CTr_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Coxa"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Coxa"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -505,7 +505,7 @@ class KinematicChainGeneric(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_FTi_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Femur"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Femur"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -513,7 +513,7 @@ class KinematicChainGeneric(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_TiTa_pitch",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Tibia"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Tibia"]],
                 origin_orientation=[0, 0, 0],
                 rotation=Axes.Y_AXIS,
                 joint_type="revolute",
@@ -521,7 +521,7 @@ class KinematicChainGeneric(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_Claw",
-                origin_translation=[0, 0, -self.nmf_size[f"{leg_name}_Tarsus"]],
+                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Tarsus"]],
                 origin_orientation=[0, 0, 0],
                 rotation=[0, 0, 0],
                 joint_type="revolute",

@@ -167,7 +167,7 @@ class LegInvKinSeq(LegInvKinBase):
             kinematic_chain_class=KinematicChainSeq(
                 bounds_dof=BOUNDS,
                 legs_list=["RF", "LF"],
-                nmf_size=None,
+                body_size=None,
             ),
             initial_angles=INITIAL_ANGLES
         )
@@ -358,8 +358,8 @@ class LegInvKinSeq(LegInvKinBase):
                 # If segment name is RF_leg so the leg name is RF
                 leg_name = segment_name.split("_")[0]
 
-                # If leg_name is not in nmf_size, then continue
-                if not leg_name in self.kinematic_chain_class.nmf_size:
+                # If leg_name is not in body_size, then continue
+                if not leg_name in self.kinematic_chain_class.body_size:
                     self.logger.warning(
                         "Leg %s is not in the kinematic chain, continuing...", leg_name
                     )
@@ -437,7 +437,7 @@ class LegInvKinGeneric(LegInvKinBase):
             kinematic_chain_class=KinematicChainGeneric(
                 bounds_dof=BOUNDS,
                 legs_list=["RF", "LF"],
-                nmf_size=None,
+                body_size=None,
             ),
             initial_angles=INITIAL_ANGLES
         )
@@ -565,8 +565,8 @@ class LegInvKinGeneric(LegInvKinBase):
                 # If segment name is RF_leg so the leg name is RF
                 leg_name = segment_name.split("_")[0]
 
-                # If leg_name is not in nmf_size, then continue
-                if not leg_name in self.kinematic_chain_class.nmf_size:
+                # If leg_name is not in body_size, then continue
+                if not leg_name in self.kinematic_chain_class.body_size:
                     self.logger.warning(
                         "Leg %s is not in the kinematic chain, continuing...", leg_name
                     )

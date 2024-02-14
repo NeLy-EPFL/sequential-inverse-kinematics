@@ -87,8 +87,8 @@ def get_stim_intervals(stim_data):
     return stim_start_end
 
 
-def calculate_nmf_size(
-    nmf_template: Dict[str, NDArray],
+def calculate_body_size(
+    body_template: Dict[str, NDArray],
     legs_list: List[str] = ["RF", "LF", "RM", "LM", "RH", "LH"],
 ) -> Dict[str, NDArray]:
     """ Calculates body segment sizes from the template data."""
@@ -99,27 +99,27 @@ def calculate_nmf_size(
             currently, it contains {legs_list}
             """
         )
-    nmf_size = {}
+    body_size = {}
     leg_segments = ["Coxa", "Femur", "Tibia", "Tarsus", "Claw"]
 
     for i, segment_name in enumerate(leg_segments):
         for leg in legs_list:
             # If Claw, calculate the length of the entire leg
             if segment_name == "Claw":
-                nmf_size[leg] = nmf_size[f"{leg}_Coxa"] + nmf_size[f"{leg}_Femur"] + \
-                    nmf_size[f"{leg}_Tibia"] + nmf_size[f"{leg}_Tarsus"]
+                body_size[leg] = body_size[f"{leg}_Coxa"] + body_size[f"{leg}_Femur"] + \
+                    body_size[f"{leg}_Tibia"] + body_size[f"{leg}_Tarsus"]
             else:
-                nmf_size[f"{leg}_{segment_name}"] = np.linalg.norm(
-                    nmf_template[f"{leg}_{segment_name}"] -
-                    nmf_template[f"{leg}_{leg_segments[i+1]}"]
+                body_size[f"{leg}_{segment_name}"] = np.linalg.norm(
+                    body_template[f"{leg}_{segment_name}"] -
+                    body_template[f"{leg}_{leg_segments[i+1]}"]
                 )
     # Assuming right and left hand-side are symmetric, checking for one side is enough
-    if "R_Antenna_base" in nmf_template:
-        nmf_size["Antenna"] = np.linalg.norm(nmf_template["R_Antenna_base"] - nmf_template["R_Antenna_edge"])
-        nmf_size["Antenna_mid_thorax"] = np.linalg.norm(
-            nmf_template["R_Antenna_base"] - nmf_template["Thorax_mid"])
+    if "R_Antenna_base" in body_template:
+        body_size["Antenna"] = np.linalg.norm(body_template["R_Antenna_base"] - body_template["R_Antenna_edge"])
+        body_size["Antenna_mid_thorax"] = np.linalg.norm(
+            body_template["R_Antenna_base"] - body_template["Thorax_mid"])
 
-    return nmf_size
+    return body_size
 
 
 def drop_level_dlc(data_frame):
