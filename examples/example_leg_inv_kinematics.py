@@ -25,7 +25,7 @@ seq_ik = LegInvKinSeq(
     kinematic_chain_class=KinematicChainSeq(
         bounds_dof=BOUNDS,
         legs_list=["RF"],
-        nmf_size=None,
+        body_size=None,
     ),
     initial_angles=INITIAL_ANGLES
 )
@@ -48,7 +48,7 @@ gen_ik = LegInvKinGeneric(
     kinematic_chain_class=KinematicChainGeneric(
         bounds_dof=BOUNDS,
         legs_list=["RF"],
-        nmf_size=None,
+        body_size=None,
     ),
     initial_angles=INITIAL_ANGLES
 )

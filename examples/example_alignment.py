@@ -7,7 +7,7 @@ from pathlib import Path
 
 from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
 from seqikpy.data import NMF_TEMPLATE, PTS2ALIGN
-from seqikpy.utils import load_file
+from seqikpy.utils import load_file, save_file
 
 # # Change the logging level here
 # logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")
@@ -19,6 +19,7 @@ if __name__ == "__main__":
 
     DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
 
+
     align = AlignPose.from_file_path(
         main_dir=DATA_PATH,
         file_name="pose3d.h5",
@@ -26,7 +27,7 @@ if __name__ == "__main__":
         convert_func=convert_from_anipose_to_dict,
         pts2align=PTS2ALIGN,
         include_claw=False,
-        nmf_template=NMF_TEMPLATE,
+        body_template=NMF_TEMPLATE,
         log_level="INFO"
     )
 
@@ -38,12 +39,12 @@ if __name__ == "__main__":
 
     align = AlignPose.from_file_path(
         main_dir=DATA_PATH,
-        file_name="converted_pose_dict.pkl",
+        file_name="converted_dict.pkl",
         legs_list=["RF", "LF"],
         convert_func=None,
         pts2align=PTS2ALIGN,
         include_claw=False,
-        nmf_template=NMF_TEMPLATE,
+        body_template=NMF_TEMPLATE,
         log_level="INFO"
     )
 
@@ -51,11 +52,10 @@ if __name__ == "__main__":
 
     # Case 3: we have the dictionary format pose data loaded already, we want to feed it
     # to the class and align the pose. This assumes that the pose data is already aligned
-    # in the right format. If not, use the static method `convert_from_anipose`.
 
     DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
 
-    f_path = DATA_PATH / "converted_pose_dict.pkl"
+    f_path = DATA_PATH / "converted_dict.pkl"
 
     pose_data = load_file(f_path)
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         pose_data_dict=pose_data,
         legs_list=["RF", "LF"],
         include_claw=False,
-        nmf_template=NMF_TEMPLATE,
+        body_template=NMF_TEMPLATE,
         log_level="INFO"
     )
 

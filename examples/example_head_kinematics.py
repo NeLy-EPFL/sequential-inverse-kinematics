@@ -16,7 +16,7 @@ data = load_file(f_path)
 
 class_hk = HeadInverseKinematics(
     aligned_pos=data,
-    nmf_template=NMF_TEMPLATE,
+    body_template=NMF_TEMPLATE,
 )
 joint_angles = class_hk.compute_head_angles(
     export_path=DATA_PATH,
