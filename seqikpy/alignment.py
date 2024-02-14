@@ -72,7 +72,7 @@ import numpy as np
 from nptyping import NDArray
 
 from seqikpy.data import PTS2ALIGN, NMF_TEMPLATE
-from seqikpy.utils import save_file, calculate_nmf_size
+from seqikpy.utils import save_file, calculate_nmf_size, dict_to_nparray_pose
 
 logging.basicConfig(
     format=" %(asctime)s - %(levelname)s- %(message)s",
@@ -131,6 +131,7 @@ def convert_from_anipose_to_dict(
             "R_head": NDArray[N_frames,N_key_points,3],
             "L_head": NDArray[N_frames,N_key_points,3],
             "Neck": NDArray[N_frames,N_key_points,3],
+            ...
         }
     """
 
@@ -150,11 +151,75 @@ def convert_from_anipose_to_dict(
 
 
 def convert_from_df3d_to_dict(
-    pose_3d: Dict[str, NDArray],
-    pts2align: Dict[str, List[str]]
+    pose_3d: NDArray,
+    pts2align: Dict[str, NDArray]
 ) -> Dict[str, NDArray]:
-    # TODO
-    pass
+    """Loads DeepFly3D data into a dictionary.
+    See the original DeepFly3D repository for indices of
+    key points for each segment.
+
+    Parameters
+    ----------
+    pose_3d : NDArray
+        Array (N, N_key_points, 3) containing 3D pose data.
+    pts2align : Dict[str, NDArray]
+        Dictionary mapping segment names to key point indices.
+        Should be in the following format:
+        >>> pts2align = {
+            "RF_leg": np.arange(0,5),
+            "RM_leg": np.arange(5,10),
+            "RH_leg": np.arange(10,15),
+            "LF_leg": np.arange(19,24),
+            "LM_leg": np.arange(24,29),
+            "LH_leg": np.arange(29,34),
+        }
+
+    Returns
+    -------
+    Dict[str, NDArray]
+        Pose data dictionary as described above.
+
+    """
+    points_3d_dict = {}
+
+    for segment, segment_idx in pts2align.items():
+        points_3d_dict[segment] = pose_3d[:, segment_idx, :].copy()
+
+    return points_3d_dict
+
+
+def convert_from_df3dpp_to_dict(
+    pose_3d: Dict[str, Dict[str, NDArray]],
+    pts2align: Optional[List[str]] = None
+) -> Dict[str, NDArray]:
+    """Load DeepFly3DPostProcessing data into a dictionary.
+
+    Parameters
+    ----------
+    pose_3d : Dict[str, Dict[str, NDArray]]
+        3D pose data from DeepFly3DPostProcessing.
+        See the original repository for details.
+    pts2align : Optional[List[str]], optional
+        List of legs to take into account, by default None
+        Example:
+        >>> pts2align = ["RF_leg", "LF_leg"]
+
+    Returns
+    -------
+    Dict[str, NDArray]
+        Pose data dictionary as described above.
+    """
+    points_3d_dict = {}
+
+    if pts2align is None:
+        pts2align = list(pose_3d.keys())
+
+    for segment in pts2align:
+        points_3d_dict[segment] = dict_to_nparray_pose(
+            pose_3d, claw_is_end_effector=True
+        )
+
+    return points_3d_dict
 
 
 class AlignPose:

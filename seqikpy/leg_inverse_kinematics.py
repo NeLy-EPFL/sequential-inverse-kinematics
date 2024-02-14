@@ -252,7 +252,7 @@ class LegInvKinSeq(LegInvKinBase):
             )
 
         # Start the inverse kinematics calculation
-        for t in trange(frames_no, disable=hide_progress_bar, desc=f"Processing stage {stage}"):
+        for t in trange(frames_no, disable=hide_progress_bar, desc=f"{segment_name} stage {stage}"):
             # Get the kinematic chain for the other stages
             if stage in [2, 3, 4]:
                 kinematic_chain = self.kinematic_chain_class.create_leg_chain(

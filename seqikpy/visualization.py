@@ -157,7 +157,8 @@ def animate_3d_points(
     format_video: str = "mp4",
     elev: int = 10,
     azim: int = 90,
-):
+    title: str ='',
+) -> None:
     """ Makes an animation of 3D pose.
     This code is intended for animating the raw 3D pose and
     IK based 3D pose.
@@ -196,6 +197,8 @@ def animate_3d_points(
         Elevation of 3D axis, by default 10
     azim : int, optional
         Azimuth of 3D axis, by default 90
+    title : str, optional
+        Title of the video
     """
     # Dark background
     plt.rcParams.update({
@@ -328,7 +331,7 @@ def animate_3d_points(
     # ax3d.set_xlabel("x")
     # ax3d.set_ylabel("y")
     # ax3d.set_zlabel("z")
-    # ax3d.set_title('DLC and DF3D Results')
+    ax3d.set_title(title, align='center')
     # ax3d.legend(bbox_to_anchor=(1.2, 0.9), frameon=False)
     def update(frame, lines, key_points, lines_second, key_points_second):
         i = 0
