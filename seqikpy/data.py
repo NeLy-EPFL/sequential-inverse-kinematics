@@ -19,7 +19,6 @@ INITIAL_ANGLES = {
         "stage_3": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0]),
         "stage_4": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0, 0.0]),
     },
-    # "head": np.array([0, -0.17, 0]),  #  none, roll, pitch, yaw
 }
 
 # Lower bound of a DOF should be strictly lower than the initial angle.

@@ -6,7 +6,7 @@ import subprocess
 import warnings
 from pathlib import Path
 from datetime import date
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional
 
 import cv2
 import pandas as pd
@@ -148,57 +148,48 @@ def load_grid_plot_data(data_path: Path) -> [Dict, Dict]:
 
 def animate_3d_points(
     points3d: Dict[str, np.ndarray],
-    key_points: Dict[str, Tuple[np.ndarray, str]],
+    # key_points: Dict[str, Tuple[np.ndarray, str]],
     export_path: Path,
     points3d_second: Dict[str, np.ndarray] = None,
-    key_points_second: Dict[str, Tuple[np.ndarray, str]] = None,
+    # key_points_second: Dict[str, Tuple[np.ndarray, str]] = None,
     fps: int = 100,
     frame_no: int = 1000,
     format_video: str = "mp4",
     elev: int = 10,
     azim: int = 90,
-    title: str ='',
+    title: str = '',
+    marker_types: Dict[str, str] = None
 ) -> None:
-    """ Makes an animation of 3D pose.
+    """Makes an animation of 3D pose.
     This code is intended for animating the raw 3D pose and
-    IK based 3D pose.
+    forward kinematics from seqikpy.
+
 
     Parameters
     ----------
-    points3d : Dict[str,np.ndarray]
+    points3d : Dict[str, np.ndarray]
         Dictionary containing the 3D pose,
         usually this is the raw 3D pose.
-    key_points : Dict[str, Tuple]
-        Dictionary mapping key points names to their indices
-        and line styles.
-        Example:
-            KEY_POINTS_DICT = {
-                "RF": (np.arange(0, 5), "solid"),
-                "R Ant": (np.arange(10, 12), "o"),
-                "Neck": (np.arange(14, 15), "x"),
-                "L Ant": (np.arange(12, 14), "o"),
-                "LF": (np.arange(5, 10), "solid"),
-            }
     export_path : Path
         Path where the animation will be saved.
-    points3d_second : Dict[str,np.ndarray], optional
+    points3d_second : Dict[str, np.ndarray], optional
         Dictionary containing the 3D pose
         usually this is the forward kinematics, by default None
-    key_points_second : Dict[str, Tuple, optional
-        Same as `key_points` for `points3d_second`, by default None
     fps : int, optional
         Frames per second, by default 100
     frame_no : int, optional
-        Frame number until which the animation will be recorded,
+        Maximum number of frames of the animation,
         by default 1000
     format_video : str, optional
-        Format of the video, by default "mp4"
+        Video format, by default "mp4"
     elev : int, optional
-        Elevation of 3D axis, by default 10
+        Elevation of the point of view, by default 10
     azim : int, optional
-        Azimuth of 3D axis, by default 90
+        Azimuth of the point of view, by default 90
     title : str, optional
-        Title of the video
+        Title of the video, by default ''
+    marker_types : Dict[str, str], optional
+        Marker types for each key point, by default None
     """
     # Dark background
     plt.rcParams.update({
@@ -213,6 +204,13 @@ def animate_3d_points(
         "savefig.facecolor": "black",
         "savefig.edgecolor": "black"})
 
+    if marker_types is None:
+        marker_types = {
+            "R_head": "o",
+            "L_head": "o",
+            "Neck": "x",
+        }
+
     fig = plt.figure()
     ax3d = fig.add_subplot(projection='3d')
     ax3d.view_init(azim=azim, elev=elev)
@@ -226,16 +224,18 @@ def animate_3d_points(
     ax3d.yaxis.pane.set_edgecolor('black')
     ax3d.zaxis.pane.set_edgecolor('black')
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len(key_points))
-    color_map_left = mcp.gen_color(cmap="Blues", n=len(key_points))
-    color_map_scatter = mcp.gen_color(cmap="RdBu", n=len(key_points))
+    color_map_right = mcp.gen_color(cmap="Reds", n=len(points3d))
+    color_map_left = mcp.gen_color(cmap="Blues", n=len(points3d))
+    color_map_scatter = mcp.gen_color(cmap="RdBu", n=len(points3d))
 
     i, j, k = 1, 1, 1
     line_data = []
     line_data_second = []
 
-    for kp, (order, ls) in key_points.items():
-        if len(order) > 3:
+    for kp, points3d_array in points3d.items():
+        order = points3d_array.shape[1]
+
+        if order > 3:
             if 'L' in kp:
                 color = color_map_left[j]
                 j += 1
@@ -244,11 +244,11 @@ def animate_3d_points(
                 k += 1
             line_data.append(
                 ax3d.plot(
-                    points3d[0, order, 0],
-                    points3d[0, order, 1],
-                    points3d[0, order, 2],
+                    points3d_array[0, :, 0],
+                    points3d_array[0, :, 1],
+                    points3d_array[0, :, 2],
                     label=kp,
-                    linestyle=ls,
+                    linestyle="solid",
                     linewidth=4,
                     color=color,
                     alpha=0.85,
@@ -257,26 +257,27 @@ def animate_3d_points(
         else:
             line_data.append(
                 ax3d.plot(
-                    points3d[0, order, 0],
-                    points3d[0, order, 1],
-                    points3d[0, order, 2],
+                    points3d_array[0, :, 0],
+                    points3d_array[0, :, 1],
+                    points3d_array[0, :, 2],
                     lw=2.5,
                     label=kp,
-                    marker=ls,
+                    marker=marker_types[kp],
                     markersize=9,
                     color=color_map_scatter[i],
                     alpha=0.7,
                 )[0]
             )
-        i += 1
+            i += 1
 
     i, j, k = 1, 1, 1
 
     if points3d_second is not None:
 
-        key_points_second = key_points if key_points_second is None else key_points_second
-        for kp, (order, ls) in key_points_second.items():
-            if len(order) > 4:
+        for kp, points3d_second_array in points3d_second.items():
+            order = points3d_second_array.shape[1]
+
+            if order > 4:
                 if 'L' in kp:
                     color = color_map_left[j]
                     j += 1
@@ -285,11 +286,11 @@ def animate_3d_points(
                     k += 1
                 line_data_second.append(
                     ax3d.plot(
-                        points3d_second[0, order, 0],
-                        points3d_second[0, order, 1],
-                        points3d_second[0, order, 2],
+                        points3d_second_array[0, :, 0],
+                        points3d_second_array[0, :, 1],
+                        points3d_second_array[0, :, 2],
                         label=kp,
-                        linestyle=ls,
+                        linestyle="--",
                         linewidth=4,
                         color=color,
                         alpha=0.85,
@@ -298,12 +299,12 @@ def animate_3d_points(
             else:
                 line_data_second.append(
                     ax3d.plot(
-                        points3d_second[0, order, 0],
-                        points3d_second[0, order, 1],
-                        points3d_second[0, order, 2],
+                        points3d_second_array[0, :, 0],
+                        points3d_second_array[0, :, 1],
+                        points3d_second_array[0, :, 2],
                         lw=2.5,
                         label=kp,
-                        marker=ls,
+                        marker=marker_types[kp],
                         markersize=9,
                         color=color_map_scatter[j],
                         alpha=0.7,
@@ -331,23 +332,24 @@ def animate_3d_points(
     # ax3d.set_xlabel("x")
     # ax3d.set_ylabel("y")
     # ax3d.set_zlabel("z")
-    ax3d.set_title(title, align='center')
+    ax3d.set_title(title, loc='center')
     # ax3d.legend(bbox_to_anchor=(1.2, 0.9), frameon=False)
-    def update(frame, lines, key_points, lines_second, key_points_second):
+
+    def update(frame, lines, points3d, lines_second, points3d_second):
         i = 0
-        for kp, (kp_range, _) in key_points.items():
+        for kp, points3d_array in points3d.items():
             lines[i].set_data(
-                points3d[frame, kp_range, 0], points3d[frame, kp_range, 1]
+                points3d_array[frame, :, 0], points3d_array[frame, :, 1]
             )
-            lines[i].set_3d_properties(points3d[frame, kp_range, 2])
+            lines[i].set_3d_properties(points3d_array[frame, :, 2])
             i += 1
         if lines_second:
             j = 0
-            for kp, (kp_range, _) in key_points_second.items():
+            for kp, points3d_second_array in points3d_second.items():
                 lines_second[j].set_data(
-                    points3d_second[frame, kp_range, 0], points3d_second[frame, kp_range, 1]
+                    points3d_second_array[frame, :, 0], points3d_second_array[frame, :, 1]
                 )
-                lines_second[j].set_3d_properties(points3d_second[frame, kp_range, 2])
+                lines_second[j].set_3d_properties(points3d_second_array[frame, :, 2])
                 j += 1
 
     # Creating the Animation object
@@ -357,9 +359,9 @@ def animate_3d_points(
         frame_no,
         fargs=(
             line_data,
-            key_points,
+            points3d,
             line_data_second,
-            key_points_second),
+            points3d_second),
         interval=10,
         blit=False)
     logger.info("Making animation...")
@@ -371,75 +373,24 @@ def animate_3d_points(
     logger.info(f"Animation is saved at {export_path}")
 
 
-def _plot_3d_points(points3d, key_points, export_path=None, t=0):
-    """Plots 3D points."""
-    fig = plt.figure(figsize=(5, 5))
-    ax3d = fig.add_subplot(projection='3d')
-    ax3d.view_init(azim=0, elev=16)
-
-    color_map_right = mcp.gen_color(cmap="RdPu", n=len(key_points))
-    color_map_left = mcp.gen_color(cmap="BuGn", n=len(key_points))
-    color_map_scatter = mcp.gen_color(cmap="gist_rainbow_r", n=len(key_points))
-
-    i = 0
-    for kp, (order, ls) in key_points.items():
-        if len(order) > 3:
-            ax3d.plot(
-                points3d[t, order, 0],
-                points3d[t, order, 1],
-                points3d[t, order, 2],
-                label=kp,
-                linestyle=ls,
-                linewidth=3,
-                color=color_map_right[i] if "R" in kp else color_map_left[-i - 1],
-            )
-        else:
-            ax3d.plot(
-                points3d[t, order, 0],
-                points3d[t, order, 1],
-                points3d[t, order, 2],
-                label=kp,
-                marker=ls,
-                markersize=9,
-                color=color_map_scatter[i],
-            )
-        i += 1
-
-    # Setting the axes properties
-    #     ax3d.set_xlim3d([np.amin(points3d[..., 0]), np.amax(points3d[..., 0])])
-    #     ax3d.set_ylim3d([np.amin(points3d[..., 1]), np.amax(points3d[..., 1])])
-    #
-    #     ax3d.set_xlim3d([-2, 1])
-    #     ax3d.set_ylim3d([-1, 1])
-    #     ax3d.set_zlim3d([-2, 0.1])
-    ax3d.set_xlim3d([-1, 1])
-    ax3d.set_ylim3d([-1, 1])
-    ax3d.set_zlim3d([-2, 0.1])
-    # ax3d.set_xticks([])
-    # ax3d.set_yticks([])
-    # ax3d.set_zticks([])
-    # ax3d.invert_zaxis()
-
-    ax3d.set_xlabel("x")
-    ax3d.set_ylabel("y")
-    ax3d.set_zlabel("z")
-    ax3d.legend(bbox_to_anchor=(1.0, 0.9), ncol=2, frameon=False)
-
-    if export_path is not None:
-        fig.savefig(export_path, bbox_inches="tight")
-
-    plt.show()
-
-
-def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
+def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, line_style="solid"):
     """Plots 3D points at time t."""
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in key_points if 'R' in kp]) + 2)
-    color_map_left = mcp.gen_color(cmap="Blues", n=len([kp for kp in key_points if 'L' in kp]) + 2)
+    if marker_types is None:
+        marker_types = {
+            "R_head": "o",
+            "L_head": "o",
+            "Neck": "x",
+        }
 
-    i, j, k = 1, 1, 1
+    color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in points3d if 'R' in kp]) + 1)
+    color_map_left = mcp.gen_color(cmap="Blues", n=len([kp for kp in points3d if 'L' in kp]) + 1)
 
-    for kp, (order, ls) in key_points.items():
+    i, j = 1,1
+
+    for kp, points3d_array in points3d.items():
+        order = points3d_array.shape[1]
+
         if 'R' in kp:
             color = color_map_right[i]
             i += 1
@@ -449,23 +400,23 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
         else:
             color = 'lightgrey'
 
-        if len(order) > 3:
+        if order > 3:
             ax3d.plot(
-                points3d[t, order, 0],
-                points3d[t, order, 1],
-                points3d[t, order, 2],
+                points3d_array[t, :, 0],
+                points3d_array[t, :, 1],
+                points3d_array[t, :, 2],
                 label=kp,
-                linestyle=ls,
+                linestyle=line_style,
                 linewidth=1.7,
                 color=color,
             )
         else:
             ax3d.plot(
-                points3d[t, order, 0],
-                points3d[t, order, 1],
-                points3d[t, order, 2],
+                points3d_array[t, :, 0],
+                points3d_array[t, :, 1],
+                points3d_array[t, :, 2],
                 label=kp,
-                marker=ls,
+                marker=marker_types[kp],
                 markersize=4.5,
                 color=color,
             )
@@ -474,14 +425,16 @@ def plot_3d_points(ax3d, points3d, key_points, export_path=None, t=0):
         plt.savefig(export_path, bbox_inches="tight")
 
 
-def plot_trailing_kp(ax3d, points3d, key_points, export_path=None, t=0, trail=5):
+def plot_trailing_kp(ax3d, points3d, export_path=None, t=0, trail=5, marker_type="x"):
     """ Plots the traces of key points from t-trail to t. """
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len(key_points) + 1)
-    color_map_left = mcp.gen_color(cmap="Blues", n=len(key_points) + 1)
+    color_map_right = mcp.gen_color(cmap="Reds", n=len(points3d) + 1)
+    color_map_left = mcp.gen_color(cmap="Blues", n=len(points3d) + 1)
 
     i, j = 1, 1
-    for kp, (order, ls) in key_points.items():
+    for kp, points3d_array in points3d.items():
+        order = points3d_array.shape[1]
+
         if 'R' in kp:
             color = color_map_right[i]
             i += 1
@@ -492,11 +445,11 @@ def plot_trailing_kp(ax3d, points3d, key_points, export_path=None, t=0, trail=5)
             color = 'grey'
 
         ax3d.scatter(
-            points3d[max(0, t - trail):t, order, 0],
-            points3d[max(0, t - trail):t, order, 1],
-            points3d[max(0, t - trail):t, order, 2],
+            points3d[max(0, t - trail):t, :, 0],
+            points3d[max(0, t - trail):t, :, 1],
+            points3d[max(0, t - trail):t, :, 2],
             label=kp,
-            marker=ls,
+            marker=marker_type,
             #             markersize=9,
             color=color,
         )
@@ -577,16 +530,16 @@ def plot_grid(
     joint_angles: Dict[str, np.ndarray],
     leg_angles_to_plot: List[str],
     head_angles_to_plot: List[str],
-    key_points_3d: Dict[str, Tuple[np.ndarray, str]],
-    key_points_3d_trail: Dict[str, Tuple[np.ndarray, str]],
     t: int,
     t_start: int,
     t_end: int,
     t_interval: int = 20,
     fps: int = 100,
     trail: int = 30,
-    stim_lines: List[int] = None,
-    export_path: Path = None,
+    marker_types_3d: Optional[Dict[str, str]] = None,
+    marker_trail: Optional[str] = "x",
+    stim_lines: Optional[List[int]] = None,
+    export_path: Optional[Path] = None,
     **kwargs
 ):
     """
@@ -622,20 +575,6 @@ def plot_grid(
                 ]
     head_angles_to_plot : List[str]
         List containing exact names of head joint angle names.
-    key_points_3d : Dict[str, Tuple[np.ndarray, str]]
-        Dictionary mapping key points names to their indices
-        and line styles.
-        Example:
-            KEY_POINTS_DICT = {
-                "RF": (np.arange(0, 5), "solid"),
-                "R Ant": (np.arange(10, 12), "o"),
-                "Neck": (np.arange(14, 15), "x"),
-                "L Ant": (np.arange(12, 14), "o"),
-                "LF": (np.arange(5, 10), "solid"),
-            }
-    key_points_3d_trail : Dict[str, Tuple[np.ndarray, str]]
-        Dictionary mapping key points names to their indices
-        and line styles for trailing key points.
     t : int
         Frame number t.
     t_start : int
@@ -649,6 +588,11 @@ def plot_grid(
     trail : int, optional
         Number of previous frames where the key point will be visible,
         by default 30
+    marker_types_3d : Dict[str, Tuple[np.ndarray, str]]
+        Dictionary mapping key points names to marker styles.
+    marker_trail : Dict[str, Tuple[np.ndarray, str]]
+        Dictionary mapping key points names to their indices
+        and line styles for trailing key points.
     stim_lines : List[int], optional
         Stimulation indicators, by default None
     export_path : Path, optional
@@ -689,9 +633,9 @@ def plot_grid(
     ax_img_side.imshow(img_side, vmin=0, vmax=255, cmap='gray')
     ax_img_front.imshow(img_front, vmin=0, vmax=255, cmap='gray')
 
-    plot_3d_points(ax1, aligned_pose, key_points=key_points_3d, t=t)
+    plot_3d_points(ax1, aligned_pose, marker_types=marker_types_kp, t=t)
     if key_points_3d_trail is not None:
-        plot_trailing_kp(ax1, aligned_pose, key_points=key_points_3d_trail, trail=trail, t=t)
+        plot_trailing_kp(ax1, aligned_pose, marker_trail=marker_trail, trail=trail, t=t)
     if plot_head:
         plot_joint_angle(
             ax2,
@@ -809,13 +753,13 @@ def plot_grid_generator(
     joint_angles: Dict[str, np.ndarray],
     leg_angles_to_plot: List[str],
     head_angles_to_plot: List[str],
-    key_points_3d: Dict[str, Tuple[np.ndarray, str]],
-    key_points_3d_trail: Dict[str, Tuple[np.ndarray, str]],
     t_start: int,
     t_end: int,
     t_interval: int = 20,
     fps: int = 100,
     trail: int = 30,
+    marker_types_3d: Dict[str, str]=None,
+    marker_trail: Optional[str]="x",
     stim_lines: List[int] = None,
     export_path: Path = None,
     **kwargs
@@ -830,8 +774,8 @@ def plot_grid_generator(
             joint_angles=joint_angles,
             leg_angles_to_plot=leg_angles_to_plot,
             head_angles_to_plot=head_angles_to_plot,
-            key_points_3d=key_points_3d,
-            key_points_3d_trail=key_points_3d_trail,
+            marker_types_3d=marker_types_3d,
+            marker_trail=marker_trail,
             t=t + t_start,
             t_start=t_start,
             t_end=t_end,
