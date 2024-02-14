@@ -369,7 +369,7 @@ class AlignPose:
                 continue
         # Take the neck as in the template as the other points are already aligned
         if "Neck" in self.body_template:
-            aligned_pose["Neck"] = self.body_template["Neck"]
+            aligned_pose["Neck"] = self.body_template["Neck"].reshape((-1,1,3))
 
         if export_path is not None:
             export_full_path = export_path / "pose3d_aligned.pkl"

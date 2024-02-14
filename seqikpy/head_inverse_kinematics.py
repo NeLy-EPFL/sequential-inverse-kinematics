@@ -13,7 +13,7 @@ Example usage:
 
 >>> class_hk = HeadInverseKinematics(
         aligned_pos = data,
-        nmf_template=NMF_TEMPLATE,
+        body_template=NMF_TEMPLATE,
     )
 >>> joint_angles = class_hk.compute_head_angles(export_path = DATA_PATH)
 
@@ -61,7 +61,7 @@ class HeadInverseKinematics:
         In principle, it should have body parts (R_head) as keys,
         and arrays (N,2 for the head) as values.
         Check the sample data for more detailed example.
-    nmf_template : Dict[str, NDArray]
+    body_template : Dict[str, NDArray]
         Dictionary containing the positions of fly model body segments.
         Check data.py for the default dictionary.
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
@@ -70,11 +70,11 @@ class HeadInverseKinematics:
 
     def __init__(
         self, aligned_pos: Dict[str, NDArray],
-        nmf_template: Dict[str, NDArray],
+        body_template: Dict[str, NDArray],
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         self.aligned_pos = aligned_pos
-        self.nmf_template = nmf_template
+        self.body_template = body_template
 
         # Check self.aligned_pos keys
         if not all(key in self.aligned_pos for key in ["R_head", "L_head", "Neck"]):
@@ -144,12 +144,12 @@ class HeadInverseKinematics:
 
     def get_head_vector(self, side: Literal["R", "L"]) -> NDArray:
         """Vector ((N,3) array) from <side> antenna base (or any head key point) to neck."""
-        return self.aligned_pos["Neck"] - self.aligned_pos[f"{side}_head"][:, 0, :]
+        return self.aligned_pos["Neck"][:,0,:] - self.aligned_pos[f"{side}_head"][:, 0, :]
 
     def get_head_vector_mid(self) -> NDArray:
         """ Vector ((N,3) array) from mid antenna base (or any head key point) to neck."""
         return (self.aligned_pos["R_head"][:, 0, :] + self.aligned_pos["L_head"]
-                [:, 0, :]) * 0.5 - self.aligned_pos["Neck"]
+                [:, 0, :]) * 0.5 - self.aligned_pos["Neck"][:,0,:]
 
     def get_head_vector_horizontal(self) -> NDArray:
         """ Vector ((N,3) array) from right antenna base (or any head key point)
@@ -309,11 +309,11 @@ class HeadInverseKinematics:
 
     def get_rest_antenna_pitch(self) -> float:
         """ Antenna pitch angle at zero pose in the fly biomechanical model."""
-        head_vector = self.nmf_template["Neck"] - self.nmf_template["R_Antenna_base"]
+        head_vector = self.body_template["Neck"] - self.body_template["R_Antenna_base"]
         # project onto x-z plane
         head_vector[1] = 0
         # We consider only one side as the model is symmetrical
-        antenna_vector = self.nmf_template["R_Antenna_edge"] - self.nmf_template["R_Antenna_base"]
+        antenna_vector = self.body_template["R_Antenna_edge"] - self.body_template["R_Antenna_base"]
         # project onto x-z plane
         antenna_vector[1] = 0
         return HeadInverseKinematics.angle_between_segments(head_vector, antenna_vector, Axes.Y_AXIS)
@@ -321,9 +321,9 @@ class HeadInverseKinematics:
     def get_rest_head_pitch(self) -> float:
         """ Head pitch angle at zero pose in the fly biomechanical model."""
         head_vector = (
-            self.nmf_template["R_Antenna_base"] +
-            self.nmf_template["L_Antenna_base"]
-        ) * 0.5 - self.nmf_template["Neck"]
+            self.body_template["R_Antenna_base"] +
+            self.body_template["L_Antenna_base"]
+        ) * 0.5 - self.body_template["Neck"]
         # project onto x-z plane
         head_vector[1] = 0
 
