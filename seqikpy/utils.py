@@ -156,9 +156,8 @@ def compute_length_of_segment(points3d, segment_beg, segment_end):
 def leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool):
     if claw_is_ee:
         return nmf_size[leg_name]
-    else:
-        # print(leg_name)
-        return nmf_size[leg_name] - nmf_size[f"{leg_name}_Tarsus"]
+
+    return nmf_size[leg_name] - nmf_size[f"{leg_name}_Tarsus"]
 
 
 def get_length_of_segments(points3d, claw_is_ee=False):

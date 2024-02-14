@@ -1,12 +1,11 @@
 """ Functions for plotting and animation. """
-import pickle
 import logging
-import time
 import subprocess
 import warnings
+import itertools
 from pathlib import Path
-from datetime import date
-from typing import Tuple, List, Dict, Optional
+from typing import Tuple, List, Dict, Optional, Iterable
+from tqdm import tqdm
 
 import cv2
 import pandas as pd
@@ -27,6 +26,64 @@ logging.basicConfig(
 # Get the logger of the module
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+
+def get_video_writer(video_path, fps, output_shape):
+    """Initialize and return a VideoWriter object."""
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    return cv2.VideoWriter(video_path, fourcc, fps, output_shape[::-1])
+
+
+def resize_frame(original_size, target_size):
+    """
+        Resize a frame to the target size
+        while preserving the width length ratio.
+    """
+    if target_size[0] == -1 and target_size[1] == -1:
+        new_size = original_size
+    elif target_size[0] == -1:
+        ratio = original_size[0] / original_size[1]
+        new_size = (int(target_size[1] * ratio), target_size[1])
+    elif target_size[1] == -1:
+        ratio = original_size[1] / original_size[0]
+        new_size = (target_size[0], int(target_size[0] * ratio))
+    else:
+        new_size = target_size
+
+    if new_size[0] > original_size[0] and new_size[1] > original_size[1]:
+        return original_size
+
+    return new_size
+
+
+def resize_rgb_frame(frame, output_shape):
+    """ resize the frame and convert it to RGB"""
+    resized = cv2.resize(frame, output_shape[::-1])
+    return cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
+
+
+def make_video(
+    video_path: str,
+    frame_generator: Iterable,
+    fps: int,
+    output_shape: Tuple=(-1, 2880),
+    n_frames: int = -1
+):
+    """ Makes videos from a generator of images. """
+    first_frame = next(frame_generator)
+    frame_generator = itertools.chain([first_frame], frame_generator)
+
+    adjusted_output_shape = resize_frame(first_frame.shape[:2], output_shape)
+    video_writer = get_video_writer(video_path, fps, adjusted_output_shape)
+
+    for frame_count, frame in tqdm(enumerate(frame_generator)):
+        rgb_frame = resize_rgb_frame(frame, adjusted_output_shape)
+        video_writer.write(rgb_frame)
+        if 0 < n_frames == frame_count + 1:
+            break
+
+    video_writer.release()
+    logging.info('Video is saved at %s', video_path)
 
 
 def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
@@ -386,7 +443,7 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
     color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in points3d if 'R' in kp]) + 1)
     color_map_left = mcp.gen_color(cmap="Blues", n=len([kp for kp in points3d if 'L' in kp]) + 1)
 
-    i, j = 1,1
+    i, j = 1, 1
 
     for kp, points3d_array in points3d.items():
         order = points3d_array.shape[1]
@@ -425,15 +482,14 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
         plt.savefig(export_path, bbox_inches="tight")
 
 
-def plot_trailing_kp(ax3d, points3d, export_path=None, t=0, trail=5, marker_type="x"):
+def plot_trailing_kp(ax3d, points3d, segments_to_plot, export_path=None, t=0, trail=5, marker_type="x"):
     """ Plots the traces of key points from t-trail to t. """
 
     color_map_right = mcp.gen_color(cmap="Reds", n=len(points3d) + 1)
     color_map_left = mcp.gen_color(cmap="Blues", n=len(points3d) + 1)
 
     i, j = 1, 1
-    for kp, points3d_array in points3d.items():
-        order = points3d_array.shape[1]
+    for kp, ind in segments_to_plot.items():
 
         if 'R' in kp:
             color = color_map_right[i]
@@ -445,9 +501,9 @@ def plot_trailing_kp(ax3d, points3d, export_path=None, t=0, trail=5, marker_type
             color = 'grey'
 
         ax3d.scatter(
-            points3d[max(0, t - trail):t, :, 0],
-            points3d[max(0, t - trail):t, :, 1],
-            points3d[max(0, t - trail):t, :, 2],
+            points3d[kp][max(0, t - trail):t, ind, 0],
+            points3d[kp][max(0, t - trail):t, ind, 1],
+            points3d[kp][max(0, t - trail):t, ind, 2],
             label=kp,
             marker=marker_type,
             #             markersize=9,
@@ -536,8 +592,9 @@ def plot_grid(
     t_interval: int = 20,
     fps: int = 100,
     trail: int = 30,
+    key_points_to_trail: Optional[Dict[str, Iterable]] = None,
     marker_types_3d: Optional[Dict[str, str]] = None,
-    marker_trail: Optional[str] = "x",
+    marker_trail: Optional[str] = None,
     stim_lines: Optional[List[int]] = None,
     export_path: Optional[Path] = None,
     **kwargs
@@ -633,9 +690,9 @@ def plot_grid(
     ax_img_side.imshow(img_side, vmin=0, vmax=255, cmap='gray')
     ax_img_front.imshow(img_front, vmin=0, vmax=255, cmap='gray')
 
-    plot_3d_points(ax1, aligned_pose, marker_types=marker_types_kp, t=t)
-    if key_points_3d_trail is not None:
-        plot_trailing_kp(ax1, aligned_pose, marker_trail=marker_trail, trail=trail, t=t)
+    plot_3d_points(ax1, aligned_pose, marker_types=marker_types_3d, t=t)
+    if key_points_to_trail is not None:
+        plot_trailing_kp(ax1, aligned_pose, key_points_to_trail, marker_type=marker_trail, trail=trail, t=t)
     if plot_head:
         plot_joint_angle(
             ax2,
@@ -758,8 +815,9 @@ def plot_grid_generator(
     t_interval: int = 20,
     fps: int = 100,
     trail: int = 30,
-    marker_types_3d: Dict[str, str]=None,
-    marker_trail: Optional[str]="x",
+    key_points_to_trail: Optional[List[str]] = None,
+    marker_types_3d: Dict[str, str] = None,
+    marker_trail: Optional[str] = "x",
     stim_lines: List[int] = None,
     export_path: Path = None,
     **kwargs
@@ -776,6 +834,7 @@ def plot_grid_generator(
             head_angles_to_plot=head_angles_to_plot,
             marker_types_3d=marker_types_3d,
             marker_trail=marker_trail,
+            key_points_to_trail=key_points_to_trail,
             t=t + t_start,
             t_start=t_start,
             t_end=t_end,
@@ -798,77 +857,3 @@ def fig_to_array(fig):
     data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
     return data
 
-
-if __name__ == '__main__':
-
-    start = time.time()
-    today = date.today()
-
-    FPS = 100
-
-    DATA_PATH = Path('../data/anipose/normal_case/pose-3d')
-    out_dir = DATA_PATH / f"inverse_kinematics_results_{today}.mp4"
-
-    anipose_data = DATA_PATH / "pose3d_aligned.pkl"
-    forward_kinematics = DATA_PATH / "forward_kinematics.pkl"
-
-    with open(anipose_data, "rb") as f:
-        aligned_pose_data = pickle.load(f)
-    with open(forward_kinematics, "rb") as f:
-        forward_kin = pickle.load(f)
-
-    # from IPython import embed; embed()
-
-    points_aligned_all = np.concatenate(
-        (
-            aligned_pose_data["RF_leg"],
-            aligned_pose_data["LF_leg"],
-            aligned_pose_data["R_head"],
-            aligned_pose_data["L_head"],
-            np.tile(aligned_pose_data["Neck"], (aligned_pose_data["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
-        ),
-        axis=1,
-    )
-
-    points_fk = np.concatenate(
-        (
-            forward_kin["RF_leg"],
-            forward_kin["LF_leg"],
-            forward_kin["R_head"],
-            forward_kin["L_head"],
-            np.tile(aligned_pose_data["Neck"], (aligned_pose_data["RF_leg"].shape[0], 1)).reshape(-1, 1, 3),
-        ),
-        axis=1,
-    )
-
-    KEY_POINTS_DICT = {
-        "RF": (np.arange(0, 5), "solid"),
-        "R Ant": (np.arange(10, 12), "o"),
-        "Neck": (np.arange(14, 15), "x"),
-        "L Ant": (np.arange(12, 14), "o"),
-        "LF": (np.arange(5, 10), "solid"),
-    }
-
-    KEY_POINTS_DICT2 = {
-        "RF": (np.arange(0, 8), ":"),
-        "R Ant": (np.arange(16, 21), "x"),
-        "Neck": (np.arange(26, 27), "x"),
-        "L Ant": (np.arange(21, 26), "x"),
-        "LF": (np.arange(8, 16), ":"),
-    }
-
-    animate_3d_points(
-        points_aligned_all,
-        KEY_POINTS_DICT,
-        points3d_second=points_fk,
-        key_points_second=KEY_POINTS_DICT2,
-        export_path=out_dir.as_posix(),
-        frame_no=6000,
-        elev=20,
-        azim=30,
-    )
-
-    end = time.time()
-    total_time = end - start
-
-    print(f'Total time taken to execute the code: {total_time}')
