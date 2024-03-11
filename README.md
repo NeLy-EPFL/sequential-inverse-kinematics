@@ -34,7 +34,7 @@
 ``` -->
 
 
-# 📚 Documentation
+# 📚 Documentation
 
 Documentation can be found [here](https://nely-epfl.github.io/sequential-inverse-kinematics/).
 
