@@ -13,7 +13,12 @@
 
 # 🪰 Overview
 
-`SeqIKPy` is a Python package that provides an implementation of inverse kinematics (IK) that is based on the open-source Python package [IKPy](https://github.com/Phylliade/ikpy). In constrast to the current IK approaches that aims to match only the end-effector, `SeqIKPy` is designed to calculate the joint angles of the fly body parts to align the 3D pose of the entire kinematic chain to a desired 3D pose.
+`SeqIKPy` is a Python package that provides an implementation of inverse kinematics (IK) that is based on the open-source Python package [IKPy](https://github.com/Phylliade/ikpy). In constrast to the current IK approaches that aims to match only the end-effector, `SeqIKPy` is designed to calculate the joint angles of the fly body parts to align the 3D pose of the entire kinematic chain to a desired 3D pose. In particular, you can use `SeqIKPy` in the pipeline shown below.
+
+<p align="center">
+<img src="./docs/images/pipeline.png" width="95%">
+</p>
+
 
 # 📐 Features
 

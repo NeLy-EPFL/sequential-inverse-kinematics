@@ -6,6 +6,7 @@ if [ $is_test -eq 0 ]; then
     echo "Pushing to pypi test."
     python -m build
     twine upload --repository testpypi dist/*
+    twine upload --skip-existing testpypi dist/*
     echo "Pushed. Check https://test.pypi.org/project/<sampleproject>"
 else
     echo "Pushing to pypi."
