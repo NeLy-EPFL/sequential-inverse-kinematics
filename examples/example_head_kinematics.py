@@ -1,4 +1,5 @@
 """ Example usage of head inverse kinematics module. """
+
 import pickle
 from pathlib import Path
 import numpy as np

@@ -1,7 +1,9 @@
 """
     Runs the entire pipeline from pose alignment to joint angles on a path given by the user.
+    Note that running this script will take about 40 minutes.
 
     Example usage:
+
     >>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001 --plot
 """
 import logging
@@ -65,7 +67,7 @@ if __name__ == "__main__":
             convert_func=convert_from_anipose_to_dict,
             pts2align=PTS2ALIGN,
             include_claw=False,
-            nmf_template=NMF_TEMPLATE,
+            body_template=NMF_TEMPLATE,
             log_level="INFO"
         )
 
@@ -73,7 +75,7 @@ if __name__ == "__main__":
         # Compute the head joint angles
         class_hk = HeadInverseKinematics(
             aligned_pos=aligned_pos,
-            nmf_template=NMF_TEMPLATE,
+            body_template=NMF_TEMPLATE,
         )
         head_joint_angles = class_hk.compute_head_angles(
             export_path=data_path,
@@ -85,7 +87,7 @@ if __name__ == "__main__":
             kinematic_chain_class=KinematicChainSeq(
                 bounds_dof=BOUNDS,
                 legs_list=["RF", "LF"],
-                nmf_size=None,
+                body_size=None,
             ),
             initial_angles=INITIAL_ANGLES
         )

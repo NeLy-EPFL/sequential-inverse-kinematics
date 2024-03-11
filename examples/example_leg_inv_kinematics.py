@@ -1,4 +1,7 @@
-""" Example usage of leg inverse kinematics module. """
+"""
+    Example usage of leg inverse kinematics module.
+    Note that running this script will take about 30 minutes.
+"""
 import time
 from pathlib import Path
 
@@ -64,7 +67,7 @@ total_time = (end - start) / 60.0
 print(f'Traditional IK took {total_time} mins')
 
 # Compare the joint angles
-fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+fig, ax = plt.subplots(1, 1, figsize=(10, 5))
 for key in leg_joint_angles_seq:
     plt.plot(leg_joint_angles_seq[key], label=key[6:], lw=2)
     plt.plot(leg_joint_angles_gen[key], ls=':', lw=2)

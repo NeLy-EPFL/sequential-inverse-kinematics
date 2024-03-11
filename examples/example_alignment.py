@@ -2,15 +2,11 @@
     Examples showing how to use the alignment class in three different ways.
 """
 import pickle
-import logging
 from pathlib import Path
 
 from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
 from seqikpy.data import NMF_TEMPLATE, PTS2ALIGN
 from seqikpy.utils import load_file, save_file
-
-# # Change the logging level here
-# logging.basicConfig(level=logging.INFO, format=" %(asctime)s - %(levelname)s- %(message)s")
 
 
 if __name__ == "__main__":
@@ -19,11 +15,11 @@ if __name__ == "__main__":
 
     DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
 
-
     align = AlignPose.from_file_path(
         main_dir=DATA_PATH,
         file_name="pose3d.h5",
         legs_list=["RF", "LF"],
+        # You can provide your own conversion function
         convert_func=convert_from_anipose_to_dict,
         pts2align=PTS2ALIGN,
         include_claw=False,
