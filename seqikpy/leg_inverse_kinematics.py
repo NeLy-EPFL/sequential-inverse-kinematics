@@ -29,8 +29,11 @@ class LegInvKinBase(ABC):
     ----------
     aligned_pos : Dict[str, np.ndarray]
         Aligned pose from the AlignPose class.
-        Should have the following structure:
-            "<side><segment>_leg" : np.array([frames, 5, 3])}
+        Should have the following structure
+
+        >>> pose_data_dict = {
+                "<side><segment>_leg": np.ndarray[N_frames,N_key_points,3],
+            }
     kinematic_chain : KinematicChainBase
         Kinematic chain of the leg.
     initial_angles : Dict[str, np.ndarray], optional
@@ -139,8 +142,11 @@ class LegInvKinSeq(LegInvKinBase):
     ----------
     aligned_pos : Dict[str, np.ndarray]
         Aligned pose from the AlignPose class.
-        Should have the following structure:
-            "<side><segment>_leg" : np.array([frames, 5, 3])}
+        Should have the following structure
+
+        >>> pose_data_dict = {
+                "<side><segment>_leg": np.ndarray[N_frames,N_key_points,3],
+            }
     kinematic_chain : KinematicChainSeq
         Kinematic chain of the leg.
     initial_angles : Dict[str, np.ndarray], optional
@@ -149,7 +155,9 @@ class LegInvKinSeq(LegInvKinBase):
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
         Logging level as a string, by default "INFO"
 
-    Example usage:
+    Examples
+    --------
+
     >>> from pathlib import Path
     >>> from seqikpy.kinematic_chain import KinematicChainSeq
     >>> from seqikpy.leg_inverse_kinematics import LegInvKinSeq
@@ -207,12 +215,9 @@ class LegInvKinSeq(LegInvKinBase):
             Origin of the kinematic chain, i.e., Thorax-Coxa joint
         initial_angles : np.ndarray
             Initial angles for the optimization seed
-
-        Kwargs
-        ------
-        segment_name : str
+        segment_name (kwargs) : str
             Leg side, i.e., RF, LF, RM, LM, RH, LH
-        stage: int
+        stage (kwargs) : int
             Stage in the sequential calculation, should be between 1 and 4
 
         Returns
@@ -328,12 +333,9 @@ class LegInvKinSeq(LegInvKinBase):
         export_path : Union[Path, str], optional
             Path where the results will be saved,
             if None, nothing is saveed, by default None
-
-        Kwargs
-        ------
-        stages : List[int], optional
+        stages (kwargs) : List[int], optional
             Stages to run the inverse kinematics.
-        hide_progress_bar : Optional[bool], optional
+        hide_progress_bar (kwargs) : Optional[bool], optional
             Hide the progress bar, by default True
 
         Returns
@@ -409,8 +411,11 @@ class LegInvKinGeneric(LegInvKinBase):
     ----------
     aligned_pos : Dict[str, np.ndarray]
         Aligned pose from the AlignPose class.
-        Should have the following structure:
-            "<side><segment>_leg" : np.array([frames, 5, 3])}
+        Should have the following structure
+
+        >>> pose_data_dict = {
+                "<side><segment>_leg": np.ndarray[N_frames,N_key_points,3],
+            }
     kinematic_chain : KinematicChainGeneric
         Kinematic chain of the leg.
     initial_angles : Dict[str, np.ndarray], optional
@@ -419,7 +424,9 @@ class LegInvKinGeneric(LegInvKinBase):
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
         Logging level as a string, by default "INFO"
 
-    Example usage:
+    Examples
+    --------
+
     >>> from pathlib import Path
     >>> from seqikpy.kinematic_chain import KinematicChainGeneric
     >>> from seqikpy.leg_inverse_kinematics import LegInvKinGeneric

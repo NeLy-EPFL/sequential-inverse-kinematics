@@ -3,7 +3,8 @@ Code for aligning 3D pose to a fly template.
 The best practice for getting good alignment is to have an accurate 3D pose and
 a template whose key points are matching the tracked key points closely.
 
-This class expects a 3D file in the following format:
+This class expects a 3D file in the following format
+
 >>> pose_data_dict = {
         "<side (R,L)><segment (F, M, H)>_leg": np.ndarray[N_frames,5,3],
         "<side (R,L)>_head": np.ndarray[N_frames,2,3],
@@ -15,7 +16,7 @@ can use the class with:
 
 Case 1: we have 3D pose obtained, and we would like to align it but first
 we need to convert the pose data into a dictionary format
-NOTE: if the 3D pose is not in the format described above, then you need to:
+NOTE: if the 3D pose is not in the format described above, then you need to
 * Convert your 3D pose file manually to the required format
 * Or, if you obtain the 3D pose from anipose (see the method `convert_from_anipose_to_dict`),
 simply set `convert` to True.
@@ -110,7 +111,8 @@ def convert_from_anipose_to_dict(
     ----------
     pose_3d : Dict[str, np.ndarray]
         3D pose data from anipose.
-        It should have the following format:
+        It should have the following format
+
         >>> pose_3d = {
             "{keypoint_name}_x" : np.ndarray[N_frames,],
             "{keypoint_name}_y" : np.ndarray[N_frames,],
@@ -123,7 +125,8 @@ def convert_from_anipose_to_dict(
     Returns
     -------
     Dict[str, np.ndarray]
-        Pose data dictionary of the following format:
+        Pose data dictionary of the following format
+
         >>> pose_data_dict = {
             "RF_leg": np.ndarray[N_frames,N_key_points,3],
             "LF_leg": np.ndarray[N_frames,N_key_points,3],
@@ -163,7 +166,8 @@ def convert_from_df3d_to_dict(
         Array (N, N_key_points, 3) containing 3D pose data.
     pts2align : Dict[str, np.ndarray]
         Dictionary mapping segment names to key point indices.
-        Should be in the following format:
+        Should be in the following format
+
         >>> pts2align = {
             "RF_leg": np.arange(0,5),
             "RM_leg": np.arange(5,10),
@@ -200,7 +204,8 @@ def convert_from_df3dpp_to_dict(
         See the original repository for details.
     pts2align : Optional[List[str]], optional
         List of legs to take into account, by default None
-        Example:
+        Example format
+
         >>> pts2align = ["RF_leg", "LF_leg"]
 
     Returns
@@ -222,16 +227,17 @@ def convert_from_df3dpp_to_dict(
 
 
 class AlignPose:
-    """Aligns the 3D poses.
+    """Aligns the 3D poses. For the class usage examples, please refer to example_alignment.py
 
     Parameters
     ----------
     pose_data_dict : Dict[str, np.ndarray]
         3D pose put in a dictionary that has the following structure defined
-        by PTS2ALIGN (see data.py for more details):
+        by PTS2ALIGN (see data.py for more details)
 
-        Example format:
-            pose_data_dict = {
+        Example format
+
+        >>> pose_data_dict = {
                 "RF_leg": np.ndarray[N_frames,N_key_points,3],
                 "LF_leg": np.ndarray[N_frames,N_key_points,3],
                 "R_head": np.ndarray[N_frames,N_key_points,3],
@@ -257,7 +263,6 @@ class AlignPose:
     log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
         Logging level as a string, by default "INFO"
 
-    For the class usage examples, please refer to `example_alignment.py`
     """
 
     def __init__(
@@ -510,8 +515,7 @@ class AlignPose:
         Notes
         -----
         * This method is used to align head key point positions with a model of a fly"s head.
-        * It calculates the scale factor and translations necessary to match the model"s
-         head size and position.
+        * It calculates the scale factor and translations necessary to match the model's head size and position.
         """
         antbase2thoraxmid_real = _get_distance_btw_vecs(
             head_array[:, 0, :], self.thorax_mid_pts

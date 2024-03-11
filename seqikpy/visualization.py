@@ -620,8 +620,9 @@ def plot_grid(
         Joint angles.
     leg_angles_to_plot : List[str]
         List containing leg joint angle names without the side.
-        Example:
-            leg_joint_angles = [
+        Examples
+
+        >>> leg_joint_angles = [
                 "ThC_yaw",
                 "ThC_pitch",
                 "ThC_roll",

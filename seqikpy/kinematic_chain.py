@@ -88,7 +88,9 @@ class KinematicChainSeq(KinematicChainBase):
         Dictionary that contains the size of different body parts,
         by default None
 
-    NOTE: the implementation follows Yaw-Pitch-Roll order.
+    NOTE
+    ----
+    This implementation follows Yaw-Pitch-Roll order.
     """
 
     def __call__(self):
@@ -105,15 +107,12 @@ class KinematicChainSeq(KinematicChainBase):
         ----------
         leg_name : str
             Name of the leg, i.e., RF, LF, etc.
-
-        Kwargs
-        ------
-        angles : Dict[str, np.ndarray]
+        angles (kwargs) : Dict[str, np.ndarray]
             Joint angles calculated in the previous step,
             None at the first step, by default None
-        stage : int
+        stage (kwargs) : int
             Stage number, (1,2,3,4)
-        t : int
+        t (kwargs) : int
             Time step, by default 0
 
         Returns
@@ -122,9 +121,11 @@ class KinematicChainSeq(KinematicChainBase):
 
         Raises
         ------
-        ValueError : If the stage number is not in (1,2,3,4)
-        ValueError : If the leg name is not in
-        ["RF", "LF", "RM", "LM", "RH", "LH"]
+        ValueError
+            If the stage number is not in (1,2,3,4)
+        ValueError
+            If the leg name is not in
+            ["RF", "LF", "RM", "LM", "RH", "LH"]
 
         """
         angles = kwargs.get("angles", None)
