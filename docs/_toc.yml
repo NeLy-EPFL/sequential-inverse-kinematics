@@ -1,0 +1,25 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+- caption: 🏁 Getting started
+  chapters:
+  - file: overview
+  - file: installation
+  - file: getting_started
+- caption: 🔬 Methodology
+  chapters:
+  - file: methodology_alignment
+  - file: methodology_angle_calc
+  - file: limitations
+- caption: 📚 Tutorials
+  chapters:
+  - file: seqikpy_grooming
+  - file: seqikpy_locomotion
+  - file: visualization
+- caption: 💬 References
+  chapters:
+  - file: seqikpy
+  - file: references
