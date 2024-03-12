@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from nmf_ik.visualization import (get_frames_from_video_ffmpeg,
+from seqikpy.visualization import (get_frames_from_video_ffmpeg,
                                   load_grid_plot_data,
                                   get_plot_config,
                                   plot_grid,

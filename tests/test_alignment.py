@@ -1,22 +1,24 @@
 import pytest
+from pathlib import Path
 import numpy as np
 
-from nmf_ik.alignment import AlignPose
+from seqikpy.alignment import AlignPose
 
+PKG_PATH = Path(seqikpy.__path__[0])
 
 @pytest.fixture
 def main_folder():
-    return '/home/nely/tracking_anipose/neuromechfly-inverse-kinematics/data/anipose/normal_case/pose-3d'
+    return PKG_PATH / 'data/anipose_pose-220807_aJO-GAL4xUAS-CsChr_Fly002_002_Beh'
 
 
 @pytest.fixture
 def main_folder_exc():
-    return '/home/nely/tracking_anipose/neuromechfly-inverse-kinematics/data/anipose/normal_case/'
+    return '../data/anipose/normal_case/'
 
 
 def test_pose_file(main_folder):
     align = AlignPose(main_folder)
-    assert align.pose_result_path == '/home/nely/tracking_anipose/neuromechfly-inverse-kinematics/data/anipose/normal_case/pose-3d/pose3d.h5'
+    assert align.pose_result_path == PKG_PATH / 'data/anipose_pose-220807_aJO-GAL4xUAS-CsChr_Fly002_002_Beh/pose_3d.h5'
 
 
 def test_pose_file_exc(main_folder_exc):

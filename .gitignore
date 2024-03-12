@@ -242,11 +242,12 @@ poetry.toml
 /data
 /results
 /deprecated
+/scripts
 *.png
 *.txt
 *.mp4
 *.pdf
 *.csv
-*.ipynb
+*.ai
 .DS_Store
 .vscode
