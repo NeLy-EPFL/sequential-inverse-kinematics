@@ -2,7 +2,7 @@
 
 
 <p align="center">
-<img src="./docs/images/logo.png" width="95%">
+<img src="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/docs/images/logo.png" width="95%">
 </p>
 
 
@@ -16,7 +16,7 @@
 `SeqIKPy` is a Python package that provides an implementation of inverse kinematics (IK) that is based on the open-source Python package [IKPy](https://github.com/Phylliade/ikpy). In constrast to the current IK approaches that aims to match only the end-effector, `SeqIKPy` is designed to calculate the joint angles of the fly body parts to align the 3D pose of the entire kinematic chain to a desired 3D pose. In particular, you can use `SeqIKPy` in the pipeline shown below.
 
 <p align="center">
-<img src="./docs/images/pipeline.png" width="95%">
+<img src="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/docs/images/pipeline.png" width="95%">
 </p>
 
 
@@ -55,26 +55,21 @@ Or, you can install the newest version of the package manually by running the fo
 $ pip install https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git
 ```
 
-Note that the IKPy module is added as a submodule. To initialize the submodule, run:
-```bash
-$ git submodule add https://github.com/gizemozd/ikpy.git ikpy_submodule
-$ git submodule update --init
-```
-
 # 🏁 Quick Start
 
+Please see the quick start guide [here](https://nely-epfl.github.io/sequential-inverse-kinematics/).
 
 
 # 💻 Contributing
 
-We welcome contributions from the community. If you would like to contribute to the project, please refer to the [contribution guidelines](). Also, read our [code of conduct](). If you have any questions, please feel free to open an issue or contact the developers.
+We welcome contributions from the community. If you would like to contribute to the project, please refer to the [contribution guidelines](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/CONTRIBUTING.md). Also, read our [code of conduct](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/CONDUCT.md). If you have any questions, please feel free to open an issue or contact the developers.
 
 # 📖 License
 
-This project is licensed under the [Apache 2.0 License]().
+This project is licensed under the [Apache 2.0 License](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/LICENSE.md).
 
 # 🐞 Issues
-If you encounter any bugs or request a new feature, please open an issue in our [issues page]().
+If you encounter any bugs or request a new feature, please open an issue in our [issues page](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues).
 
 # 💬 Citing
 If you find this package useful in your research, please consider citing it using the following BibTeX entry:

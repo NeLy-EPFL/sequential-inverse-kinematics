@@ -19,14 +19,14 @@
 
 # 💻 Contributing
 
-We welcome contributions from the community. If you would like to contribute to the project, please refer to the [contribution guidelines](). Also, read our [code of conduct](). If you have any questions, please feel free to open an issue or contact the developers.
+We welcome contributions from the community. If you would like to contribute to the project, please refer to the [contribution guidelines](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/CONTRIBUTING.md). Also, read our [code of conduct](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/CONDUCT.md). If you have any questions, please feel free to open an issue or contact the developers.
 
 # 📖 License
 
-This project is licensed under the [Apache 2.0 License]().
+This project is licensed under the [Apache 2.0 License](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/LICENSE.md).
 
 # 🐞 Issues
-If you encounter any bugs or request a new feature, please open an issue in our [issues page]().
+If you encounter any bugs or request a new feature, please open an issue in our [issues page](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues).
 
 # 💬 Citing
 If you find this package useful in your research, please consider citing it using the following BibTeX entry:
