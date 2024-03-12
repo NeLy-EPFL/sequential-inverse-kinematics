@@ -1,0 +1,938 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Using SeqIKPy for Drosophila grooming &#8212; Trial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'seqikpy_grooming';</script>
+    <link rel="icon" href="_static/logo.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using SeqIKPy for Drosophila locomotion" href="seqikpy_locomotion.html" />
+    <link rel="prev" title="Limitations" href="limitations.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Trial - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Trial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to SeqIKPy!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏁 Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Features</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🔬 Methodology</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="methodology_alignment.html">3D pose alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methodology_angle_calc.html">Inverse kinematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitations.html">Limitations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Tutorials</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Using SeqIKPy for Drosophila grooming</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="seqikpy_locomotion.html">Using SeqIKPy for Drosophila locomotion</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">💬 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="seqikpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues/new?title=Issue%20on%20page%20%2Fseqikpy_grooming.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/seqikpy_grooming.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Using SeqIKPy for Drosophila grooming</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Using SeqIKPy for Drosophila grooming</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-the-body-model">Defining the body model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#aligning-the-3d-pose-data">Aligning the 3D pose data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#head-inverse-kinematics">Head inverse kinematics</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-inverse-kinematics">Sequential Inverse Kinematics</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-sequential-inverse-kinematics">Run sequential inverse kinematics</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#d-visualization-of-the-joint-angles">2D visualization of the joint angles</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#animation-of-the-target-3d-pose-and-the-forward-kinematics">Animation of the target 3D pose and the forward kinematics</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#original-3d-pose-solid-f-k-dashed">Original 3D pose (solid) F.K. (dashed)</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="using-seqikpy-for-drosophila-grooming">
+<h1>Using SeqIKPy for Drosophila grooming<a class="headerlink" href="#using-seqikpy-for-drosophila-grooming" title="Link to this heading">#</a></h1>
+<p>In this tutorial, we will use <code class="docutils literal notranslate"><span class="pre">seqikpy</span></code> to perform inverse kinematics on a grooming data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">autoreload</span> 2
+<span class="c1"># Import the necessary libraries</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">seqikpy.data</span> <span class="kn">import</span> <span class="n">PTS2ALIGN</span>
+<span class="kn">from</span> <span class="nn">seqikpy.utils</span> <span class="kn">import</span> <span class="n">load_file</span><span class="p">,</span> <span class="n">save_file</span><span class="p">,</span> <span class="n">calculate_body_size</span><span class="p">,</span> <span class="n">dict_to_nparray_pose</span>
+<span class="kn">from</span> <span class="nn">seqikpy.alignment</span> <span class="kn">import</span> <span class="n">AlignPose</span><span class="p">,</span> <span class="n">convert_from_anipose_to_dict</span>
+<span class="kn">from</span> <span class="nn">seqikpy.kinematic_chain</span> <span class="kn">import</span> <span class="n">KinematicChainSeq</span>
+<span class="kn">from</span> <span class="nn">seqikpy.head_inverse_kinematics</span> <span class="kn">import</span> <span class="n">HeadInverseKinematics</span>
+<span class="kn">from</span> <span class="nn">seqikpy.leg_inverse_kinematics</span> <span class="kn">import</span> <span class="n">LegInvKinSeq</span>
+<span class="kn">from</span> <span class="nn">seqikpy.visualization</span> <span class="kn">import</span> <span class="n">plot_3d_points</span><span class="p">,</span> <span class="n">animate_3d_points</span>
+
+<span class="c1"># Set up the constant variables</span>
+<span class="n">leg_joint_angle_names</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;ThC_yaw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ThC_pitch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ThC_roll&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CTr_pitch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CTr_roll&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FTi_pitch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TiTa_pitch&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">legs_to_align</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span><span class="s2">&quot;LF&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the data, below contains the kinematics during locomotion</span>
+<span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/anipose_pose-220807_aJO-GAL4xUAS-CsChr_Fly002_002_Beh&quot;</span><span class="p">)</span>
+<span class="n">pose_data</span> <span class="o">=</span> <span class="n">load_file</span><span class="p">(</span>
+    <span class="n">data_path</span> <span class="o">/</span> <span class="s2">&quot;pose3d.h5&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert the dictionary in a compatible format</span>
+<span class="n">converted_dict_full</span> <span class="o">=</span> <span class="n">convert_from_anipose_to_dict</span><span class="p">(</span><span class="n">pose_data</span><span class="p">,</span> <span class="n">pts2align</span><span class="o">=</span><span class="n">PTS2ALIGN</span><span class="p">)</span>
+
+<span class="c1"># Select the time period where locomotion happens</span>
+<span class="n">converted_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">dict_v</span> <span class="ow">in</span> <span class="n">converted_dict_full</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">converted_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_v</span><span class="p">[</span><span class="mi">400</span><span class="p">:</span><span class="mi">600</span><span class="p">,:,:]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="defining-the-body-model">
+<h1>Defining the body model<a class="headerlink" href="#defining-the-body-model" title="Link to this heading">#</a></h1>
+<p>It is very challenging to precisely define the joint rotational axes in Drosophila due to the complex structure of their exoskeleton. Here, we make use of a previously published biomechanical model of Drosophila melonagestor, <a class="reference external" href="https://github.com/NeLy-EPFL/NeuroMechFly">NeuroMechFly</a>. Specifically, we identified the 3D points corresponding to each joint on the biomechanical body, and use this information to transform the real animal 3D data into the biomechanical model’s frame of reference.</p>
+ <p style="text-align: center;">
+    <img src="./images/NMF_zero_pose.png" alt="Biomechanical model" width="600"/>
+    <br>
+    <em>Biomechanical model</em>
+    <br>
+ </p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TEMPLATE_NMF_GROOMING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RF_Coxa&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Femur&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="mf">0.67</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Tibia&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Tarsus&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Claw&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.19</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Coxa&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Femur&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="mf">0.67</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Tibia&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Tarsus&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Claw&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.19</span><span class="p">]),</span>
+    <span class="s2">&quot;R_Antenna_base&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.41</span><span class="p">]),</span>
+    <span class="s2">&quot;L_Antenna_base&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.41</span><span class="p">]),</span>
+    <span class="s2">&quot;R_Antenna_edge&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.06</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.14</span><span class="p">]),</span>
+    <span class="s2">&quot;L_Antenna_edge&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.06</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.14</span><span class="p">]),</span>
+    <span class="s2">&quot;R_wing&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.08</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.43</span><span class="p">]),</span>
+    <span class="s2">&quot;L_wing&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.43</span><span class="p">]),</span>
+    <span class="s2">&quot;Neck&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">]),</span>
+    <span class="s2">&quot;Thorax_mid&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.43</span><span class="p">]),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="aligning-the-3d-pose-data">
+<h1>Aligning the 3D pose data<a class="headerlink" href="#aligning-the-3d-pose-data" title="Link to this heading">#</a></h1>
+<p>The alignment process serves two purposes:</p>
+<ol class="arabic simple">
+<li><p>Transforming the 3D pose data to the biomechanical model’s frame of reference.</p></li>
+<li><p>(Optional) scaling the animal 3D data to match the size of the biomechanical model if the biomechanical model’s size is given to the <code class="docutils literal notranslate"><span class="pre">AlignPose</span></code> class. This option is useful if you want to scale all of your data to one body size, or if you want to perform kinematic replay in simulation using the body model. Alternatively, the user can provide the experimental animal’s body size into the class. In that case, the scaling will ensure that the animal’s limb size is the same throughout the trial duration.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets align the pose</span>
+<span class="n">align</span> <span class="o">=</span> <span class="n">AlignPose</span><span class="p">(</span>
+    <span class="n">pose_data_dict</span><span class="o">=</span><span class="n">converted_dict</span><span class="p">,</span>
+    <span class="n">legs_list</span><span class="o">=</span><span class="n">legs_to_align</span><span class="p">,</span>
+    <span class="n">include_claw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">body_template</span><span class="o">=</span><span class="n">TEMPLATE_NMF_GROOMING</span><span class="p">,</span>
+    <span class="c1"># if body_size is none, then the size will be</span>
+    <span class="c1"># calculated from the template</span>
+    <span class="n">body_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span>
+<span class="p">)</span>
+
+<span class="n">aligned_pos</span> <span class="o">=</span> <span class="n">align</span><span class="o">.</span><span class="n">align_pose</span><span class="p">(</span><span class="n">export_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 2024-02-14 16:20:38,905 - INFO- Scale factor antenna base R: 3.299136588367448, ant itself: 3.0696614255829213
+ 2024-02-14 16:20:38,909 - INFO- Scale factor for RF leg: 3.3732827141008928
+ 2024-02-14 16:20:38,912 - INFO- Scale factor antenna base L: 3.267804996386114, ant itself: 3.216483887152704
+ 2024-02-14 16:20:38,914 - INFO- Scale factor for LF leg: 3.199567458065388
+ 2024-02-14 16:20:38,917 - INFO- Aligned pose is saved at ../data/anipose_pose-220807_aJO-GAL4xUAS-CsChr_Fly002_002_Beh
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="head-inverse-kinematics">
+<h1>Head inverse kinematics<a class="headerlink" href="#head-inverse-kinematics" title="Link to this heading">#</a></h1>
+<p>As the head consists of two different joints (antennae) connected to a link (head), it is impossible to calculate inverse kinematics using the kinematic chain method without losing accuracy on one antenna. Therefore, we adopt a “dot product” method to calculate the angle between two vectors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">class_hk</span> <span class="o">=</span> <span class="n">HeadInverseKinematics</span><span class="p">(</span>
+    <span class="n">aligned_pos</span><span class="o">=</span><span class="n">aligned_pos</span><span class="p">,</span>
+    <span class="n">body_template</span><span class="o">=</span><span class="n">TEMPLATE_NMF_GROOMING</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">head_joint_angles</span> <span class="o">=</span> <span class="n">class_hk</span><span class="o">.</span><span class="n">compute_head_angles</span><span class="p">(</span>
+    <span class="n">export_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span>
+    <span class="n">compute_ant_angles</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 2024-02-14 16:20:38,962 - INFO- Head joint angles are saved at ../data/anipose_pose-220807_aJO-GAL4xUAS-CsChr_Fly002_002_Beh!
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="sequential-inverse-kinematics">
+<h1>Sequential Inverse Kinematics<a class="headerlink" href="#sequential-inverse-kinematics" title="Link to this heading">#</a></h1>
+<p>Below, we will start the inverse kinematics process using <code class="docutils literal notranslate"><span class="pre">seqikpy</span></code>
+The initial step is to determine the initial seeds for the first time step. While it is not crucial to have good initial seeds, having initial values out of the joint DOF limits will raise an error.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We are defining a set of initial seeds for the IK optimization</span>
+<span class="n">INITIAL_ANGLES_GROOMING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RF&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># Base ThC yaw pitch CTr pitch</span>
+        <span class="s2">&quot;stage_1&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">]),</span>
+        <span class="c1"># Base ThC yaw pitch roll CTr pitch CTr roll</span>
+        <span class="s2">&quot;stage_2&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">]),</span>
+        <span class="c1"># Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch</span>
+        <span class="s2">&quot;stage_3&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+        <span class="c1"># Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch TiTa pitch</span>
+        <span class="s2">&quot;stage_4&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+    <span class="p">},</span>
+    <span class="c1"># Same order for the contralateral leg</span>
+    <span class="s2">&quot;LF&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;stage_1&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">]),</span>
+        <span class="s2">&quot;stage_2&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">]),</span>
+        <span class="s2">&quot;stage_3&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+        <span class="s2">&quot;stage_4&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Secondly, we need to define some lower and upper limits for the joints. Again, having informative bounds is helpful to prevent singularities in the optimization. For example, Tibia-tarsus pitch joint should not exceed 0 degrees (always negative since the rotation is clockwise). So, it makes sense to assign an upper limit of 0 degrees for this joint.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We determine the bounds for each joint DOF</span>
+<span class="n">BOUNDS_GROOMING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RF_ThC_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">130</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_ThC_yaw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_ThC_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">60</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_CTr_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_CTr_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">150</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_FTi_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">170</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_TiTa_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">150</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_ThC_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">130</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_ThC_yaw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_ThC_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">60</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_CTr_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_CTr_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">150</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_FTi_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">170</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_TiTa_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">150</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="run-sequential-inverse-kinematics">
+<h2>Run sequential inverse kinematics<a class="headerlink" href="#run-sequential-inverse-kinematics" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize the necessary classes</span>
+<span class="n">kin_chain</span> <span class="o">=</span> <span class="n">KinematicChainSeq</span><span class="p">(</span>
+    <span class="n">bounds_dof</span><span class="o">=</span><span class="n">BOUNDS_GROOMING</span><span class="p">,</span>
+    <span class="n">body_size</span><span class="o">=</span><span class="n">calculate_body_size</span><span class="p">(</span>
+        <span class="n">TEMPLATE_NMF_GROOMING</span><span class="p">,</span>
+        <span class="n">legs_list</span><span class="o">=</span><span class="n">legs_to_align</span>
+    <span class="p">),</span>
+    <span class="n">legs_list</span><span class="o">=</span><span class="n">legs_to_align</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">class_seq_ik</span> <span class="o">=</span> <span class="n">LegInvKinSeq</span><span class="p">(</span>
+    <span class="n">aligned_pos</span><span class="o">=</span><span class="n">aligned_pos</span><span class="p">,</span>
+    <span class="n">kinematic_chain_class</span><span class="o">=</span><span class="n">kin_chain</span><span class="p">,</span>
+    <span class="n">initial_angles</span><span class="o">=</span><span class="n">INITIAL_ANGLES_GROOMING</span><span class="p">,</span>
+    <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The below code will commence the IK process, which consists of four stages per kinematic chain. For more details, please visit the methodology page.</p>
+<p>After the process is over, <code class="docutils literal notranslate"><span class="pre">run_ik_and_fk</span></code> will save the results in two separete .pkl files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">leg_joint_angles.pkl</span></code> -&gt; pickle file that contains the leg joint angles</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">forward_kinematics.pkl</span></code> -&gt; 3D position of the legs construction from the calculated leg joint angles, useful for visualization and debugging purposes</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">leg_joint_angles</span><span class="p">,</span> <span class="n">forward_kinematics</span> <span class="o">=</span> <span class="n">class_seq_ik</span><span class="o">.</span><span class="n">run_ik_and_fk</span><span class="p">(</span>
+    <span class="n">export_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span>
+    <span class="n">hide_progress_bar</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 2024-02-14 16:20:39,080 - INFO- Computing joint angles and forward kinematics...
+ 2024-02-14 16:21:43,655 - INFO- Joint angles and forward kinematics are saved at ../data/anipose_pose-220807_aJO-GAL4xUAS-CsChr_Fly002_002_Beh
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="d-visualization-of-the-joint-angles">
+<h1>2D visualization of the joint angles<a class="headerlink" href="#d-visualization-of-the-joint-angles" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s plot the joint angles for all six legs</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">axs</span> <span class="o">=</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">angle_name</span> <span class="ow">in</span> <span class="n">leg_joint_angle_names</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">leg_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;LF&quot;</span><span class="p">]):</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">leg_joint_angles</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">leg_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">angle_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]),</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">angle_name</span><span class="p">,</span>
+            <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">leg_name</span><span class="p">)</span>
+
+<span class="n">time_step</span> <span class="o">=</span> <span class="mf">1e-2</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">()</span> <span class="o">*</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;f&#39;</span><span class="p">))</span>
+
+
+<span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (sec)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (sec)&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Leg joint angles (deg)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/539ef0910e98e13626813470a179635864bee565d8b1834eadaf6e5b1d816b64.png" src="_images/539ef0910e98e13626813470a179635864bee565d8b1834eadaf6e5b1d816b64.png" />
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="animation-of-the-target-3d-pose-and-the-forward-kinematics">
+<h1>Animation of the target 3D pose and the forward kinematics<a class="headerlink" href="#animation-of-the-target-3d-pose-and-the-forward-kinematics" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">200</span> 
+<span class="c1"># change the neck points to an array</span>
+<span class="n">aligned_pos</span><span class="p">[</span><span class="s1">&#39;Neck&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">aligned_pos</span><span class="p">[</span><span class="s1">&#39;Neck&#39;</span><span class="p">],</span> <span class="p">(</span><span class="n">n_frames</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">azim</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">elev</span><span class="o">=</span><span class="mi">10</span>
+
+<span class="n">animate_3d_points</span><span class="p">(</span>
+    <span class="n">points3d</span><span class="o">=</span><span class="n">aligned_pos</span><span class="p">,</span>
+    <span class="n">points3d_second</span><span class="o">=</span><span class="n">forward_kinematics</span><span class="p">,</span>
+    <span class="n">export_path</span><span class="o">=</span><span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;fk_ik_elev_</span><span class="si">{</span><span class="n">elev</span><span class="si">}</span><span class="s1">_azim_</span><span class="si">{</span><span class="n">azim</span><span class="si">}</span><span class="s1">.mp4&#39;</span><span class="p">,</span>
+    <span class="n">frame_no</span><span class="o">=</span><span class="n">n_frames</span><span class="p">,</span>
+    <span class="n">elev</span><span class="o">=</span><span class="n">elev</span><span class="p">,</span>
+    <span class="n">azim</span><span class="o">=</span><span class="n">azim</span><span class="p">,</span>
+    <span class="n">fps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 2024-02-14 16:21:44,033 - INFO- Making animation...
+ 2024-02-14 16:21:48,772 - INFO- Animation is saved at ../data/anipose_pose-220807_aJO-GAL4xUAS-CsChr_Fly002_002_Beh/fk_ik_elev_10_azim_0.mp4
+</pre></div>
+</div>
+<img alt="_images/3c4ceb7c17a385c52cdf33650e7152664083e4d22ce8dd8ecbc0339763758575.png" src="_images/3c4ceb7c17a385c52cdf33650e7152664083e4d22ce8dd8ecbc0339763758575.png" />
+</div>
+</div>
+<section id="original-3d-pose-solid-f-k-dashed">
+<h2>Original 3D pose (solid) F.K. (dashed)<a class="headerlink" href="#original-3d-pose-solid-f-k-dashed" title="Link to this heading">#</a></h2>
+<p><img alt="grooming" src="_images/grooming.gif" /></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If wanted, you can save each frame as a png file</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="k">for</span> <span class="n">azim</span><span class="p">,</span> <span class="n">elev</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">90</span><span class="p">)]:</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">ax3d</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">azim</span><span class="o">=</span><span class="n">azim</span><span class="p">,</span> <span class="n">elev</span><span class="o">=</span><span class="n">elev</span><span class="p">)</span>
+
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+
+    <span class="n">plot_3d_points</span><span class="p">(</span>
+        <span class="n">ax3d</span><span class="p">,</span>
+        <span class="n">aligned_pos</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">line_style</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span>
+    <span class="p">)</span>
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.3</span><span class="p">,</span><span class="mf">0.6</span><span class="p">))</span>
+
+    <span class="n">plot_3d_points</span><span class="p">(</span>
+        <span class="n">ax3d</span><span class="p">,</span>
+        <span class="n">forward_kinematics</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">line_style</span><span class="o">=</span><span class="s1">&#39;--&#39;</span>
+    <span class="p">)</span>
+    
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Solid - raw 3D, Dashed - FK&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/099e922d19cf9588329d4edc4bc7fbd2e947c77ff933bb7f17051428c24643c2.png" src="_images/099e922d19cf9588329d4edc4bc7fbd2e947c77ff933bb7f17051428c24643c2.png" />
+<img alt="_images/e11c5f455c6f75b12fe5eed487c07585fc18e3c2e433433c0a9c7c2c543bff7e.png" src="_images/e11c5f455c6f75b12fe5eed487c07585fc18e3c2e433433c0a9c7c2c543bff7e.png" />
+<img alt="_images/779459429387f5380f64746d7c5e96c477aeddd04fe17f5435ed31799e787fc8.png" src="_images/779459429387f5380f64746d7c5e96c477aeddd04fe17f5435ed31799e787fc8.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="limitations.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Limitations</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="seqikpy_locomotion.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Using SeqIKPy for Drosophila locomotion</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Using SeqIKPy for Drosophila grooming</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-the-body-model">Defining the body model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#aligning-the-3d-pose-data">Aligning the 3D pose data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#head-inverse-kinematics">Head inverse kinematics</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-inverse-kinematics">Sequential Inverse Kinematics</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-sequential-inverse-kinematics">Run sequential inverse kinematics</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#d-visualization-of-the-joint-angles">2D visualization of the joint angles</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#animation-of-the-target-3d-pose-and-the-forward-kinematics">Animation of the target 3D pose and the forward kinematics</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#original-3d-pose-solid-f-k-dashed">Original 3D pose (solid) F.K. (dashed)</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By P. Gizem Özdil
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

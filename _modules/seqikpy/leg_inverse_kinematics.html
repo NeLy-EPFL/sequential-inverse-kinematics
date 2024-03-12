@@ -1,0 +1,1082 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seqikpy.leg_inverse_kinematics &#8212; Trial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/seqikpy/leg_inverse_kinematics';</script>
+    <link rel="icon" href="../../_static/logo.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Trial - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Trial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to SeqIKPy!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏁 Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Features</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🔬 Methodology</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_alignment.html">3D pose alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_angle_calc.html">Inverse kinematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../limitations.html">Limitations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_grooming.html">Using SeqIKPy for Drosophila grooming</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_locomotion.html">Using SeqIKPy for Drosophila locomotion</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">💬 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues/new?title=Issue%20on%20page%20%2F_modules/seqikpy/leg_inverse_kinematics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for seqikpy.leg_inverse_kinematics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Module to calculate inverse kinematics from 3D pose based on IKPy.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">trange</span>
+<span class="kn">from</span> <span class="nn">ikpy.chain</span> <span class="kn">import</span> <span class="n">Chain</span>
+
+<span class="kn">from</span> <span class="nn">seqikpy.utils</span> <span class="kn">import</span> <span class="n">save_file</span>
+<span class="kn">from</span> <span class="nn">seqikpy.data</span> <span class="kn">import</span> <span class="n">INITIAL_ANGLES</span>
+<span class="kn">from</span> <span class="nn">seqikpy.kinematic_chain</span> <span class="kn">import</span> <span class="n">KinematicChainBase</span><span class="p">,</span> <span class="n">KinematicChainSeq</span><span class="p">,</span> <span class="n">KinematicChainGeneric</span>
+<span class="c1"># Ignore the warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot; </span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2">- </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()]</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="LegInvKinBase">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinBase">[docs]</a>
+<span class="k">class</span> <span class="nc">LegInvKinBase</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class to calculate inverse kinematics for leg joints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    aligned_pos : Dict[str, np.ndarray]</span>
+<span class="sd">        Aligned pose from the AlignPose class.</span>
+<span class="sd">        Should have the following structure</span>
+
+<span class="sd">        &gt;&gt;&gt; pose_data_dict = {</span>
+<span class="sd">                &quot;&lt;side&gt;&lt;segment&gt;_leg&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            }</span>
+<span class="sd">    kinematic_chain : KinematicChainBase</span>
+<span class="sd">        Kinematic chain of the leg.</span>
+<span class="sd">    initial_angles : Dict[str, np.ndarray], optional</span>
+<span class="sd">        Initial angles of DOFs.</span>
+<span class="sd">        If not provided, the default values from data.py will be used.</span>
+<span class="sd">    log_level : Literal[&quot;DEBUG&quot;, &quot;INFO&quot;, &quot;WARNING&quot;, &quot;ERROR&quot;], optional</span>
+<span class="sd">        Logging level as a string, by default &quot;INFO&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">aligned_pos</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">kinematic_chain_class</span><span class="p">:</span> <span class="n">KinematicChainBase</span><span class="p">,</span>
+        <span class="n">initial_angles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">log_level</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span> <span class="o">=</span> <span class="n">aligned_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kinematic_chain_class</span> <span class="o">=</span> <span class="n">kinematic_chain_class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_angles</span> <span class="o">=</span> <span class="n">INITIAL_ANGLES</span> <span class="k">if</span> <span class="n">initial_angles</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">initial_angles</span>
+
+        <span class="c1"># Get the logger of the module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">numeric_level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">log_level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">numeric_level</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LegInvKinBase.calculate_ik">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinBase.calculate_ik">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_ik</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kinematic_chain</span><span class="p">:</span> <span class="n">Chain</span><span class="p">,</span> <span class="n">target_pos</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                     <span class="n">initial_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the joint angles in the leg chain.&quot;&quot;&quot;</span>
+        <span class="c1"># don&quot;t take the last and first ones into account</span>
+        <span class="k">return</span> <span class="n">kinematic_chain</span><span class="o">.</span><span class="n">inverse_kinematics</span><span class="p">(</span>
+            <span class="n">target_position</span><span class="o">=</span><span class="n">target_pos</span><span class="p">,</span>
+            <span class="n">initial_position</span><span class="o">=</span><span class="n">initial_angles</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LegInvKinBase.calculate_fk">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinBase.calculate_fk">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_fk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kinematic_chain</span><span class="p">:</span> <span class="n">Chain</span><span class="p">,</span> <span class="n">joint_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the forward kinematics from the joint dof angles.&quot;&quot;&quot;</span>
+        <span class="n">fk</span> <span class="o">=</span> <span class="n">kinematic_chain</span><span class="o">.</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">joint_angles</span><span class="p">,</span> <span class="n">full_kinematics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">end_effector_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">kinematic_chain</span><span class="o">.</span><span class="n">links</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kinematic_chain</span><span class="o">.</span><span class="n">links</span><span class="p">)):</span>
+            <span class="n">end_effector_positions</span><span class="p">[</span><span class="n">link</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fk</span><span class="p">[</span><span class="n">link</span><span class="p">][:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">end_effector_positions</span></div>
+
+
+<div class="viewcode-block" id="LegInvKinBase.get_scale_factor">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinBase.get_scale_factor">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_scale_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets scale the ratio between two vectors.&quot;&quot;&quot;</span>
+        <span class="n">vector_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">norm_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vector_diff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">length</span> <span class="o">/</span> <span class="n">norm_sum</span></div>
+
+
+<div class="viewcode-block" id="LegInvKinBase.calculate_ik_stage">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinBase.calculate_ik_stage">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">calculate_ik_stage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">end_effector_pos</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">initial_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">segment_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;For a given trial pose data, calculates the inverse kinematics.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        end_effector_pos : np.ndarray</span>
+<span class="sd">            3D array containing the position of the end effector pos</span>
+<span class="sd">        origin : np.ndarray</span>
+<span class="sd">            Origin of the kinematic chain, i.e., Thorax-Coxa joint</span>
+<span class="sd">        initial_angles : np.ndarray</span>
+<span class="sd">            Initial angles for the optimization seed</span>
+<span class="sd">        segment_name : str</span>
+<span class="sd">            Leg side, i.e., RF, LF, RM, LM, RH, LH</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Array containing the cartesian coordinates of the joint positions.</span>
+<span class="sd">            The joint angles are saved in a class attribute</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="LegInvKinBase.run_ik_and_fk">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinBase.run_ik_and_fk">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">run_ik_and_fk</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">export_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs inverse and forward kinematics for leg joints.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        export_path : Union[Path, str], optional</span>
+<span class="sd">            Path where the results will be saved,</span>
+<span class="sd">            if None, nothing is saveed, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[Dict[str,np.ndarray], Dict[str,np.ndarray]]</span>
+<span class="sd">            Two dictionaries containing joint angles and forward</span>
+<span class="sd">            kinematics, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LegInvKinSeq">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinSeq">[docs]</a>
+<span class="k">class</span> <span class="nc">LegInvKinSeq</span><span class="p">(</span><span class="n">LegInvKinBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to calculate inverse kinematics for leg joints in a</span>
+<span class="sd">    sequential manner. This method finds the optimal joint angles</span>
+<span class="sd">    within the bounds to match each koint as closely as possible.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    aligned_pos : Dict[str, np.ndarray]</span>
+<span class="sd">        Aligned pose from the AlignPose class.</span>
+<span class="sd">        Should have the following structure</span>
+
+<span class="sd">        &gt;&gt;&gt; pose_data_dict = {</span>
+<span class="sd">                &quot;&lt;side&gt;&lt;segment&gt;_leg&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            }</span>
+<span class="sd">    kinematic_chain : KinematicChainSeq</span>
+<span class="sd">        Kinematic chain of the leg.</span>
+<span class="sd">    initial_angles : Dict[str, np.ndarray], optional</span>
+<span class="sd">        Initial angles of DOFs.</span>
+<span class="sd">        If not provided, the default values from data.py will be used.</span>
+<span class="sd">    log_level : Literal[&quot;DEBUG&quot;, &quot;INFO&quot;, &quot;WARNING&quot;, &quot;ERROR&quot;], optional</span>
+<span class="sd">        Logging level as a string, by default &quot;INFO&quot;</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.kinematic_chain import KinematicChainSeq</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.leg_inverse_kinematics import LegInvKinSeq</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.data import BOUNDS, INITIAL_ANGLES</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.utils import load_file</span>
+
+<span class="sd">    &gt;&gt;&gt; DATA_PATH = Path(&quot;../data/anipose_220525_aJO_Fly001_001/pose-3d&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; f_path = DATA_PATH / &quot;pose3d_aligned.pkl&quot;</span>
+
+<span class="sd">    &gt;&gt;&gt; aligned_pos = load_file(f_path)</span>
+
+<span class="sd">    &gt;&gt;&gt; seq_ik = LegInvKinSeq(</span>
+<span class="sd">            aligned_pos=aligned_pos,</span>
+<span class="sd">            kinematic_chain_class=KinematicChainSeq(</span>
+<span class="sd">                bounds_dof=BOUNDS,</span>
+<span class="sd">                legs_list=[&quot;RF&quot;, &quot;LF&quot;],</span>
+<span class="sd">                body_size=None,</span>
+<span class="sd">            ),</span>
+<span class="sd">            initial_angles=INITIAL_ANGLES</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &gt;&gt;&gt; leg_joint_angles, forward_kinematics = seq_ik.run_ik_and_fk(</span>
+<span class="sd">            export_path=DATA_PATH,</span>
+<span class="sd">            hide_progress_bar=False</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">aligned_pos</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">kinematic_chain_class</span><span class="p">:</span> <span class="n">KinematicChainSeq</span><span class="p">,</span>
+        <span class="n">initial_angles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">log_level</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">aligned_pos</span><span class="p">,</span> <span class="n">kinematic_chain_class</span><span class="p">,</span> <span class="n">initial_angles</span><span class="p">,</span> <span class="n">log_level</span><span class="p">)</span>
+        <span class="c1"># Create an empty dict for joint angles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="LegInvKinSeq.calculate_ik_stage">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinSeq.calculate_ik_stage">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_ik_stage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">end_effector_pos</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">initial_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">segment_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;For a given trial pose data, calculates the inverse kinematics.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        end_effector_pos : np.ndarray</span>
+<span class="sd">            3D array containing the position of the end effector pos</span>
+<span class="sd">        origin : np.ndarray</span>
+<span class="sd">            Origin of the kinematic chain, i.e., Thorax-Coxa joint</span>
+<span class="sd">        initial_angles : np.ndarray</span>
+<span class="sd">            Initial angles for the optimization seed</span>
+<span class="sd">        segment_name (kwargs) : str</span>
+<span class="sd">            Leg side, i.e., RF, LF, RM, LM, RH, LH</span>
+<span class="sd">        stage (kwargs) : int</span>
+<span class="sd">            Stage in the sequential calculation, should be between 1 and 4</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Array containing the cartesian coordinates of the joint positions.</span>
+<span class="sd">            The joint angles are saved in a class attribute</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stage</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stage&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">hide_progress_bar</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hide_progress_bar&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">segment_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;LF&quot;</span><span class="p">,</span> <span class="s2">&quot;RM&quot;</span><span class="p">,</span> <span class="s2">&quot;LM&quot;</span><span class="p">,</span> <span class="s2">&quot;RH&quot;</span><span class="p">,</span> <span class="s2">&quot;LH&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segment name (</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">) is not valid.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">stage</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stage (</span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">) should be between 1 and 4.&quot;</span><span class="p">)</span>
+
+        <span class="n">frames_no</span> <span class="o">=</span> <span class="n">end_effector_pos</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">end_effector_pos_diff</span> <span class="o">=</span> <span class="n">end_effector_pos</span> <span class="o">-</span> <span class="n">origin</span>
+
+        <span class="c1"># Joint angles shape: (number of frames, number of DOFs)</span>
+        <span class="n">joint_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">frames_no</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_angles</span><span class="p">)))</span>
+        <span class="c1"># Forward kinematics shape: (number of frames, number of</span>
+        <span class="c1"># joints in the kinematics chain, axes-x,y,z)</span>
+        <span class="n">forward_kinematics</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">frames_no</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_angles</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="c1"># if the origin is a vector, convert it to a matrix</span>
+        <span class="k">if</span> <span class="n">origin</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="p">(</span><span class="n">frames_no</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># Get the kinematic chain for Stage 1</span>
+        <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">kinematic_chain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kinematic_chain_class</span><span class="o">.</span><span class="n">create_leg_chain</span><span class="p">(</span>
+                <span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span>
+                <span class="n">leg_name</span><span class="o">=</span><span class="n">segment_name</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Start the inverse kinematics calculation</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trange</span><span class="p">(</span><span class="n">frames_no</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="n">hide_progress_bar</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2"> stage </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="c1"># Get the kinematic chain for the other stages</span>
+            <span class="k">if</span> <span class="n">stage</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+                <span class="n">kinematic_chain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kinematic_chain_class</span><span class="o">.</span><span class="n">create_leg_chain</span><span class="p">(</span>
+                    <span class="n">leg_name</span><span class="o">=</span><span class="n">segment_name</span><span class="p">,</span>
+                    <span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span>
+                    <span class="n">angles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">,</span>
+                    <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># from IPython import embed; embed()</span>
+
+            <span class="c1"># For the first frame, use the given initial angles, for the rest</span>
+            <span class="c1"># use the calculated joint angles from the previous time step</span>
+            <span class="n">initial_angles</span> <span class="o">=</span> <span class="n">initial_angles</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">joint_angles</span><span class="p">[</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="c1"># Calculate the inverse kinematics</span>
+            <span class="n">joint_angles</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_ik</span><span class="p">(</span>
+                <span class="n">kinematic_chain</span><span class="p">,</span> <span class="n">end_effector_pos_diff</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:],</span> <span class="n">initial_angles</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Calculate the forward kinematics for the last stage only</span>
+            <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">forward_kinematics</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">calculate_fk</span><span class="p">(</span><span class="n">kinematic_chain</span><span class="p">,</span> <span class="n">joint_angles</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:])</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Link names</span>
+        <span class="n">link_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">link</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">kinematic_chain</span><span class="o">.</span><span class="n">links</span><span class="p">]</span>
+
+        <span class="c1"># Store the joint angles based on the stage number</span>
+        <span class="c1"># Stage 1: Thorax-Coxa pitch and yaw</span>
+        <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_ThC_yaw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_ThC_yaw&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_ThC_pitch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_ThC_pitch&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stage 1 is completed!&quot;</span><span class="p">)</span>
+        <span class="c1"># Stage 2: Thorax-Coxa roll, Coxa-Trochanter pitch</span>
+        <span class="k">elif</span> <span class="n">stage</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_ThC_roll&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_ThC_roll&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_CTr_pitch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_CTr_pitch&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stage 2 is completed!&quot;</span><span class="p">)</span>
+        <span class="c1"># Stage 3: Coxa-Trochanter roll, Femur-Tibia pitch</span>
+        <span class="k">elif</span> <span class="n">stage</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_CTr_roll&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_CTr_roll&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_FTi_pitch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_FTi_pitch&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stage 3 is completed!&quot;</span><span class="p">)</span>
+        <span class="c1"># Stage 4: Tibia-Tarsus pitch</span>
+        <span class="k">elif</span> <span class="n">stage</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_TiTa_pitch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">_TiTa_pitch&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stage 4 is completed!&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">forward_kinematics</span></div>
+
+
+<div class="viewcode-block" id="LegInvKinSeq.run_ik_and_fk">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinSeq.run_ik_and_fk">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_ik_and_fk</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">export_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs inverse and forward kinematics for leg joints.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        export_path : Union[Path, str], optional</span>
+<span class="sd">            Path where the results will be saved,</span>
+<span class="sd">            if None, nothing is saveed, by default None</span>
+<span class="sd">        stages (kwargs) : List[int], optional</span>
+<span class="sd">            Stages to run the inverse kinematics.</span>
+<span class="sd">        hide_progress_bar (kwargs) : Optional[bool], optional</span>
+<span class="sd">            Hide the progress bar, by default True</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[Dict[str,np.ndarray], Dict[str,np.ndarray]]</span>
+<span class="sd">            Two dictionaries containing joint angles and forward</span>
+<span class="sd">            kinematics, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stages</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stages&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+        <span class="n">hide_progress_bar</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hide_progress_bar&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">stages</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">stages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Maximum stage number is 4 and the list should be strictly incremental.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">forward_kinematics_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing joint angles and forward kinematics...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">segment_name</span><span class="p">,</span> <span class="n">segment_array</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;leg&quot;</span> <span class="ow">in</span> <span class="n">segment_name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="c1"># If segment name is RF_leg so the leg name is RF</span>
+                <span class="n">leg_name</span> <span class="o">=</span> <span class="n">segment_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c1"># If leg_name is not in body_size, then continue</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">leg_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kinematic_chain_class</span><span class="o">.</span><span class="n">body_size</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Leg </span><span class="si">%s</span><span class="s2"> is not in the kinematic chain, continuing...&quot;</span><span class="p">,</span> <span class="n">leg_name</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># First key point of the segment array is the origin</span>
+                <span class="c1"># of the kinematic chain, i.e., Thorax-Coxa joint</span>
+                <span class="n">origin</span> <span class="o">=</span> <span class="n">segment_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+                <span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="n">stages</span><span class="p">:</span>
+                    <span class="c1"># for each stage, the end effector is the corresponding joint</span>
+                    <span class="n">end_effector_pos</span> <span class="o">=</span> <span class="n">segment_array</span><span class="p">[:,</span> <span class="n">stage</span><span class="p">,</span> <span class="p">:]</span>
+                    <span class="n">initial_angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_angles</span><span class="p">[</span><span class="n">leg_name</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;stage_</span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+
+                    <span class="n">forward_kinematics_dict</span><span class="p">[</span><span class="n">segment_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_ik_stage</span><span class="p">(</span>
+                        <span class="n">end_effector_pos</span><span class="o">=</span><span class="n">end_effector_pos</span><span class="p">,</span>
+                        <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
+                        <span class="n">initial_angles</span><span class="o">=</span><span class="n">initial_angles</span><span class="p">,</span>
+                        <span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span>
+                        <span class="n">segment_name</span><span class="o">=</span><span class="n">leg_name</span><span class="p">,</span>
+                        <span class="n">hide_progress_bar</span><span class="o">=</span><span class="n">hide_progress_bar</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Segment </span><span class="si">%s</span><span class="s2"> is not a leg, continuing...&quot;</span><span class="p">,</span> <span class="n">segment_name</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Joint angles and forward kinematics are computed.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">export_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">save_file</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">export_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;forward_kinematics.pkl&quot;</span><span class="p">,</span>
+                <span class="n">forward_kinematics_dict</span>
+            <span class="p">)</span>
+            <span class="n">save_file</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">export_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;leg_joint_angles.pkl&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Joint angles and forward kinematics are saved at </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">export_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">,</span> <span class="n">forward_kinematics_dict</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LegInvKinGeneric">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinGeneric">[docs]</a>
+<span class="k">class</span> <span class="nc">LegInvKinGeneric</span><span class="p">(</span><span class="n">LegInvKinBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to calculate inverse kinematics for leg joints in a</span>
+<span class="sd">    generic manner to only match the given end effector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    aligned_pos : Dict[str, np.ndarray]</span>
+<span class="sd">        Aligned pose from the AlignPose class.</span>
+<span class="sd">        Should have the following structure</span>
+
+<span class="sd">        &gt;&gt;&gt; pose_data_dict = {</span>
+<span class="sd">                &quot;&lt;side&gt;&lt;segment&gt;_leg&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            }</span>
+<span class="sd">    kinematic_chain : KinematicChainGeneric</span>
+<span class="sd">        Kinematic chain of the leg.</span>
+<span class="sd">    initial_angles : Dict[str, np.ndarray], optional</span>
+<span class="sd">        Initial angles of DOFs.</span>
+<span class="sd">        If not provided, the default values from data.py will be used.</span>
+<span class="sd">    log_level : Literal[&quot;DEBUG&quot;, &quot;INFO&quot;, &quot;WARNING&quot;, &quot;ERROR&quot;], optional</span>
+<span class="sd">        Logging level as a string, by default &quot;INFO&quot;</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.kinematic_chain import KinematicChainGeneric</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.leg_inverse_kinematics import LegInvKinGeneric</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.data import BOUNDS, INITIAL_ANGLES</span>
+<span class="sd">    &gt;&gt;&gt; from seqikpy.utils import load_file</span>
+
+<span class="sd">    &gt;&gt;&gt; DATA_PATH = Path(&quot;../data/anipose_220525_aJO_Fly001_001/pose-3d&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; f_path = DATA_PATH / &quot;pose3d_aligned.pkl&quot;</span>
+
+<span class="sd">    &gt;&gt;&gt; aligned_pos = load_file(f_path)</span>
+
+<span class="sd">    &gt;&gt;&gt; seq_ik = LegInvKinGeneric(</span>
+<span class="sd">            aligned_pos=aligned_pos,</span>
+<span class="sd">            kinematic_chain_class=KinematicChainGeneric(</span>
+<span class="sd">                bounds_dof=BOUNDS,</span>
+<span class="sd">                legs_list=[&quot;RF&quot;, &quot;LF&quot;],</span>
+<span class="sd">                body_size=None,</span>
+<span class="sd">            ),</span>
+<span class="sd">            initial_angles=INITIAL_ANGLES</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &gt;&gt;&gt; leg_joint_angles, forward_kinematics = gen_ik.run_ik_and_fk(</span>
+<span class="sd">            export_path=DATA_PATH,</span>
+<span class="sd">            hide_progress_bar=False</span>
+<span class="sd">        )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">aligned_pos</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">kinematic_chain_class</span><span class="p">:</span> <span class="n">KinematicChainGeneric</span><span class="p">,</span>
+        <span class="n">initial_angles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">log_level</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">aligned_pos</span><span class="p">,</span> <span class="n">kinematic_chain_class</span><span class="p">,</span> <span class="n">initial_angles</span><span class="p">,</span> <span class="n">log_level</span><span class="p">)</span>
+        <span class="c1"># Create an empty dict for joint angles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="LegInvKinGeneric.calculate_ik_stage">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinGeneric.calculate_ik_stage">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_ik_stage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">end_effector_pos</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">initial_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">segment_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;For a given trial pose data, calculates the inverse kinematics.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        end_effector_pos : np.ndarray</span>
+<span class="sd">            3D array containing the position of the end effector pos</span>
+<span class="sd">        origin : np.ndarray</span>
+<span class="sd">            Origin of the kinematic chain, i.e., Thorax-Coxa joint</span>
+<span class="sd">        initial_angles : np.ndarray</span>
+<span class="sd">            Initial angles for the optimization seed</span>
+<span class="sd">        segment_name : str</span>
+<span class="sd">            Leg side, i.e., RF, LF, RM, LM, RH, LH</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Array containing the cartesian coordinates of the joint positions.</span>
+<span class="sd">            The joint angles are saved in a class attribute</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hide_progress_bar</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hide_progress_bar&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">segment_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;LF&quot;</span><span class="p">,</span> <span class="s2">&quot;RM&quot;</span><span class="p">,</span> <span class="s2">&quot;LM&quot;</span><span class="p">,</span> <span class="s2">&quot;RH&quot;</span><span class="p">,</span> <span class="s2">&quot;LH&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segment name (</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">) is not valid.&quot;</span><span class="p">)</span>
+
+        <span class="n">frames_no</span> <span class="o">=</span> <span class="n">end_effector_pos</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">end_effector_pos_diff</span> <span class="o">=</span> <span class="n">end_effector_pos</span> <span class="o">-</span> <span class="n">origin</span>
+
+        <span class="c1"># Joint angles shape: (number of frames, number of DOFs)</span>
+        <span class="n">joint_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">frames_no</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_angles</span><span class="p">)))</span>
+        <span class="c1"># Forward kinematics shape: (number of frames, number of</span>
+        <span class="c1"># joints in the kinematics chain, axes-x,y,z)</span>
+        <span class="n">forward_kinematics</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">frames_no</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_angles</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="c1"># if the origin is a vector, convert it to a matrix</span>
+        <span class="k">if</span> <span class="n">origin</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="p">(</span><span class="n">frames_no</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># Generic IK, the kinematic chain is the entire leg</span>
+        <span class="n">kinematic_chain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kinematic_chain_class</span><span class="o">.</span><span class="n">create_leg_chain</span><span class="p">(</span>
+            <span class="n">leg_name</span><span class="o">=</span><span class="n">segment_name</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Start the inverse kinematics calculation</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trange</span><span class="p">(</span><span class="n">frames_no</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="n">hide_progress_bar</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Calculating IK </span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="c1"># For the first frame, use the given initial angles, for the rest</span>
+            <span class="c1"># use the calculated joint angles from the previous time step</span>
+            <span class="n">initial_angles</span> <span class="o">=</span> <span class="n">initial_angles</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">joint_angles</span><span class="p">[</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="c1"># Calculate the inverse kinematics</span>
+            <span class="n">joint_angles</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_ik</span><span class="p">(</span>
+                <span class="n">kinematic_chain</span><span class="p">,</span> <span class="n">end_effector_pos_diff</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:],</span> <span class="n">initial_angles</span>
+            <span class="p">)</span>
+
+            <span class="n">forward_kinematics</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">calculate_fk</span><span class="p">(</span><span class="n">kinematic_chain</span><span class="p">,</span> <span class="n">joint_angles</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:])</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Link names</span>
+        <span class="n">link_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">link</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">kinematic_chain</span><span class="o">.</span><span class="n">links</span><span class="p">]</span>
+        <span class="c1"># Store the joint angles based on the stage number</span>
+        <span class="k">for</span> <span class="n">link_name</span> <span class="ow">in</span> <span class="n">link_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;Base&quot;</span> <span class="ow">in</span> <span class="n">link_name</span> <span class="ow">or</span> <span class="s2">&quot;Claw&quot;</span> <span class="ow">in</span> <span class="n">link_name</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_</span><span class="si">{</span><span class="n">link_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joint_angles</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="n">link_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">link_name</span><span class="p">)</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">forward_kinematics</span></div>
+
+
+<div class="viewcode-block" id="LegInvKinGeneric.run_ik_and_fk">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.leg_inverse_kinematics.LegInvKinGeneric.run_ik_and_fk">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_ik_and_fk</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">export_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs inverse and forward kinematics for leg joints.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        export_path : Union[Path, str], optional</span>
+<span class="sd">            Path where the results will be saved,</span>
+<span class="sd">            if None, nothing is saveed, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[Dict[str,np.ndarray], Dict[str,np.ndarray]]</span>
+<span class="sd">            Two dictionaries containing joint angles and forward</span>
+<span class="sd">            kinematics, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hide_progress_bar</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hide_progress_bar&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">forward_kinematics_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing joint angles and forward kinematics...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">segment_name</span><span class="p">,</span> <span class="n">segment_array</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;leg&quot;</span> <span class="ow">in</span> <span class="n">segment_name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="c1"># If segment name is RF_leg so the leg name is RF</span>
+                <span class="n">leg_name</span> <span class="o">=</span> <span class="n">segment_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c1"># If leg_name is not in body_size, then continue</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">leg_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kinematic_chain_class</span><span class="o">.</span><span class="n">body_size</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Leg </span><span class="si">%s</span><span class="s2"> is not in the kinematic chain, continuing...&quot;</span><span class="p">,</span> <span class="n">leg_name</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># First key point of the segment array is the origin</span>
+                <span class="c1"># of the kinematic chain, i.e., Thorax-Coxa joint</span>
+                <span class="n">origin</span> <span class="o">=</span> <span class="n">segment_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+                <span class="c1"># for the generic IK, endeffector is the claw</span>
+                <span class="n">end_effector_pos</span> <span class="o">=</span> <span class="n">segment_array</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">initial_angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_angles</span><span class="p">[</span><span class="n">leg_name</span><span class="p">][</span><span class="s2">&quot;stage_4&quot;</span><span class="p">]</span>
+
+                <span class="n">forward_kinematics_dict</span><span class="p">[</span><span class="n">segment_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_ik_stage</span><span class="p">(</span>
+                    <span class="n">end_effector_pos</span><span class="o">=</span><span class="n">end_effector_pos</span><span class="p">,</span>
+                    <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
+                    <span class="n">initial_angles</span><span class="o">=</span><span class="n">initial_angles</span><span class="p">,</span>
+                    <span class="n">segment_name</span><span class="o">=</span><span class="n">leg_name</span><span class="p">,</span>
+                    <span class="n">hide_progress_bar</span><span class="o">=</span><span class="n">hide_progress_bar</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Segment </span><span class="si">%s</span><span class="s2"> is not a leg, continuing...&quot;</span><span class="p">,</span> <span class="n">segment_name</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Joint angles and forward kinematics are computed.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">export_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">save_file</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">export_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;forward_kinematics.pkl&quot;</span><span class="p">,</span>
+                <span class="n">forward_kinematics_dict</span>
+            <span class="p">)</span>
+            <span class="n">save_file</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">export_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;leg_joint_angles.pkl&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Joint angles and forward kinematics are saved at </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">export_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_angles_dict</span><span class="p">,</span> <span class="n">forward_kinematics_dict</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By P. Gizem Özdil
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

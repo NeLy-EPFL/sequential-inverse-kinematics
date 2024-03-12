@@ -1,0 +1,866 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seqikpy.utils &#8212; Trial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/seqikpy/utils';</script>
+    <link rel="icon" href="../../_static/logo.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Trial - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Trial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to SeqIKPy!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏁 Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Features</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🔬 Methodology</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_alignment.html">3D pose alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_angle_calc.html">Inverse kinematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../limitations.html">Limitations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_grooming.html">Using SeqIKPy for Drosophila grooming</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_locomotion.html">Using SeqIKPy for Drosophila locomotion</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">💬 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues/new?title=Issue%20on%20page%20%2F_modules/seqikpy/utils.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for seqikpy.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Utilities. &quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">nptyping</span> <span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">pchip_interpolate</span>
+
+
+<div class="viewcode-block" id="get_fps_from_video">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_fps_from_video">[docs]</a>
+<span class="k">def</span> <span class="nf">get_fps_from_video</span><span class="p">(</span><span class="n">video_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Finds the fps of a video. &quot;&quot;&quot;</span>
+    <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">video_dir</span><span class="p">))</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">fps</span></div>
+
+
+
+<div class="viewcode-block" id="load_stim_data">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.load_stim_data">[docs]</a>
+<span class="k">def</span> <span class="nf">load_stim_data</span><span class="p">(</span><span class="n">main_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Loads the stimulus info from txt.&quot;&quot;&quot;</span>
+    <span class="n">stim_dir</span> <span class="o">=</span> <span class="n">main_dir</span> <span class="o">/</span> <span class="s2">&quot;stimulusSequence.txt&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">stim_dir</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">lines</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stim_dir</span><span class="si">}</span><span class="s2"> does not exist!!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="get_stim_array">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_stim_array">[docs]</a>
+<span class="k">def</span> <span class="nf">get_stim_array</span><span class="p">(</span>
+        <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">frame_rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">hamming_window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">time_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes a stimulus array from the stimulus information.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    main_dir : str</span>
+<span class="sd">        Path of the file containing the stim info.</span>
+<span class="sd">    frame_rate : int</span>
+<span class="sd">        Frame rate of the recordings.</span>
+<span class="sd">    scale : int, optional</span>
+<span class="sd">        Interpolation rate applied in df3dPP, by default 1 (no interpolation!)</span>
+<span class="sd">    hamming_window_size : int, optional</span>
+<span class="sd">        Size of the filter applied in df3dPP, by default 28</span>
+<span class="sd">    time_scale : int, optional</span>
+<span class="sd">        Time scale of the stimulus info (msec), by default 1e-3</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        np.array(length, ) of boolean values indicating the stimulus time points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stim_duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">frame_no</span> <span class="o">=</span> <span class="n">stim_duration</span> <span class="o">*</span> <span class="n">frame_rate</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="n">repeat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">stim_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">frame_no</span><span class="p">)</span>
+    <span class="c1"># Get only the sequence data</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">repeat_no</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line_no</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">line_no</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                           <span class="o">*</span> <span class="n">frame_rate</span> <span class="o">*</span> <span class="n">time_scale</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)</span>
+            <span class="n">stim_array</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span>
+                       <span class="n">duration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="n">line_no</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">True</span>
+            <span class="n">start</span> <span class="o">+=</span> <span class="n">duration</span>
+
+    <span class="n">trim_ind</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hamming_window_size</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">stim_array</span><span class="p">[</span><span class="n">trim_ind</span><span class="p">:</span> <span class="n">stim_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">trim_ind</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_stim_intervals">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_stim_intervals">[docs]</a>
+<span class="k">def</span> <span class="nf">get_stim_intervals</span><span class="p">(</span><span class="n">stim_data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Reads stimulus array and returns the stim intervals for plotting purposes.</span>
+<span class="sd">    Use get_stim_array otherwise. &quot;&quot;&quot;</span>
+    <span class="n">stim_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">stim_data</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">stim_start_end</span> <span class="o">=</span> <span class="p">[</span><span class="n">stim_on</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">stim_on</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">stim_start_end</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stim_on</span><span class="p">[</span><span class="n">ind</span><span class="p">])</span>
+        <span class="n">stim_start_end</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stim_on</span><span class="p">[</span><span class="n">ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stim_on</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">stim_start_end</span><span class="p">:</span>
+        <span class="n">stim_start_end</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stim_on</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">stim_start_end</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_body_size">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.calculate_body_size">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_body_size</span><span class="p">(</span>
+    <span class="n">body_template</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">],</span>
+    <span class="n">legs_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;LF&quot;</span><span class="p">,</span> <span class="s2">&quot;RM&quot;</span><span class="p">,</span> <span class="s2">&quot;LM&quot;</span><span class="p">,</span> <span class="s2">&quot;RH&quot;</span><span class="p">,</span> <span class="s2">&quot;LH&quot;</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculates body segment sizes from the template data.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">legs_list</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;LF&quot;</span><span class="p">,</span> <span class="s2">&quot;RM&quot;</span><span class="p">,</span> <span class="s2">&quot;LM&quot;</span><span class="p">,</span> <span class="s2">&quot;RH&quot;</span><span class="p">,</span> <span class="s2">&quot;LH&quot;</span><span class="p">])):</span>
+        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            legs_list could only contain [&quot;RF&quot;, &quot;LF&quot;, &quot;RM&quot;, &quot;LM&quot;, &quot;RH&quot;, &quot;LH&quot;],</span>
+<span class="s2">            currently, it contains </span><span class="si">{</span><span class="n">legs_list</span><span class="si">}</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+    <span class="n">body_size</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">leg_segments</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;Femur&quot;</span><span class="p">,</span> <span class="s2">&quot;Tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;Tarsus&quot;</span><span class="p">,</span> <span class="s2">&quot;Claw&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">segment_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg_segments</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">leg</span> <span class="ow">in</span> <span class="n">legs_list</span><span class="p">:</span>
+            <span class="c1"># If Claw, calculate the length of the entire leg</span>
+            <span class="k">if</span> <span class="n">segment_name</span> <span class="o">==</span> <span class="s2">&quot;Claw&quot;</span><span class="p">:</span>
+                <span class="n">body_size</span><span class="p">[</span><span class="n">leg</span><span class="p">]</span> <span class="o">=</span> <span class="n">body_size</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_Coxa&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">body_size</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_Femur&quot;</span><span class="p">]</span> <span class="o">+</span> \
+                    <span class="n">body_size</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_Tibia&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">body_size</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_Tarsus&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">body_size</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+                    <span class="n">body_template</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">-</span>
+                    <span class="n">body_template</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">leg_segments</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+    <span class="c1"># Assuming right and left hand-side are symmetric, checking for one side is enough</span>
+    <span class="k">if</span> <span class="s2">&quot;R_Antenna_base&quot;</span> <span class="ow">in</span> <span class="n">body_template</span><span class="p">:</span>
+        <span class="n">body_size</span><span class="p">[</span><span class="s2">&quot;Antenna&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;R_Antenna_base&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;R_Antenna_edge&quot;</span><span class="p">])</span>
+        <span class="n">body_size</span><span class="p">[</span><span class="s2">&quot;Antenna_mid_thorax&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+            <span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;R_Antenna_base&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;Thorax_mid&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">body_size</span></div>
+
+
+
+<div class="viewcode-block" id="drop_level_dlc">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.drop_level_dlc">[docs]</a>
+<span class="k">def</span> <span class="nf">drop_level_dlc</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts DLC type dataframe into one level df. &quot;&quot;&quot;</span>
+    <span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">droplevel</span><span class="p">()</span>
+    <span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">data_frame</span></div>
+
+
+
+<div class="viewcode-block" id="fix_coxae_pos">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.fix_coxae_pos">[docs]</a>
+<span class="k">def</span> <span class="nf">fix_coxae_pos</span><span class="p">(</span><span class="n">points3d</span><span class="p">,</span> <span class="n">right_coxa_kp</span><span class="o">=</span><span class="s2">&quot;thorax_coxa_R&quot;</span><span class="p">,</span> <span class="n">left_coxa_kp</span><span class="o">=</span><span class="s2">&quot;thorax_coxa_L&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculates the fixed coxae location based on the quantiles. &quot;&quot;&quot;</span>
+    <span class="n">coxa_right</span> <span class="o">=</span> <span class="n">get_array</span><span class="p">(</span><span class="n">right_coxa_kp</span><span class="p">,</span> <span class="n">points3d</span><span class="p">)</span>
+    <span class="n">coxa_left</span> <span class="o">=</span> <span class="n">get_array</span><span class="p">(</span><span class="n">left_coxa_kp</span><span class="p">,</span> <span class="n">points3d</span><span class="p">)</span>
+    <span class="n">coxa_right_fixed</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">coxa_right</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">coxa_right</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+    <span class="n">coxa_left_fixed</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">coxa_left</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">coxa_left</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="n">coxa_right_fixed</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="n">coxa_left_fixed</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="compute_length_of_segment">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.compute_length_of_segment">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_length_of_segment</span><span class="p">(</span><span class="n">points3d</span><span class="p">,</span> <span class="n">segment_beg</span><span class="p">,</span> <span class="n">segment_end</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the length of a segment.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">points3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_beg</span><span class="si">}</span><span class="s2">_x&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">points3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_end</span><span class="si">}</span><span class="s2">_x&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">points3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_beg</span><span class="si">}</span><span class="s2">_y&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">points3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_end</span><span class="si">}</span><span class="s2">_y&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">points3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_beg</span><span class="si">}</span><span class="s2">_z&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">points3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_end</span><span class="si">}</span><span class="s2">_z&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="leg_length_model">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.leg_length_model">[docs]</a>
+<span class="k">def</span> <span class="nf">leg_length_model</span><span class="p">(</span><span class="n">nmf_size</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">leg_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">claw_is_ee</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">claw_is_ee</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nmf_size</span><span class="p">[</span><span class="n">leg_name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">nmf_size</span><span class="p">[</span><span class="n">leg_name</span><span class="p">]</span> <span class="o">-</span> <span class="n">nmf_size</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg_name</span><span class="si">}</span><span class="s2">_Tarsus&quot;</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_length_of_segments">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_length_of_segments">[docs]</a>
+<span class="k">def</span> <span class="nf">get_length_of_segments</span><span class="p">(</span><span class="n">points3d</span><span class="p">,</span> <span class="n">claw_is_ee</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns a dictionary with segment sizes. &quot;&quot;&quot;</span>
+    <span class="n">segments</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Coxa&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;thorax_coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;coxa_femur&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;Femur&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;coxa_femur&quot;</span><span class="p">,</span> <span class="s2">&quot;femur_tibia&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;Tibia&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;femur_tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;tibia_tarsus&quot;</span><span class="p">),</span>
+        <span class="c1"># &quot;Antenna&quot;: (&quot;base_anten&quot;, &quot;tip_anten&quot;),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">claw_is_ee</span><span class="p">:</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">segments</span><span class="p">,</span> <span class="s2">&quot;Tarsus&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;tibia_tarsus&quot;</span><span class="p">,</span> <span class="s2">&quot;claw&quot;</span><span class="p">)}</span>
+    <span class="n">lengths</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">segment_name</span><span class="p">,</span> <span class="p">(</span><span class="n">segment_start</span><span class="p">,</span> <span class="n">segment_end</span><span class="p">)</span> <span class="ow">in</span> <span class="n">segments</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">]:</span>
+            <span class="n">lengths</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_length_of_segment</span><span class="p">(</span>
+                <span class="n">points3d</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_start</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_end</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">lengths</span></div>
+
+
+
+<div class="viewcode-block" id="compute_mean_length_of_segments">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.compute_mean_length_of_segments">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_mean_length_of_segments</span><span class="p">(</span><span class="n">segment_lengths</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes mean length of each segment. &quot;&quot;&quot;</span>
+    <span class="n">mean_segment_length</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">segment</span><span class="p">,</span> <span class="n">length_array</span> <span class="ow">in</span> <span class="n">segment_lengths</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">mean_segment_length</span><span class="p">[</span><span class="n">segment</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">length_array</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mean_segment_length</span></div>
+
+
+
+<div class="viewcode-block" id="get_mean_length_of_segments">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_mean_length_of_segments">[docs]</a>
+<span class="k">def</span> <span class="nf">get_mean_length_of_segments</span><span class="p">(</span><span class="n">points3d</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Gets a dictionary with segment lengths. &quot;&quot;&quot;</span>
+    <span class="n">lengths</span> <span class="o">=</span> <span class="n">get_length_of_segments</span><span class="p">(</span><span class="n">points3d</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">compute_mean_length_of_segments</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_leg_length">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_leg_length">[docs]</a>
+<span class="k">def</span> <span class="nf">get_leg_length</span><span class="p">(</span><span class="n">mean_segment_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns the leg size from the mean segment lengths.&quot;&quot;&quot;</span>
+    <span class="n">leg_length_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">size</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">mean_segment_size</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s2">&quot;R_&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">leg_length_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">size</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">mean_segment_size</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s2">&quot;L_&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="n">leg_length_r</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="n">leg_length_l</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="get_array">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_array">[docs]</a>
+<span class="k">def</span> <span class="nf">get_array</span><span class="p">(</span><span class="n">kp_name</span><span class="p">,</span> <span class="n">kp_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns 3D points of a key point in an array format.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">kp_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp_name</span><span class="si">}</span><span class="s2">_x&quot;</span><span class="p">],</span>
+            <span class="n">kp_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp_name</span><span class="si">}</span><span class="s2">_y&quot;</span><span class="p">],</span>
+            <span class="n">kp_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp_name</span><span class="si">}</span><span class="s2">_z&quot;</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_mean_quantile">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_mean_quantile">[docs]</a>
+<span class="k">def</span> <span class="nf">get_mean_quantile</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">quantile_diff</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">-</span> <span class="n">quantile_diff</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">quantile_diff</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="dist_calc">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.dist_calc">[docs]</a>
+<span class="k">def</span> <span class="nf">dist_calc</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_distance_btw_vecs">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.get_distance_btw_vecs">[docs]</a>
+<span class="k">def</span> <span class="nf">get_distance_btw_vecs</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vector1</span> <span class="o">-</span> <span class="n">vector2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_file">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.save_file">[docs]</a>
+<span class="k">def</span> <span class="nf">save_file</span><span class="p">(</span><span class="n">out_fname</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save file.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_fname</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_file">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.load_file">[docs]</a>
+<span class="k">def</span> <span class="nf">load_file</span><span class="p">(</span><span class="n">output_fname</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load file.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_fname</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pts</span></div>
+
+
+
+<div class="viewcode-block" id="from_anipose_to_array">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.from_anipose_to_array">[docs]</a>
+<span class="k">def</span> <span class="nf">from_anipose_to_array</span><span class="p">(</span><span class="n">points3d</span><span class="p">,</span> <span class="n">claw_is_end_effector</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert usual dataframe format into a three dimensional array of size (N,KeyPoints,3).&quot;&quot;&quot;</span>
+
+    <span class="n">kps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;thorax_coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;coxa_femur&quot;</span><span class="p">,</span> <span class="s2">&quot;femur_tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;tibia_tarsus&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">claw_is_end_effector</span><span class="p">:</span>
+        <span class="n">kps</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;claw&quot;</span><span class="p">]</span>
+        <span class="n">key_points</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">kp</span> <span class="ow">in</span> <span class="n">kps</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">key_points</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">kp</span> <span class="ow">in</span> <span class="n">kps</span><span class="p">]</span>
+
+    <span class="n">frames_no</span> <span class="o">=</span> <span class="n">points3d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">position_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">frames_no</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_points</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># timestep, key points, axes</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">key_points</span><span class="p">):</span>
+        <span class="n">position_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">get_array</span><span class="p">(</span><span class="n">kp</span><span class="p">,</span> <span class="n">points3d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">return</span> <span class="n">position_array</span></div>
+
+
+
+<div class="viewcode-block" id="df_to_nparray">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.df_to_nparray">[docs]</a>
+<span class="k">def</span> <span class="nf">df_to_nparray</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">claw_is_end_effector</span><span class="p">,</span> <span class="n">segment</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert usual dataframe format into a three dimensional array. &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">claw_is_end_effector</span><span class="p">:</span>
+        <span class="n">key_points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;Femur&quot;</span><span class="p">,</span> <span class="s2">&quot;Tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;Tarsus&quot;</span><span class="p">,</span> <span class="s2">&quot;Claw&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">key_points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;Femur&quot;</span><span class="p">,</span> <span class="s2">&quot;Tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;Tarsus&quot;</span><span class="p">]</span>
+
+    <span class="n">position_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Pose_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">F_Coxa_x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="nb">len</span><span class="p">(</span><span class="n">key_points</span><span class="p">),</span>
+         <span class="mi">3</span><span class="p">))</span>  <span class="c1"># timestep, key points, axes</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">key_points</span><span class="p">):</span>
+        <span class="n">position_array</span><span class="p">[:,</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">data_frame</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Pose_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">segment</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">kp</span><span class="si">}</span><span class="s2">_x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                <span class="n">data_frame</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Pose_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">segment</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">kp</span><span class="si">}</span><span class="s2">_y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                <span class="n">data_frame</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Pose_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">segment</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">kp</span><span class="si">}</span><span class="s2">_z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">position_array</span></div>
+
+
+
+<div class="viewcode-block" id="dict_to_nparray_pose">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.dict_to_nparray_pose">[docs]</a>
+<span class="k">def</span> <span class="nf">dict_to_nparray_pose</span><span class="p">(</span><span class="n">pose_dict</span><span class="p">,</span> <span class="n">claw_is_end_effector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert usual df3dPP dictionary format into a three dimensional array. &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">claw_is_end_effector</span><span class="p">:</span>
+        <span class="n">key_points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;Femur&quot;</span><span class="p">,</span> <span class="s2">&quot;Tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;Tarsus&quot;</span><span class="p">,</span> <span class="s2">&quot;Claw&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">key_points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;Femur&quot;</span><span class="p">,</span> <span class="s2">&quot;Tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;Tarsus&quot;</span><span class="p">]</span>
+
+    <span class="n">position_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">pose_dict</span><span class="p">[</span><span class="s2">&quot;Coxa&quot;</span><span class="p">][</span><span class="s2">&quot;raw_pos_aligned&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="nb">len</span><span class="p">(</span><span class="n">key_points</span><span class="p">),</span>
+         <span class="mi">3</span><span class="p">))</span>  <span class="c1"># timestep, key points, axes</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">key_points</span><span class="p">):</span>
+        <span class="n">position_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">pose_dict</span><span class="p">[</span><span class="n">kp</span><span class="p">][</span><span class="s2">&quot;raw_pos_aligned&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">position_array</span></div>
+
+
+
+<div class="viewcode-block" id="dict_to_nparray_angle">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.dict_to_nparray_angle">[docs]</a>
+<span class="k">def</span> <span class="nf">dict_to_nparray_angle</span><span class="p">(</span><span class="n">angle_dict</span><span class="p">,</span> <span class="n">leg</span><span class="p">,</span> <span class="n">claw_is_end_effector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert usual df3dPP dictionary format into a three dimensional array. &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">claw_is_end_effector</span><span class="p">:</span>
+        <span class="n">dofs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ThC_roll&quot;</span><span class="p">,</span> <span class="s2">&quot;ThC_yaw&quot;</span><span class="p">,</span> <span class="s2">&quot;ThC_pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;CTr_pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;CTr_roll&quot;</span><span class="p">,</span> <span class="s2">&quot;FTi_pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;TiTa_pitch&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dofs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ThC_roll&quot;</span><span class="p">,</span> <span class="s2">&quot;ThC_yaw&quot;</span><span class="p">,</span> <span class="s2">&quot;ThC_pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;CTr_pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;CTr_roll&quot;</span><span class="p">,</span> <span class="s2">&quot;FTi_pitch&quot;</span><span class="p">]</span>
+
+    <span class="n">angle_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">angle_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_leg&quot;</span><span class="p">][</span><span class="n">dofs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span>
+         <span class="nb">len</span><span class="p">(</span><span class="n">dofs</span><span class="p">)))</span>  <span class="c1"># timestep, dofs</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">):</span>
+        <span class="n">angle_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">angle_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg</span><span class="si">}</span><span class="s2">_leg&quot;</span><span class="p">][</span><span class="n">kp</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">angle_array</span></div>
+
+
+
+<div class="viewcode-block" id="interpolate_signal">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.interpolate_signal">[docs]</a>
+<span class="k">def</span> <span class="nf">interpolate_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">original_ts</span><span class="p">,</span> <span class="n">new_ts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Interpolates signals. &quot;&quot;&quot;</span>
+    <span class="n">total_time</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">original_ts</span>
+    <span class="n">original_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">,</span> <span class="n">original_ts</span><span class="p">)</span>
+    <span class="n">new_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">,</span> <span class="n">new_ts</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">interpolated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">pchip_interpolate</span><span class="p">(</span><span class="n">original_x</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">new_x</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="n">signal</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">signal</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">signal</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">interpolated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">pchip_interpolate</span><span class="p">(</span><span class="n">original_x</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">new_x</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">interpolated</span></div>
+
+
+
+<div class="viewcode-block" id="interpolate_joint_angles">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.utils.interpolate_joint_angles">[docs]</a>
+<span class="k">def</span> <span class="nf">interpolate_joint_angles</span><span class="p">(</span><span class="n">joint_angles_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Interpolates joint angles. &quot;&quot;&quot;</span>
+    <span class="n">interpolated_joint_angles</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">joint_angles_dict</span><span class="p">:</span>
+        <span class="n">interpolated_joint_angles</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="o">=</span> <span class="n">interpolate_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">=</span><span class="n">joint_angles_dict</span><span class="p">[</span><span class="n">dof</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">interpolated_joint_angles</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By P. Gizem Özdil
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

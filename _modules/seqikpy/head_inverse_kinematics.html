@@ -1,0 +1,820 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seqikpy.head_inverse_kinematics &#8212; Trial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/seqikpy/head_inverse_kinematics';</script>
+    <link rel="icon" href="../../_static/logo.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Trial - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Trial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to SeqIKPy!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏁 Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Features</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🔬 Methodology</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_alignment.html">3D pose alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_angle_calc.html">Inverse kinematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../limitations.html">Limitations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_grooming.html">Using SeqIKPy for Drosophila grooming</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_locomotion.html">Using SeqIKPy for Drosophila locomotion</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">💬 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues/new?title=Issue%20on%20page%20%2F_modules/seqikpy/head_inverse_kinematics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for seqikpy.head_inverse_kinematics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Implementation of a class to calculate head inverse kinematics.</span>
+
+<span class="sd">Example usage:</span>
+<span class="sd">&gt;&gt;&gt; import pickle</span>
+<span class="sd">&gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">&gt;&gt;&gt; from seqikpy.head_inverse_kinematics import HeadInverseKinematics</span>
+<span class="sd">&gt;&gt;&gt; from seqikpy.data import NMF_TEMPLATE</span>
+
+<span class="sd">&gt;&gt;&gt; DATA_PATH = Path(&quot;../data/anipose/normal_case/pose-3d&quot;)</span>
+<span class="sd">&gt;&gt;&gt; f_path = DATA_PATH / &quot;aligned_pose3d.h5&quot;</span>
+<span class="sd">&gt;&gt;&gt; with open(f_path, &quot;rb&quot;) as f:</span>
+<span class="sd">&gt;&gt;&gt;     data = pickle.load(f)</span>
+
+<span class="sd">&gt;&gt;&gt; class_hk = HeadInverseKinematics(</span>
+<span class="sd">        aligned_pos = data,</span>
+<span class="sd">        body_template=NMF_TEMPLATE,</span>
+<span class="sd">    )</span>
+<span class="sd">&gt;&gt;&gt; joint_angles = class_hk.compute_head_angles(export_path = DATA_PATH)</span>
+
+<span class="sd">IMPORTANT NOTES:</span>
+<span class="sd">----------------</span>
+<span class="sd">* The aligned pose must include keys: [&quot;R_head&quot;, &quot;L_head&quot;, &quot;Neck&quot;] for head angles calculation.</span>
+
+<span class="sd">* Each key corresponds to an array shaped as (N, key_points, 3), where N is the frame count, key_points is the number of key points per part (2 for the head, including antenna base and edge, 1 for the neck), and 3 represents the x, y, z dimensions.</span>
+
+<span class="sd">* The key points vary based on the 3D data. If antennal joint angles are not required, &quot;L_head&quot; and &quot;R_head&quot; may contain only a single key point. In such cases, set calculate_ant_angle to False in compute_head_angles. The head segments (&quot;L_head&quot;, &quot;R_head&quot;) can include any key point such as the head bristles for calculating head roll, pitch, and yaw. The examples utilize the antennae base for these calculations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
+
+<span class="kn">from</span> <span class="nn">seqikpy.utils</span> <span class="kn">import</span> <span class="n">save_file</span>
+
+<span class="c1"># Axes as a named tuple to ensure immutability</span>
+<span class="n">AxesTuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;AxesTuple&quot;</span><span class="p">,</span> <span class="s2">&quot;X_AXIS Y_AXIS Z_AXIS&quot;</span><span class="p">)</span>
+<span class="n">Axes</span> <span class="o">=</span> <span class="n">AxesTuple</span><span class="p">(</span>
+    <span class="n">X_AXIS</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">Y_AXIS</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">Z_AXIS</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="p">)</span>
+
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot; </span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2">- </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()]</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics">[docs]</a>
+<span class="k">class</span> <span class="nc">HeadInverseKinematics</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the head DOFs (3) and antennae DOFs (2)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    aligned_pos : Dict[str, np.ndarray]</span>
+<span class="sd">        Aligned pose dictionary.</span>
+<span class="sd">        In principle, it should have body parts (R_head) as keys,</span>
+<span class="sd">        and arrays (N,2 for the head) as values.</span>
+<span class="sd">        Check the sample data for more detailed example.</span>
+<span class="sd">    body_template : Dict[str, np.ndarray]</span>
+<span class="sd">        Dictionary containing the positions of fly model body segments.</span>
+<span class="sd">        Check data.py for the default dictionary.</span>
+<span class="sd">    log_level : Literal[&quot;DEBUG&quot;, &quot;INFO&quot;, &quot;WARNING&quot;, &quot;ERROR&quot;], optional</span>
+<span class="sd">        Logging level as a string, by default &quot;INFO&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">aligned_pos</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">body_template</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">log_level</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span> <span class="o">=</span> <span class="n">aligned_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span> <span class="o">=</span> <span class="n">body_template</span>
+
+        <span class="c1"># Check self.aligned_pos keys</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;R_head&quot;</span><span class="p">,</span> <span class="s2">&quot;L_head&quot;</span><span class="p">,</span> <span class="s2">&quot;Neck&quot;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;self.aligned_pos must have R_head, L_head, Neck as keys,</span>
+<span class="sd">                at least one of them is missing in the current data&quot;&quot;&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Set the constants values to avoid repetitive computations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_mid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_head_vector_mid</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_horizontal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_head_vector_horizontal</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_mid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_horizontal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                One of head vectors</span>
+<span class="s2">                (mid: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head_vector_mid</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, horizontal: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head_vector_horizontal</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">                does not have the right shape (N,3).</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+
+        <span class="c1"># Biomechanical model `zero pose` joint angles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rest_head_pitch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rest_head_pitch</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rest_antenna_pitch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rest_antenna_pitch</span><span class="p">()</span>
+
+        <span class="c1"># Get the logger of the module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">numeric_level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">log_level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">numeric_level</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HeadInverseKinematics.compute_head_angles">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.compute_head_angles">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_head_angles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">export_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">compute_ant_angles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the head &amp; antennal joint angles</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        export_path : Union[str, Path], optional</span>
+<span class="sd">            Export path of the joint angles, by default None</span>
+<span class="sd">        compute_ant_angles : Optional[bool], optional</span>
+<span class="sd">            If True, computes the head roll,pitch and yaw, by default True</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, np.ndarray]</span>
+<span class="sd">            Dicitonary containing the head joint angles, saved</span>
+<span class="sd">            in export path if provided</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">head_angles</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">head_angles</span><span class="p">[</span><span class="s2">&quot;Angle_head_roll&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_head_roll</span><span class="p">()</span>
+        <span class="n">head_angles</span><span class="p">[</span><span class="s2">&quot;Angle_head_pitch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_head_pitch</span><span class="p">()</span>
+        <span class="n">head_angles</span><span class="p">[</span><span class="s2">&quot;Angle_head_yaw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_head_yaw</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">compute_ant_angles</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">]:</span>
+                <span class="n">head_angles</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_antenna_yaw_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_antenna_yaw</span><span class="p">(</span>
+                    <span class="n">side</span><span class="o">=</span><span class="n">side</span><span class="p">,</span> <span class="n">head_roll</span><span class="o">=</span><span class="n">head_angles</span><span class="p">[</span><span class="s2">&quot;Angle_head_roll&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">head_angles</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Angle_antenna_pitch_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_antenna_pitch</span><span class="p">(</span>
+                    <span class="n">side</span><span class="o">=</span><span class="n">side</span><span class="p">,</span> <span class="n">head_roll</span><span class="o">=</span><span class="n">head_angles</span><span class="p">[</span><span class="s2">&quot;Angle_head_roll&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">export_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">save_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">export_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;head_joint_angles.pkl&quot;</span><span class="p">,</span> <span class="n">head_angles</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Head joint angles are saved at </span><span class="si">%s</span><span class="s2">!&quot;</span><span class="p">,</span> <span class="n">export_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">head_angles</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.get_head_vector">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.get_head_vector">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_head_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Vector ((N,3) array) from &lt;side&gt; antenna base (or any head key point) to neck.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="s2">&quot;Neck&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">_head&quot;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.get_head_vector_mid">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.get_head_vector_mid">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_head_vector_mid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Vector ((N,3) array) from mid antenna base (or any head key point) to neck.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="s2">&quot;R_head&quot;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="s2">&quot;L_head&quot;</span><span class="p">]</span>
+                <span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="s2">&quot;Neck&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">,:]</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.get_head_vector_horizontal">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.get_head_vector_horizontal">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_head_vector_horizontal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Vector ((N,3) array) from right antenna base (or any head key point)</span>
+<span class="sd">        to left antenna base (or any head key point).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="s2">&quot;L_head&quot;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="s2">&quot;R_head&quot;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.get_ant_vector">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.get_ant_vector">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ant_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Vector ((N,3) array) from antenna base to antenna edge.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">_head&quot;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">aligned_pos</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">_head&quot;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.angle_between_segments">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.angle_between_segments">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">angle_between_segments</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rot_axis</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the angle between two vectors based on the cos formula.</span>
+<span class="sd">        It reverses the sign of the angle if determinant of the matrix having</span>
+<span class="sd">        two vectors and the rotation axis is negative.</span>
+
+<span class="sd">        The returned angle is in radians.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># reshape to (N,3)</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="n">v1_norm</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">v2_norm</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">v1_norm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],))</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">v1_norm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">mask</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">([</span><span class="n">rot_axis</span><span class="p">,</span> <span class="n">v1</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">:],</span> <span class="n">v2</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">:]])</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ij,ij-&gt;i&quot;</span><span class="p">,</span> <span class="n">v1_norm</span><span class="p">,</span> <span class="n">v2_norm</span><span class="p">))</span> <span class="o">*</span> <span class="n">mask</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.compute_head_pitch">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.compute_head_pitch">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_head_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the head pitch angle (rad) from head mid vector</span>
+<span class="sd">        projected onto sagittal plane to the anteroposterior plane.</span>
+<span class="sd">        Furthermore, it sums the angle with the resting joint angle of the head pitch.</span>
+
+<span class="sd">        Higher head pitch means head is lowered more.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_mid</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># take the projection on the sagittal plane</span>
+        <span class="n">head_vector</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">anteroposterior_axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plane</span><span class="p">(</span><span class="n">Axes</span><span class="o">.</span><span class="n">X_AXIS</span><span class="p">,</span> <span class="n">head_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">HeadInverseKinematics</span><span class="o">.</span><span class="n">angle_between_segments</span><span class="p">(</span>
+            <span class="n">v1</span><span class="o">=</span><span class="n">anteroposterior_axis</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="n">head_vector</span><span class="p">,</span> <span class="n">rot_axis</span><span class="o">=</span><span class="n">Axes</span><span class="o">.</span><span class="n">Y_AXIS</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">angle</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rest_head_pitch</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.compute_head_roll">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.compute_head_roll">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_head_roll</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the head roll angle (rad) from horizontal axis</span>
+<span class="sd">        to head horizontal vector projected onto transverse plane.</span>
+
+<span class="sd">        Positive head roll -&gt; rotation to the right in fly coords</span>
+<span class="sd">        Negative head roll -&gt; rotation to the left in the fly coords</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_horizontal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># take the projection on the dorsoventral plane</span>
+        <span class="n">head_vector</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">horizontal_axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plane</span><span class="p">(</span><span class="n">Axes</span><span class="o">.</span><span class="n">Y_AXIS</span><span class="p">,</span> <span class="n">head_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">HeadInverseKinematics</span><span class="o">.</span><span class="n">angle_between_segments</span><span class="p">(</span>
+            <span class="n">v1</span><span class="o">=</span><span class="n">horizontal_axis</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="n">head_vector</span><span class="p">,</span> <span class="n">rot_axis</span><span class="o">=</span><span class="n">Axes</span><span class="o">.</span><span class="n">X_AXIS</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">angle</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.compute_head_yaw">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.compute_head_yaw">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_head_yaw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the head yaw angle (rad) from horizontal axis</span>
+<span class="sd">        to head horizontal vector projected onto frontal plane.</span>
+
+<span class="sd">        Positive head yaw -&gt; head yaw to the left</span>
+<span class="sd">        Negative head yaw -&gt; head yaw to the right</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_horizontal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># take the projection on the horizontal plane</span>
+        <span class="n">head_vector</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">horizontal_axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plane</span><span class="p">(</span><span class="n">Axes</span><span class="o">.</span><span class="n">Y_AXIS</span><span class="p">,</span> <span class="n">head_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">HeadInverseKinematics</span><span class="o">.</span><span class="n">angle_between_segments</span><span class="p">(</span>
+            <span class="n">v1</span><span class="o">=</span><span class="n">horizontal_axis</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="n">head_vector</span><span class="p">,</span> <span class="n">rot_axis</span><span class="o">=</span><span class="n">Axes</span><span class="o">.</span><span class="n">Z_AXIS</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">angle</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.compute_antenna_pitch">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.compute_antenna_pitch">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_antenna_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">],</span> <span class="n">head_roll</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the head pitch angle (rad) from head vector</span>
+<span class="sd">        projected onto sagittal plane to antenna vector (from base ant to edge).</span>
+<span class="sd">        Furthermore, it subtracts the angle with the resting joint angle of the antenna pitch.</span>
+
+<span class="sd">        Higher antenna pitch means antenna is lifted upward more.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">side</span> <span class="o">=</span> <span class="n">side</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">side</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Side should be either R or L&quot;</span><span class="p">)</span>
+
+        <span class="n">v_derotate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">derotate_vector</span><span class="p">,</span> <span class="n">signature</span><span class="o">=</span><span class="s2">&quot;(m),(m,n)-&gt;(m,n)&quot;</span><span class="p">)</span>
+
+        <span class="n">antenna_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ant_vector</span><span class="p">(</span><span class="n">side</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">antenna_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Ant vector (</span><span class="si">{</span><span class="n">antenna_vector</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">) does not have the right shape (N,3).</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="c1"># Derotate the antenna vector to eliminate the singularity errors</span>
+        <span class="c1"># coming from head roll</span>
+        <span class="n">antenna_vector</span> <span class="o">=</span> <span class="n">v_derotate</span><span class="p">(</span><span class="n">head_roll</span><span class="p">,</span> <span class="n">antenna_vector</span><span class="p">)</span>
+        <span class="n">antenna_vector</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_head_vector</span><span class="p">(</span><span class="n">side</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">head_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Head vector (</span><span class="si">{</span><span class="n">head_vector</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">) does not have the right shape (N,3).</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="n">v_derotate</span><span class="p">(</span><span class="n">head_roll</span><span class="p">,</span> <span class="n">head_vector</span><span class="p">)</span>
+        <span class="n">head_vector</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">HeadInverseKinematics</span><span class="o">.</span><span class="n">angle_between_segments</span><span class="p">(</span>
+            <span class="n">v1</span><span class="o">=</span><span class="n">head_vector</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="n">antenna_vector</span><span class="p">,</span> <span class="n">rot_axis</span><span class="o">=</span><span class="n">Axes</span><span class="o">.</span><span class="n">Y_AXIS</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">angle</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rest_antenna_pitch</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.compute_antenna_yaw">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.compute_antenna_yaw">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_antenna_yaw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">],</span> <span class="n">head_roll</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the antenna yaw angle (rad) from the lateral head vector</span>
+<span class="sd">        projected onto transverse plane to antenna vector (from base ant to edge)</span>
+<span class="sd">        projected, again, on the transverse plane.</span>
+
+<span class="sd">        Higher antenna yaw means antennae get closer to the midline,</span>
+<span class="sd">        deviating from the resting position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">side</span> <span class="o">=</span> <span class="n">side</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">side</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Side should be either R or L&quot;</span><span class="p">)</span>
+
+        <span class="n">v_derotate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">derotate_vector</span><span class="p">,</span> <span class="n">signature</span><span class="o">=</span><span class="s2">&quot;(m),(m,n)-&gt;(m,n)&quot;</span><span class="p">)</span>
+
+        <span class="n">antenna_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ant_vector</span><span class="p">(</span><span class="n">side</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">antenna_vector</span> <span class="o">=</span> <span class="n">v_derotate</span><span class="p">(</span><span class="n">head_roll</span><span class="p">,</span> <span class="n">antenna_vector</span><span class="p">)</span>
+        <span class="n">antenna_vector</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_vector_horizontal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="n">v_derotate</span><span class="p">(</span><span class="n">head_roll</span><span class="p">,</span> <span class="n">head_vector</span><span class="p">)</span>
+        <span class="n">head_vector</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">HeadInverseKinematics</span><span class="o">.</span><span class="n">angle_between_segments</span><span class="p">(</span>
+            <span class="n">v1</span><span class="o">=</span><span class="n">antenna_vector</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="n">head_vector</span><span class="p">,</span> <span class="n">rot_axis</span><span class="o">=</span><span class="n">Axes</span><span class="o">.</span><span class="n">X_AXIS</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">side</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">angle</span>
+
+        <span class="k">return</span> <span class="n">angle</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.get_rest_antenna_pitch">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.get_rest_antenna_pitch">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_rest_antenna_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Antenna pitch angle at zero pose in the fly biomechanical model.&quot;&quot;&quot;</span>
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;Neck&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;R_Antenna_base&quot;</span><span class="p">]</span>
+        <span class="c1"># project onto x-z plane</span>
+        <span class="n">head_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># We consider only one side as the model is symmetrical</span>
+        <span class="n">antenna_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;R_Antenna_edge&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;R_Antenna_base&quot;</span><span class="p">]</span>
+        <span class="c1"># project onto x-z plane</span>
+        <span class="n">antenna_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">HeadInverseKinematics</span><span class="o">.</span><span class="n">angle_between_segments</span><span class="p">(</span><span class="n">head_vector</span><span class="p">,</span> <span class="n">antenna_vector</span><span class="p">,</span> <span class="n">Axes</span><span class="o">.</span><span class="n">Y_AXIS</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.get_rest_head_pitch">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.get_rest_head_pitch">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_rest_head_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Head pitch angle at zero pose in the fly biomechanical model.&quot;&quot;&quot;</span>
+        <span class="n">head_vector</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;R_Antenna_base&quot;</span><span class="p">]</span> <span class="o">+</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;L_Antenna_base&quot;</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;Neck&quot;</span><span class="p">]</span>
+        <span class="c1"># project onto x-z plane</span>
+        <span class="n">head_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">HeadInverseKinematics</span><span class="o">.</span><span class="n">angle_between_segments</span><span class="p">(</span><span class="n">head_vector</span><span class="p">,</span> <span class="n">Axes</span><span class="o">.</span><span class="n">X_AXIS</span><span class="p">,</span> <span class="n">Axes</span><span class="o">.</span><span class="n">Y_AXIS</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.derotate_vector">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.derotate_vector">[docs]</a>
+    <span class="k">def</span> <span class="nf">derotate_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head_roll_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">vector_to_derotate</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rotates a vector by the inverse amount of `head_roll_angle` along the x axis.&quot;&quot;&quot;</span>
+        <span class="c1"># counter-clockwise rotation in its coordinate system</span>
+        <span class="n">rotation</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="o">-</span><span class="n">head_roll_angle</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rotation</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">vector_to_derotate</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="HeadInverseKinematics.get_plane">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.head_inverse_kinematics.HeadInverseKinematics.get_plane">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_row</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Construct an array by repeating row n_row many times.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">(</span><span class="n">n_row</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By P. Gizem Özdil
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

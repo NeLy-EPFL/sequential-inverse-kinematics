@@ -1,0 +1,1024 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seqikpy.alignment &#8212; Trial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/seqikpy/alignment';</script>
+    <link rel="icon" href="../../_static/logo.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Trial - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Trial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to SeqIKPy!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏁 Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Features</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🔬 Methodology</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_alignment.html">3D pose alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_angle_calc.html">Inverse kinematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../limitations.html">Limitations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_grooming.html">Using SeqIKPy for Drosophila grooming</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_locomotion.html">Using SeqIKPy for Drosophila locomotion</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">💬 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues/new?title=Issue%20on%20page%20%2F_modules/seqikpy/alignment.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for seqikpy.alignment</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Code for aligning 3D pose to a fly template.</span>
+<span class="sd">The best practice for getting good alignment is to have an accurate 3D pose and</span>
+<span class="sd">a template whose key points are matching the tracked key points closely.</span>
+
+<span class="sd">This class expects a 3D file in the following format</span>
+
+<span class="sd">&gt;&gt;&gt; pose_data_dict = {</span>
+<span class="sd">        &quot;&lt;side (R,L)&gt;&lt;segment (F, M, H)&gt;_leg&quot;: np.ndarray[N_frames,5,3],</span>
+<span class="sd">        &quot;&lt;side (R,L)&gt;_head&quot;: np.ndarray[N_frames,2,3],</span>
+<span class="sd">        &quot;Neck&quot;: np.ndarray[N_frames,1,3],</span>
+<span class="sd">    }</span>
+
+<span class="sd">Usage might differ based on the needs. For now, there are three cases that you</span>
+<span class="sd">can use the class with:</span>
+
+<span class="sd">Case 1: we have 3D pose obtained, and we would like to align it but first</span>
+<span class="sd">we need to convert the pose data into a dictionary format</span>
+<span class="sd">NOTE: if the 3D pose is not in the format described above, then you need to</span>
+<span class="sd">* Convert your 3D pose file manually to the required format</span>
+<span class="sd">* Or, if you obtain the 3D pose from anipose (see the method `convert_from_anipose_to_dict`),</span>
+<span class="sd">simply set `convert` to True.</span>
+
+<span class="sd">&gt;&gt;&gt; data_path = Path(&quot;../data/anipose_220525_aJO_Fly001_001/pose-3d&quot;)</span>
+<span class="sd">&gt;&gt;&gt; align = AlignPose.from_file_path(</span>
+<span class="sd">&gt;&gt;&gt;     main_dir=data_path,</span>
+<span class="sd">&gt;&gt;&gt;     file_name=&quot;pose3d.h5&quot;,</span>
+<span class="sd">&gt;&gt;&gt;     legs_list=[&quot;RF&quot;,&quot;LF&quot;],</span>
+<span class="sd">&gt;&gt;&gt;     convert_dict=True,</span>
+<span class="sd">&gt;&gt;&gt;     pts2align=PTS2ALIGN,</span>
+<span class="sd">&gt;&gt;&gt;     include_claw=False,</span>
+<span class="sd">&gt;&gt;&gt;     body_template=NMF_TEMPLATE,</span>
+<span class="sd">&gt;&gt;&gt; )</span>
+<span class="sd">&gt;&gt;&gt; aligned_pos = align.align_pose(export_path=data_path)</span>
+
+<span class="sd">Case 2: we have a pose data in the required data structure, we just want to load and align it</span>
+
+<span class="sd">&gt;&gt;&gt; data_path = Path(&quot;../data/anipose_220525_aJO_Fly001_001/pose-3d&quot;)</span>
+<span class="sd">&gt;&gt;&gt; align = AlignPose.from_file_path(</span>
+<span class="sd">&gt;&gt;&gt;     main_dir=data_path,</span>
+<span class="sd">&gt;&gt;&gt;     file_name=&quot;converted_pose_dict.pkl&quot;,</span>
+<span class="sd">&gt;&gt;&gt;     legs_list=[&quot;RF&quot;,&quot;LF&quot;],</span>
+<span class="sd">&gt;&gt;&gt;     convert_dict=False,</span>
+<span class="sd">&gt;&gt;&gt;     pts2align=PTS2ALIGN,</span>
+<span class="sd">&gt;&gt;&gt;     include_claw=False,</span>
+<span class="sd">&gt;&gt;&gt;     body_template=NMF_TEMPLATE,</span>
+<span class="sd">&gt;&gt;&gt; )</span>
+<span class="sd">&gt;&gt;&gt; aligned_pos = align.align_pose(export_path=data_path)</span>
+
+<span class="sd">Case 3: we have a pose data in the required format loaded already, we want to feed it</span>
+<span class="sd">to the class and align the pose. This assumes that the pose data is already aligned</span>
+<span class="sd">in the right format. If not, use the static method `convert_from_anipose`.</span>
+
+<span class="sd">&gt;&gt;&gt; data_path = Path(&quot;../data/anipose_220525_aJO_Fly001_001/pose-3d&quot;)</span>
+<span class="sd">&gt;&gt;&gt; f_path = data_path / &quot;converted_pose_dict.pkl&quot;</span>
+<span class="sd">&gt;&gt;&gt; with open(f_path, &quot;rb&quot;) as f:</span>
+<span class="sd">&gt;&gt;&gt;     pose_data = pickle.load(f)</span>
+<span class="sd">&gt;&gt;&gt; align = AlignPose(</span>
+<span class="sd">&gt;&gt;&gt;     pose_data_dict=pose_data,</span>
+<span class="sd">&gt;&gt;&gt;     legs_list=[&quot;RF&quot;,&quot;LF&quot;],</span>
+<span class="sd">&gt;&gt;&gt;     include_claw=False,</span>
+<span class="sd">&gt;&gt;&gt;     body_template=NMF_TEMPLATE,</span>
+<span class="sd">&gt;&gt;&gt; )</span>
+<span class="sd">&gt;&gt;&gt; aligned_pos = align.align_pose(export_path=data_path)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">seqikpy.data</span> <span class="kn">import</span> <span class="n">PTS2ALIGN</span><span class="p">,</span> <span class="n">NMF_TEMPLATE</span>
+<span class="kn">from</span> <span class="nn">seqikpy.utils</span> <span class="kn">import</span> <span class="n">save_file</span><span class="p">,</span> <span class="n">calculate_body_size</span><span class="p">,</span> <span class="n">dict_to_nparray_pose</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot; </span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2">- </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()]</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_mean_quantile</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">quantile_diff</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns the mean of upper and lower quantiles. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">-</span> <span class="n">quantile_diff</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">quantile_diff</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_leg_length_model</span><span class="p">(</span><span class="n">nmf_size</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">leg_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">claw_is_ee</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Sums up the segments of the model leg size.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">claw_is_ee</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nmf_size</span><span class="p">[</span><span class="n">leg_name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">nmf_size</span><span class="p">[</span><span class="n">leg_name</span><span class="p">]</span> <span class="o">-</span> <span class="n">nmf_size</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg_name</span><span class="si">}</span><span class="s2">_Tarsus&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_get_distance_btw_vecs</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculates the distance between two vectors. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vector1</span> <span class="o">-</span> <span class="n">vector2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="convert_from_anipose_to_dict">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.convert_from_anipose_to_dict">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_from_anipose_to_dict</span><span class="p">(</span>
+    <span class="n">pose_3d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">pts2align</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads anipose 3D pose data into a dictionary.</span>
+<span class="sd">    See data.py for a mapping from keypoint name to segment name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pose_3d : Dict[str, np.ndarray]</span>
+<span class="sd">        3D pose data from anipose.</span>
+<span class="sd">        It should have the following format</span>
+
+<span class="sd">        &gt;&gt;&gt; pose_3d = {</span>
+<span class="sd">            &quot;{keypoint_name}_x&quot; : np.ndarray[N_frames,],</span>
+<span class="sd">            &quot;{keypoint_name}_y&quot; : np.ndarray[N_frames,],</span>
+<span class="sd">            &quot;{keypoint_name}_z&quot; : np.ndarray[N_frames,],</span>
+<span class="sd">        }</span>
+<span class="sd">    pts2align : Dict[str, List[str]]</span>
+<span class="sd">        Segment names and corresponding key point names to be aligned,</span>
+<span class="sd">        check data.py for an example, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict[str, np.ndarray]</span>
+<span class="sd">        Pose data dictionary of the following format</span>
+
+<span class="sd">        &gt;&gt;&gt; pose_data_dict = {</span>
+<span class="sd">            &quot;RF_leg&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            &quot;LF_leg&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            &quot;R_head&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            &quot;L_head&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            &quot;Neck&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            ...</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">points_3d_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">pts2align</span><span class="p">:</span>
+        <span class="n">segment_kps</span> <span class="o">=</span> <span class="n">pts2align</span><span class="p">[</span><span class="n">segment</span><span class="p">]</span>
+        <span class="n">temp_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">pose_3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment_kps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_kps</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kp_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">segment_kps</span><span class="p">):</span>
+            <span class="n">temp_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">pose_3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp_name</span><span class="si">}</span><span class="s2">_x&quot;</span><span class="p">]</span>
+            <span class="n">temp_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pose_3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp_name</span><span class="si">}</span><span class="s2">_y&quot;</span><span class="p">]</span>
+            <span class="n">temp_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">pose_3d</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kp_name</span><span class="si">}</span><span class="s2">_z&quot;</span><span class="p">]</span>
+
+        <span class="n">points_3d_dict</span><span class="p">[</span><span class="n">segment</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">points_3d_dict</span></div>
+
+
+
+<div class="viewcode-block" id="convert_from_df3d_to_dict">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.convert_from_df3d_to_dict">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_from_df3d_to_dict</span><span class="p">(</span>
+    <span class="n">pose_3d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pts2align</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads DeepFly3D data into a dictionary.</span>
+<span class="sd">    See the original DeepFly3D repository for indices of</span>
+<span class="sd">    key points for each segment.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pose_3d : np.ndarray</span>
+<span class="sd">        Array (N, N_key_points, 3) containing 3D pose data.</span>
+<span class="sd">    pts2align : Dict[str, np.ndarray]</span>
+<span class="sd">        Dictionary mapping segment names to key point indices.</span>
+<span class="sd">        Should be in the following format</span>
+
+<span class="sd">        &gt;&gt;&gt; pts2align = {</span>
+<span class="sd">            &quot;RF_leg&quot;: np.arange(0,5),</span>
+<span class="sd">            &quot;RM_leg&quot;: np.arange(5,10),</span>
+<span class="sd">            &quot;RH_leg&quot;: np.arange(10,15),</span>
+<span class="sd">            &quot;LF_leg&quot;: np.arange(19,24),</span>
+<span class="sd">            &quot;LM_leg&quot;: np.arange(24,29),</span>
+<span class="sd">            &quot;LH_leg&quot;: np.arange(29,34),</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict[str, np.ndarray]</span>
+<span class="sd">        Pose data dictionary as described above.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points_3d_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">segment</span><span class="p">,</span> <span class="n">segment_idx</span> <span class="ow">in</span> <span class="n">pts2align</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">points_3d_dict</span><span class="p">[</span><span class="n">segment</span><span class="p">]</span> <span class="o">=</span> <span class="n">pose_3d</span><span class="p">[:,</span> <span class="n">segment_idx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">points_3d_dict</span></div>
+
+
+
+<div class="viewcode-block" id="convert_from_df3dpp_to_dict">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.convert_from_df3dpp_to_dict">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_from_df3dpp_to_dict</span><span class="p">(</span>
+    <span class="n">pose_3d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
+    <span class="n">pts2align</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load DeepFly3DPostProcessing data into a dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pose_3d : Dict[str, Dict[str, np.ndarray]]</span>
+<span class="sd">        3D pose data from DeepFly3DPostProcessing.</span>
+<span class="sd">        See the original repository for details.</span>
+<span class="sd">    pts2align : Optional[List[str]], optional</span>
+<span class="sd">        List of legs to take into account, by default None</span>
+<span class="sd">        Example format</span>
+
+<span class="sd">        &gt;&gt;&gt; pts2align = [&quot;RF_leg&quot;, &quot;LF_leg&quot;]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict[str, np.ndarray]</span>
+<span class="sd">        Pose data dictionary as described above.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points_3d_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">pts2align</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pts2align</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pose_3d</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">pts2align</span><span class="p">:</span>
+        <span class="n">points_3d_dict</span><span class="p">[</span><span class="n">segment</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_to_nparray_pose</span><span class="p">(</span>
+            <span class="n">pose_3d</span><span class="p">[</span><span class="n">segment</span><span class="p">],</span> <span class="n">claw_is_end_effector</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">points_3d_dict</span></div>
+
+
+
+<div class="viewcode-block" id="AlignPose">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose">[docs]</a>
+<span class="k">class</span> <span class="nc">AlignPose</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aligns the 3D poses. For the class usage examples, please refer to example_alignment.py</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pose_data_dict : Dict[str, np.ndarray]</span>
+<span class="sd">        3D pose put in a dictionary that has the following structure defined</span>
+<span class="sd">        by PTS2ALIGN (see data.py for more details)</span>
+
+<span class="sd">        Example format</span>
+
+<span class="sd">        &gt;&gt;&gt; pose_data_dict = {</span>
+<span class="sd">                &quot;RF_leg&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">                &quot;LF_leg&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">                &quot;R_head&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">                &quot;L_head&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">                &quot;Neck&quot;: np.ndarray[N_frames,N_key_points,3],</span>
+<span class="sd">            }</span>
+<span class="sd">    legs_list : List[str]</span>
+<span class="sd">        A list containing the leg names to operate on.</span>
+<span class="sd">        Should follow the convention &lt;R or L&gt;&lt;F or M or H&gt;</span>
+<span class="sd">        e.g., [&quot;RF&quot;, &quot;LF&quot;, &quot;RM&quot;, &quot;LM&quot;, &quot;RH&quot;, &quot;LH&quot;]</span>
+<span class="sd">    include_claw : bool, optional</span>
+<span class="sd">        If True, claw is included in the scaling process, by default False</span>
+<span class="sd">    body_template : Dict[str, np.ndarray], optional</span>
+<span class="sd">        A dictionary containing the positions of fly model body segments.</span>
+<span class="sd">        Check ./data.py for the default dictionary, by default None</span>
+<span class="sd">    body_size : Dict[str, float], optional</span>
+<span class="sd">        A dictionary containing the  limb size of the fly.</span>
+<span class="sd">        If the user wants to scale the animal data to match the</span>
+<span class="sd">        biomechanical model, then `body_size` should be the same as</span>
+<span class="sd">        the model body size. Otherwise, the user should calculate the</span>
+<span class="sd">        animal&#39;s body size.</span>
+<span class="sd">        Check ./data.py for an example.</span>
+<span class="sd">    log_level : Literal[&quot;DEBUG&quot;, &quot;INFO&quot;, &quot;WARNING&quot;, &quot;ERROR&quot;], optional</span>
+<span class="sd">        Logging level as a string, by default &quot;INFO&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pose_data_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">legs_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">include_claw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">body_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">body_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">log_level</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pose_data_dict</span> <span class="o">=</span> <span class="n">pose_data_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_claw</span> <span class="o">=</span> <span class="n">include_claw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span> <span class="o">=</span> <span class="n">NMF_TEMPLATE</span> <span class="k">if</span> <span class="n">body_template</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">body_template</span>
+        <span class="c1"># Calculate the size of the limbs from the template</span>
+        <span class="k">if</span> <span class="n">body_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body_size</span> <span class="o">=</span> <span class="n">calculate_body_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">,</span> <span class="n">legs_list</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body_size</span> <span class="o">=</span> <span class="n">body_size</span>
+
+        <span class="c1"># Get the logger of the module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">numeric_level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">log_level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">numeric_level</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AlignPose.from_file_path">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.from_file_path">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file_path</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">main_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+        <span class="n">file_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;pose3d.*&quot;</span><span class="p">,</span>
+        <span class="n">convert_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pts2align</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method to load pose3d data and convert it into a proper</span>
+<span class="sd">        structure.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        main_dir : Union[str, Path]</span>
+<span class="sd">            Path where the Anipose triangulation results are saved.</span>
+<span class="sd">            By default, the result file is caled pose3d.h5</span>
+<span class="sd">            However, if the name is different, &lt;pose_result_path&gt; should</span>
+<span class="sd">            be modified accordingly.</span>
+<span class="sd">            Example: &quot;../Fly001/001_Beh/behData/pose-3d&quot;</span>
+<span class="sd">        file_name : str, optional</span>
+<span class="sd">            File name, by default &quot;pose3d.*&quot;</span>
+<span class="sd">        convert_func : Callable, optional</span>
+<span class="sd">            Function to convert the loaded pose into the required format,</span>
+<span class="sd">            set by the user if None, no conversion is performed,</span>
+<span class="sd">            by default None</span>
+<span class="sd">        pts2align : Dict[str, List[str]], optional</span>
+<span class="sd">            Body part names and corresponding key points names to be aligned,</span>
+<span class="sd">            check data.py for an example, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        AlignPose</span>
+<span class="sd">            Instance of the AlignPose class.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If file with a name that contains `file_name` does not exist in `main_dir`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">paths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">pose_3d</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2"> does not exits in </span><span class="si">{</span><span class="n">main_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">convert_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pts2align</span> <span class="o">=</span> <span class="n">PTS2ALIGN</span> <span class="k">if</span> <span class="n">pts2align</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pts2align</span>
+            <span class="n">converted_dict</span> <span class="o">=</span> <span class="n">convert_func</span><span class="p">(</span><span class="n">pose_3d</span><span class="p">,</span> <span class="n">pts2align</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">converted_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">pose_3d</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AlignPose.align_pose">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.align_pose">[docs]</a>
+    <span class="k">def</span> <span class="nf">align_pose</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">export_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Aligns the leg and head key point positions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        export_path : Union[str, Path], optional</span>
+<span class="sd">            The path where the aligned pose data will be saved, if specified.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, np.ndarray]</span>
+<span class="sd">            A dictionary containing the aligned pose data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aligned_pose</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">segment</span><span class="p">,</span> <span class="n">segment_array</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pose_data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;leg&quot;</span> <span class="ow">in</span> <span class="n">segment</span><span class="p">:</span>
+                <span class="n">aligned_pose</span><span class="p">[</span><span class="n">segment</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">align_leg</span><span class="p">(</span>
+                    <span class="n">leg_array</span><span class="o">=</span><span class="n">segment_array</span><span class="p">,</span> <span class="n">leg_name</span><span class="o">=</span><span class="n">segment</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="s2">&quot;head&quot;</span> <span class="ow">in</span> <span class="n">segment</span><span class="p">:</span>
+                <span class="n">aligned_pose</span><span class="p">[</span><span class="n">segment</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">align_head</span><span class="p">(</span>
+                    <span class="n">head_array</span><span class="o">=</span><span class="n">segment_array</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not aligned&quot;</span><span class="p">,</span> <span class="n">segment</span><span class="p">)</span>
+                <span class="k">continue</span>
+        <span class="c1"># Take the neck as in the template as the other points are already aligned</span>
+        <span class="k">if</span> <span class="s2">&quot;Neck&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">:</span>
+            <span class="n">aligned_pose</span><span class="p">[</span><span class="s2">&quot;Neck&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="s2">&quot;Neck&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">export_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">export_full_path</span> <span class="o">=</span> <span class="n">export_path</span> <span class="o">/</span> <span class="s2">&quot;pose3d_aligned.pkl&quot;</span>
+            <span class="n">save_file</span><span class="p">(</span><span class="n">out_fname</span><span class="o">=</span><span class="n">export_full_path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">aligned_pose</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Aligned pose is saved at </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">export_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">aligned_pose</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">thorax_mid_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Gets the middle point of right and left wing hinges. &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;Thorax&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pose_data_dict</span><span class="p">,</span> <span class="s2">&quot;To align the head, you need to have a `Thorax` key point&quot;</span>
+        <span class="n">thorax_pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pose_data_dict</span><span class="p">[</span><span class="s2">&quot;Thorax&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">thorax_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">thorax_pts</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+
+<div class="viewcode-block" id="AlignPose.get_fixed_pos">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.get_fixed_pos">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_fixed_pos</span><span class="p">(</span><span class="n">points_3d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Gets the fixed pose of a steady key point determined by the quantiles. &quot;&quot;&quot;</span>
+        <span class="n">fixed_pos</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_get_mean_quantile</span><span class="p">(</span><span class="n">points_3d</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span>
+            <span class="n">_get_mean_quantile</span><span class="p">(</span><span class="n">points_3d</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span>
+            <span class="n">_get_mean_quantile</span><span class="p">(</span><span class="n">points_3d</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fixed_pos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AlignPose.get_mean_length">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.get_mean_length">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mean_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">segment_is_leg</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Computes the mean length of a body segment. &quot;&quot;&quot;</span>
+        <span class="n">lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">segment_array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">segment_is_leg</span><span class="p">:</span>
+            <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;coxa&quot;</span><span class="p">,</span> <span class="s2">&quot;femur&quot;</span><span class="p">,</span> <span class="s2">&quot;tibia&quot;</span><span class="p">,</span> <span class="s2">&quot;tarsus&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;antenna&quot;</span><span class="p">]</span>
+
+        <span class="n">length_mean</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
+            <span class="n">length_mean</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_mean_quantile</span><span class="p">(</span><span class="n">lengths</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">length_mean</span></div>
+
+
+<div class="viewcode-block" id="AlignPose.find_scale_leg">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.find_scale_leg">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_scale_leg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">leg_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mean_length</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Computes the ratio between the model size and the real fly size. &quot;&quot;&quot;</span>
+        <span class="n">nmf_size</span> <span class="o">=</span> <span class="n">_leg_length_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body_size</span><span class="p">,</span> <span class="n">leg_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_claw</span><span class="p">)</span>
+        <span class="n">fly_leg_size</span> <span class="o">=</span> <span class="n">mean_length</span><span class="p">[</span><span class="s2">&quot;coxa&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mean_length</span><span class="p">[</span><span class="s2">&quot;femur&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mean_length</span><span class="p">[</span><span class="s2">&quot;tibia&quot;</span><span class="p">]</span>
+        <span class="n">fly_leg_size</span> <span class="o">+=</span> <span class="n">mean_length</span><span class="p">[</span><span class="s2">&quot;tarsus&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_claw</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">nmf_size</span> <span class="o">/</span> <span class="n">fly_leg_size</span></div>
+
+
+<div class="viewcode-block" id="AlignPose.find_stationary_indices">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.find_stationary_indices">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_stationary_indices</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5e-5</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Find the indices in an array where the function value does not move significantly.&quot;&quot;&quot;</span>
+        <span class="n">indices_stat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">array</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">indices_stat</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Threshold (</span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s2">) is too low to find stationary points, please increase it.&quot;</span>
+
+        <span class="k">return</span> <span class="n">indices_stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AlignPose.align_leg">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.align_leg">[docs]</a>
+    <span class="k">def</span> <span class="nf">align_leg</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">leg_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">leg_name</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;LF&quot;</span><span class="p">,</span> <span class="s2">&quot;RM&quot;</span><span class="p">,</span> <span class="s2">&quot;LM&quot;</span><span class="p">,</span> <span class="s2">&quot;RH&quot;</span><span class="p">,</span> <span class="s2">&quot;LH&quot;</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scales and translates the leg key point locations based on the model size and configuration.</span>
+
+<span class="sd">        This method takes a 3D array of leg key point positions and scales and translates them to align with a</span>
+<span class="sd">        predefined model size and joint configuration. It accounts for the relative positions</span>
+<span class="sd">        of key points and ensures that the scaled leg key points match the model size.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        leg_array : np.ndarray</span>
+<span class="sd">            A 3D array containing the leg key point positions.</span>
+<span class="sd">        leg_name : str</span>
+<span class="sd">            A string indicating the name of the leg (e.g., &quot;RF&quot;, &quot;LF&quot;, ...) for alignment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            A new 3D array containing the scaled and aligned leg key point positions.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        * This method is used to align leg key point positions with a model of a fly&quot;s leg.</span>
+<span class="sd">        * It calculates the scale factor and multiplies the first 4 or 5 segments with the scale factor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aligned_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">leg_array</span><span class="p">)</span>
+        <span class="n">fixed_coxa</span> <span class="o">=</span> <span class="n">AlignPose</span><span class="o">.</span><span class="n">get_fixed_pos</span><span class="p">(</span><span class="n">leg_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+
+        <span class="n">mean_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_length</span><span class="p">(</span><span class="n">leg_array</span><span class="p">,</span> <span class="n">segment_is_leg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">scale_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_scale_leg</span><span class="p">(</span><span class="n">leg_name</span><span class="p">,</span> <span class="n">mean_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Scale factor for </span><span class="si">%s</span><span class="s2"> leg: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">leg_name</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Translate the 3D pose coxa to the template coxa position</span>
+                <span class="n">aligned_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">leg_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg_name</span><span class="si">}</span><span class="s2">_Coxa&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Scale the length of the leg and</span>
+                <span class="c1"># move the leg to the predefined coxa pos</span>
+                <span class="n">pos_aligned</span> <span class="o">=</span> <span class="p">(</span><span class="n">leg_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">fixed_coxa</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                    <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span>
+                <span class="p">)</span> <span class="o">*</span> <span class="n">scale_factor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leg_name</span><span class="si">}</span><span class="s2">_Coxa&quot;</span><span class="p">]</span>
+
+                <span class="n">aligned_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">pos_aligned</span>
+
+        <span class="k">return</span> <span class="n">aligned_array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AlignPose.align_head">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.alignment.AlignPose.align_head">[docs]</a>
+    <span class="k">def</span> <span class="nf">align_head</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scales and translates the head key point locations based on the model size and configuration.</span>
+
+<span class="sd">        This method takes a 3D array of head key point positions and scales and translates</span>
+<span class="sd">        them to align with a predefined model size and configuration, such as a fly&quot;s head.</span>
+<span class="sd">        It accounts for the relative positions of key points and ensures that the scaled</span>
+<span class="sd">        head key points match the model size.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        head_array : np.ndarray</span>
+<span class="sd">            A 3D array containing the head key point positions.</span>
+<span class="sd">        side : str</span>
+<span class="sd">            A string indicating the side of the head (e.g., &quot;R&quot; or &quot;L&quot;) for alignment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            A new 3D array containing the scaled and aligned head key point positions.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If the &quot;body_template&quot; dictionary does not contain the required key names,</span>
+<span class="sd">            &quot;Antenna_mid_thorax&quot; or &quot;Antenna&quot;.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        * This method is used to align head key point positions with a model of a fly&quot;s head.</span>
+<span class="sd">        * It calculates the scale factor and translations necessary to match the model&#39;s head size and position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">antbase2thoraxmid_real</span> <span class="o">=</span> <span class="n">_get_distance_btw_vecs</span><span class="p">(</span>
+            <span class="n">head_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">thorax_mid_pts</span>
+        <span class="p">)</span>
+        <span class="n">ant_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_length</span><span class="p">(</span><span class="n">head_array</span><span class="p">,</span> <span class="n">segment_is_leg</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;antenna&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_size</span><span class="p">[</span><span class="s2">&quot;Antenna_mid_thorax&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_size</span><span class="p">[</span><span class="s2">&quot;Antenna&quot;</span><span class="p">]:</span>
+            <span class="n">antbase2thoraxmid_tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_size</span><span class="p">[</span><span class="s2">&quot;Antenna_mid_thorax&quot;</span><span class="p">]</span>
+            <span class="n">ant_tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_size</span><span class="p">[</span><span class="s2">&quot;Antenna&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Nmf template dictionary does not contain</span>
+<span class="sd">                a key name &lt;Antenna_mid_thorax&gt; or &lt;Antenna&gt;</span>
+<span class="sd">                Please check the dictionary you provided.&quot;&quot;&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">stationary_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_stationary_indices</span><span class="p">(</span><span class="n">antbase2thoraxmid_real</span><span class="p">)</span>
+        <span class="n">antenna_origin_fixed</span> <span class="o">=</span> <span class="n">AlignPose</span><span class="o">.</span><span class="n">get_fixed_pos</span><span class="p">(</span>
+            <span class="n">head_array</span><span class="p">[</span><span class="n">stationary_indices</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="p">)</span>
+        <span class="n">scale_base_ant</span> <span class="o">=</span> <span class="n">antbase2thoraxmid_tmp</span> <span class="o">/</span> <span class="n">_get_mean_quantile</span><span class="p">(</span>
+            <span class="n">antbase2thoraxmid_real</span><span class="p">[</span><span class="n">stationary_indices</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">scale_tip_ant</span> <span class="o">=</span> <span class="n">ant_tmp</span> <span class="o">/</span> <span class="n">_get_mean_quantile</span><span class="p">(</span><span class="n">ant_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Scale factor antenna base </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">, ant itself: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">scale_base_ant</span><span class="p">,</span> <span class="n">scale_tip_ant</span>
+        <span class="p">)</span>
+
+        <span class="n">aligned_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">head_array</span><span class="p">)</span>
+        <span class="n">aligned_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">head_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">antenna_origin_fixed</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">scale_base_ant</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">_Antenna_base&quot;</span><span class="p">]</span>
+        <span class="n">aligned_array</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">head_array</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">antenna_origin_fixed</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">scale_tip_ant</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_template</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">_Antenna_base&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">aligned_array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By P. Gizem Özdil
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

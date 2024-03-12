@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seqikpy.data &#8212; Trial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/seqikpy/data';</script>
+    <link rel="icon" href="../../_static/logo.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Trial - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Trial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to SeqIKPy!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏁 Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Features</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🔬 Methodology</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_alignment.html">3D pose alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../methodology_angle_calc.html">Inverse kinematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../limitations.html">Limitations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_grooming.html">Using SeqIKPy for Drosophila grooming</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy_locomotion.html">Using SeqIKPy for Drosophila locomotion</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">💬 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../seqikpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/issues/new?title=Issue%20on%20page%20%2F_modules/seqikpy/data.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for seqikpy.data</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Data, constants, and paths. &quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">INITIAL_ANGLES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RF&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># Base ThC yaw pitch CTr pitch</span>
+        <span class="s2">&quot;stage_1&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">]),</span>
+        <span class="c1"># Base ThC yaw pitch roll CTr pitch CTr roll</span>
+        <span class="s2">&quot;stage_2&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">]),</span>
+        <span class="c1"># Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch</span>
+        <span class="s2">&quot;stage_3&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+        <span class="c1"># Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch TiTa pitch</span>
+        <span class="s2">&quot;stage_4&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+    <span class="p">},</span>
+    <span class="c1"># Same order for the contralateral leg</span>
+    <span class="s2">&quot;LF&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;stage_1&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">]),</span>
+        <span class="s2">&quot;stage_2&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">]),</span>
+        <span class="s2">&quot;stage_3&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+        <span class="s2">&quot;stage_4&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.45</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.14</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.48</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># Lower bound of a DOF should be strictly lower than the initial angle.</span>
+<span class="c1"># Upper bound of a DOF should be strictly bigger than the initial angle.</span>
+<span class="n">BOUNDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RF_ThC_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">130</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_ThC_yaw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_ThC_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">60</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_CTr_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_CTr_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">150</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_FTi_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">170</span><span class="p">)),</span>
+    <span class="s2">&quot;RF_TiTa_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">150</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_ThC_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">130</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_ThC_yaw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_ThC_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">60</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_CTr_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_CTr_roll&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">150</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_FTi_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">170</span><span class="p">)),</span>
+    <span class="s2">&quot;LF_TiTa_pitch&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">150</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+<span class="p">}</span>
+
+<span class="c1"># Size of the template body segments</span>
+<span class="n">NMF_SIZE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RF_Coxa&quot;</span><span class="p">:</span> <span class="mf">0.40</span><span class="p">,</span>
+    <span class="s2">&quot;RM_Coxa&quot;</span><span class="p">:</span> <span class="mf">0.182</span><span class="p">,</span>
+    <span class="s2">&quot;RH_Coxa&quot;</span><span class="p">:</span> <span class="mf">0.199</span><span class="p">,</span>
+    <span class="s2">&quot;LF_Coxa&quot;</span><span class="p">:</span> <span class="mf">0.40</span><span class="p">,</span>
+    <span class="s2">&quot;LM_Coxa&quot;</span><span class="p">:</span> <span class="mf">0.182</span><span class="p">,</span>
+    <span class="s2">&quot;LH_Coxa&quot;</span><span class="p">:</span> <span class="mf">0.199</span><span class="p">,</span>
+    <span class="s2">&quot;RF_Femur&quot;</span><span class="p">:</span> <span class="mf">0.69</span><span class="p">,</span>
+    <span class="s2">&quot;RM_Femur&quot;</span><span class="p">:</span> <span class="mf">0.7829999999999999</span><span class="p">,</span>
+    <span class="s2">&quot;RH_Femur&quot;</span><span class="p">:</span> <span class="mf">0.8360000000000001</span><span class="p">,</span>
+    <span class="s2">&quot;LF_Femur&quot;</span><span class="p">:</span> <span class="mf">0.69</span><span class="p">,</span>
+    <span class="s2">&quot;LM_Femur&quot;</span><span class="p">:</span> <span class="mf">0.7829999999999999</span><span class="p">,</span>
+    <span class="s2">&quot;LH_Femur&quot;</span><span class="p">:</span> <span class="mf">0.8360000000000001</span><span class="p">,</span>
+    <span class="s2">&quot;RF_Tibia&quot;</span><span class="p">:</span> <span class="mf">0.54</span><span class="p">,</span>
+    <span class="s2">&quot;RM_Tibia&quot;</span><span class="p">:</span> <span class="mf">0.668</span><span class="p">,</span>
+    <span class="s2">&quot;RH_Tibia&quot;</span><span class="p">:</span> <span class="mf">0.6849999999999998</span><span class="p">,</span>
+    <span class="s2">&quot;LF_Tibia&quot;</span><span class="p">:</span> <span class="mf">0.54</span><span class="p">,</span>
+    <span class="s2">&quot;LM_Tibia&quot;</span><span class="p">:</span> <span class="mf">0.668</span><span class="p">,</span>
+    <span class="s2">&quot;LH_Tibia&quot;</span><span class="p">:</span> <span class="mf">0.6849999999999998</span><span class="p">,</span>
+    <span class="s2">&quot;RF_Tarsus&quot;</span><span class="p">:</span> <span class="mf">0.63</span><span class="p">,</span>
+    <span class="s2">&quot;RM_Tarsus&quot;</span><span class="p">:</span> <span class="mf">0.6949999999999998</span><span class="p">,</span>
+    <span class="s2">&quot;RH_Tarsus&quot;</span><span class="p">:</span> <span class="mf">0.7950000000000002</span><span class="p">,</span>
+    <span class="s2">&quot;LF_Tarsus&quot;</span><span class="p">:</span> <span class="mf">0.63</span><span class="p">,</span>
+    <span class="s2">&quot;LM_Tarsus&quot;</span><span class="p">:</span> <span class="mf">0.6949999999999998</span><span class="p">,</span>
+    <span class="s2">&quot;LH_Tarsus&quot;</span><span class="p">:</span> <span class="mf">0.7950000000000002</span><span class="p">,</span>
+    <span class="s2">&quot;RF&quot;</span><span class="p">:</span> <span class="mf">2.26</span><span class="p">,</span>
+    <span class="s2">&quot;RM&quot;</span><span class="p">:</span> <span class="mf">2.328</span><span class="p">,</span>
+    <span class="s2">&quot;RH&quot;</span><span class="p">:</span> <span class="mf">2.515</span><span class="p">,</span>
+    <span class="s2">&quot;LF&quot;</span><span class="p">:</span> <span class="mf">2.26</span><span class="p">,</span>
+    <span class="s2">&quot;LM&quot;</span><span class="p">:</span> <span class="mf">2.328</span><span class="p">,</span>
+    <span class="s2">&quot;LH&quot;</span><span class="p">:</span> <span class="mf">2.515</span><span class="p">,</span>
+    <span class="s2">&quot;Antenna&quot;</span><span class="p">:</span> <span class="mf">0.2745906043549196</span><span class="p">,</span>
+    <span class="s2">&quot;Antenna_mid_thorax&quot;</span><span class="p">:</span> <span class="mf">0.9355746896961248</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># Key points to align, to be provided in the alignment.Align class</span>
+<span class="n">PTS2ALIGN</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;R_head&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;base_anten_R&quot;</span><span class="p">,</span> <span class="s2">&quot;tip_anten_R&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;RF_leg&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;thorax_coxa_R&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coxa_femur_R&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;femur_tibia_R&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tibia_tarsus_R&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;claw_R&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Thorax&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;thorax_wing_R&quot;</span><span class="p">,</span> <span class="s2">&quot;thorax_midpoint_tether&quot;</span><span class="p">,</span> <span class="s2">&quot;thorax_wing_L&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;L_head&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;base_anten_L&quot;</span><span class="p">,</span> <span class="s2">&quot;tip_anten_L&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;LF_leg&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;thorax_coxa_L&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coxa_femur_L&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;femur_tibia_L&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tibia_tarsus_L&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;claw_L&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_pts2align">
+<a class="viewcode-back" href="../../seqikpy.html#seqikpy.data.get_pts2align">[docs]</a>
+<span class="k">def</span> <span class="nf">get_pts2align</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Deletes the keys from the PTS2ALIGN dictionary.&quot;&quot;&quot;</span>
+    <span class="n">pts_temp</span> <span class="o">=</span> <span class="n">PTS2ALIGN</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;_RF&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">pts_temp</span><span class="p">[</span><span class="s2">&quot;RF_leg&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="s2">&quot;_LF&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">pts_temp</span><span class="p">[</span><span class="s2">&quot;LF_leg&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="s2">&quot;_RLF&quot;</span> <span class="ow">in</span> <span class="n">path</span> <span class="ow">or</span> <span class="s2">&quot;_LRF&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">pts_temp</span><span class="p">[</span><span class="s2">&quot;LF_leg&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">pts_temp</span><span class="p">[</span><span class="s2">&quot;RF_leg&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">pts_temp</span></div>
+
+
+
+<span class="c1"># Key points that are used in alignment</span>
+<span class="n">SKELETON</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;base_anten_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tip_anten_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thorax_coxa_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;coxa_femur_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;femur_tibia_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tibia_tarsus_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;claw_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thorax_wing_R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thorax_midpoint_tether&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thorax_wing_L&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base_anten_L&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tip_anten_L&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thorax_coxa_L&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;coxa_femur_L&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;femur_tibia_L&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tibia_tarsus_L&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;claw_L&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Pose of each body landmark in the NeuroMechFly v0.0.6 model</span>
+<span class="c1"># Note that each leg segment represents the joint in the proximal part</span>
+<span class="c1"># For example, RF_Coxa means Thorax-Coxa joint</span>
+<span class="n">NMF_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RF_Coxa&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Femur&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="mf">0.67</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Tibia&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Tarsus&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56</span><span class="p">]),</span>
+    <span class="s2">&quot;RF_Claw&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.19</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Coxa&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Femur&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="mf">0.67</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Tibia&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Tarsus&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.56</span><span class="p">]),</span>
+    <span class="s2">&quot;LF_Claw&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.19</span><span class="p">]),</span>
+    <span class="s2">&quot;R_Antenna_base&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.41</span><span class="p">]),</span>
+    <span class="s2">&quot;L_Antenna_base&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.41</span><span class="p">]),</span>
+    <span class="s2">&quot;R_Antenna_edge&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.06</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.14</span><span class="p">]),</span>
+    <span class="s2">&quot;L_Antenna_edge&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.06</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.14</span><span class="p">]),</span>
+    <span class="c1"># &quot;Labellum&quot;: np.array([0.75, 0.0, 0.81]),</span>
+    <span class="s2">&quot;R_post_vertical&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.59</span><span class="p">]),</span>
+    <span class="s2">&quot;L_post_vertical&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.59</span><span class="p">]),</span>
+    <span class="c1"># &quot;R_ant_orb&quot;: np.array([0.88, -0.18, 1.49]),</span>
+    <span class="c1"># &quot;L_ant_orb&quot;: np.array([0.88, 0.18, 1.49]),</span>
+    <span class="s2">&quot;R_wing&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.08</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.43</span><span class="p">]),</span>
+    <span class="s2">&quot;L_wing&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.43</span><span class="p">]),</span>
+    <span class="s2">&quot;Neck&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">]),</span>
+    <span class="s2">&quot;Thorax_mid&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.43</span><span class="p">]),</span>
+    <span class="s2">&quot;L_dorsal_hum&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.41</span><span class="p">,</span> <span class="mf">0.37</span><span class="p">,</span> <span class="mf">1.32</span><span class="p">]),</span>
+    <span class="c1"># &quot;L_ant_notopleural&quot;: np.array([0.28, 0.39, 1.39]),</span>
+    <span class="s2">&quot;R_dorsal_hum&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.41</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.37</span><span class="p">,</span> <span class="mf">1.32</span><span class="p">]),</span>
+    <span class="c1"># &quot;R_ant_notopleural&quot;: np.array([0.30, -0.39, 1.39]),</span>
+<span class="p">}</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By P. Gizem Özdil
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
