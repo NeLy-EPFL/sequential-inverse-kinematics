@@ -1,9 +1,13 @@
 """ Test kinematic chain generation"""
 import pytest
+from pathlib import Path
 
+import seqikpy
 from seqikpy.kinematic_chain import KinematicChainSeq, KinematicChainGeneric
 from seqikpy.data import BOUNDS, INITIAL_ANGLES
 from seqikpy.utils import load_file
+
+PKG_PATH = Path(seqikpy.__path__[0])
 
 
 @pytest.fixture
@@ -19,7 +23,7 @@ def setup_kinematic_chain_seq():
 @pytest.mark.parametrize('leg_name', ['RF', 'LF'])
 def test_kin_chain_seq(leg_name, setup_kinematic_chain_seq):
 
-    leg_angles = load_file("leg_joint_angles.pkl")
+    leg_angles = load_file(PKG_PATH / "../tests" / "leg_joint_angles.pkl")
 
     kin_chain = setup_kinematic_chain_seq
 

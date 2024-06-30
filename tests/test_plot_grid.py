@@ -5,11 +5,14 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
+import seqikpy
 from seqikpy.visualization import (
     load_grid_plot_data,
     get_plot_config,
     plot_grid,
     video_frames_generator)
+
+PKG_PATH = Path(seqikpy.__path__[0])
 
 
 def test_plot_config():
@@ -69,7 +72,7 @@ def test_grid_plot():
     ]
 
     # Load the data
-    data_path = Path("../data/anipose_220807_Fly002_002")
+    data_path = PKG_PATH / "../data/anipose_220807_Fly002_002"
     video_path_front = data_path / "camera_3.mp4"
     video_path_side = data_path / "camera_5.mp4"
 
@@ -131,12 +134,12 @@ def test_grid_plot():
         trail=30,
         t_interval=100,
         stim_lines=stim_lines,
-        export_path=f'generate_frame_{t}.png',
+        export_path=PKG_PATH / "../tests" / f'generate_frame_{t}.png',
         **plot_config
     )
     # Load the ground truth and generated images
-    img_ground_truth = plt.imread('test_frame_100.png')
-    img_test = plt.imread(f'generate_frame_{t}.png')
+    img_ground_truth = plt.imread(PKG_PATH / "../tests" / 'test_frame_100.png')
+    img_test = plt.imread(PKG_PATH / "../tests" / f'generate_frame_{t}.png')
     # Convert colors to compare in a more robust way
     img_ground_truth = np.where(img_ground_truth > 0, 1, 0)
     img_test = np.where(img_test > 0, 1, 0)
