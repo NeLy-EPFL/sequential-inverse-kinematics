@@ -18,15 +18,15 @@ Case 1: we have 3D pose obtained, and we would like to align it but first
 we need to convert the pose data into a dictionary format
 NOTE: if the 3D pose is not in the format described above, then you need to
 * Convert your 3D pose file manually to the required format
-* Or, if you obtain the 3D pose from anipose (see the method `convert_from_anipose_to_dict`),
-simply set `convert` to True.
+* Or, if you obtain the 3D pose from anipose, simply set `convert_func`
+to `convert_from_anipose_to_dict` .
 
 >>> data_path = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
 >>> align = AlignPose.from_file_path(
 >>>     main_dir=data_path,
 >>>     file_name="pose3d.h5",
 >>>     legs_list=["RF","LF"],
->>>     convert_dict=True,
+>>>     convert_func=convert_from_anipose_to_dict,
 >>>     pts2align=PTS2ALIGN,
 >>>     include_claw=False,
 >>>     body_template=NMF_TEMPLATE,
@@ -40,7 +40,7 @@ Case 2: we have a pose data in the required data structure, we just want to load
 >>>     main_dir=data_path,
 >>>     file_name="converted_pose_dict.pkl",
 >>>     legs_list=["RF","LF"],
->>>     convert_dict=False,
+>>>     convert_func=None,
 >>>     pts2align=PTS2ALIGN,
 >>>     include_claw=False,
 >>>     body_template=NMF_TEMPLATE,
@@ -373,7 +373,7 @@ class AlignPose:
                 continue
         # Take the neck as in the template as the other points are already aligned
         if "Neck" in self.body_template:
-            aligned_pose["Neck"] = self.body_template["Neck"].reshape((-1,1,3))
+            aligned_pose["Neck"] = self.body_template["Neck"].reshape((-1, 1, 3))
 
         if export_path is not None:
             export_full_path = export_path / "pose3d_aligned.pkl"

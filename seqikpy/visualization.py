@@ -8,13 +8,13 @@ from typing import Tuple, List, Dict, Optional, Iterable
 from tqdm import tqdm
 
 import cv2
-import pandas as pd
 import numpy as np
-from mycolorpy import colorlist as mcp
 from matplotlib import animation
 from matplotlib.gridspec import GridSpec
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+from seqikpy.utils import load_file
 
 # Ignore the warnings
 warnings.filterwarnings("ignore")
@@ -26,6 +26,13 @@ logging.basicConfig(
 # Get the logger of the module
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+
+def generate_color_map(cmap: str, n: int) -> List:
+    """Generates a list of colors from a given colormap."""
+    cmap = plt.get_cmap(cmap)
+    colors = cmap(np.linspace(0, 1, n))
+    return colors
 
 
 def get_video_writer(video_path, fps, output_shape):
@@ -66,7 +73,7 @@ def make_video(
     video_path: str,
     frame_generator: Iterable,
     fps: int,
-    output_shape: Tuple=(-1, 2880),
+    output_shape: Tuple = (-1, 2880),
     n_frames: int = -1
 ):
     """ Makes videos from a generator of images. """
@@ -131,6 +138,9 @@ def get_plot_config(data_path: Path):
         Data path should look like:
         "/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d"
     """
+    assert data_path.parts[-1] == "pose-3d", "The data path should end with pose-3d"
+    assert data_path.parts[-2] == "behData", "The data path should contain behData"
+
     plot_config = {}
     trial_type = data_path.parts[-3]
     if "_RLF_coxa" in trial_type:
@@ -192,13 +202,13 @@ def load_grid_plot_data(data_path: Path) -> [Dict, Dict]:
         Returns joint angles (head and leg) and aligned pose as a tuple.
     """
     if (data_path / "body_joint_angles.pkl").is_file():
-        joint_angles = pd.read_pickle(data_path / "body_joint_angles.pkl")
+        joint_angles = load_file(data_path / "body_joint_angles.pkl")
     else:
-        head_joint_angles = pd.read_pickle(data_path / "head_joint_angles.pkl")
-        leg_joint_angles = pd.read_pickle(data_path / "leg_joint_angles.pkl") \
+        head_joint_angles = load_file(data_path / "head_joint_angles.pkl")
+        leg_joint_angles = load_file(data_path / "leg_joint_angles.pkl") \
             if (data_path / "leg_joint_angles.pkl").is_file() else {}
         joint_angles = {**head_joint_angles, **leg_joint_angles}
-    aligned_pose = pd.read_pickle(data_path / "pose3d_aligned.pkl")
+    aligned_pose = load_file(data_path / "pose3d_aligned.pkl")
 
     return joint_angles, aligned_pose
 
@@ -281,9 +291,9 @@ def animate_3d_points(
     ax3d.yaxis.pane.set_edgecolor("black")
     ax3d.zaxis.pane.set_edgecolor("black")
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len(points3d))
-    color_map_left = mcp.gen_color(cmap="Blues", n=len(points3d))
-    color_map_scatter = mcp.gen_color(cmap="RdBu", n=len(points3d))
+    color_map_right = generate_color_map(cmap="Reds", n=len(points3d))
+    color_map_left = generate_color_map(cmap="Blues", n=len(points3d))
+    color_map_scatter = generate_color_map(cmap="RdBu", n=len(points3d))
 
     i, j, k = 1, 1, 1
     line_data = []
@@ -440,8 +450,8 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
             "Neck": "x",
         }
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len([kp for kp in points3d if "R" in kp]) + 1)
-    color_map_left = mcp.gen_color(cmap="Blues", n=len([kp for kp in points3d if "L" in kp]) + 1)
+    color_map_right = generate_color_map(cmap="Reds", n=len([kp for kp in points3d if "R" in kp]) + 1)
+    color_map_left = generate_color_map(cmap="Blues", n=len([kp for kp in points3d if "L" in kp]) + 1)
 
     i, j = 1, 1
 
@@ -485,8 +495,8 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
 def plot_trailing_kp(ax3d, points3d, segments_to_plot, export_path=None, t=0, trail=5, marker_type="x"):
     """ Plots the traces of key points from t-trail to t. """
 
-    color_map_right = mcp.gen_color(cmap="Reds", n=len(points3d) + 1)
-    color_map_left = mcp.gen_color(cmap="Blues", n=len(points3d) + 1)
+    color_map_right = generate_color_map(cmap="Reds", n=len(points3d) + 1)
+    color_map_left = generate_color_map(cmap="Blues", n=len(points3d) + 1)
 
     i, j = 1, 1
     for kp, ind in segments_to_plot.items():
@@ -546,7 +556,7 @@ def plot_joint_angle(
     export_path : Path, optional
         Path where the plot will be saved, by default None
     """
-    colors = mcp.gen_color(cmap="Set2", n=len(angles_to_plot))
+    colors = generate_color_map(cmap="Set2", n=len(angles_to_plot))
 
     for i, joint_name in enumerate(angles_to_plot):
         joint_angles = kinematics_data[joint_name]
@@ -857,4 +867,3 @@ def fig_to_array(fig):
     data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
     data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
     return data
-
