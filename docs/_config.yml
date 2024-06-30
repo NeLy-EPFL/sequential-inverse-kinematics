@@ -45,8 +45,8 @@ html:
 # API reference
 sphinx:
   extra_extensions:
-  - 'sphinx.ext.autodoc'
-  - 'sphinx.ext.napoleon'
-  - 'sphinx.ext.viewcode'
+  - sphinx.ext.autodoc
+  - sphinx.ext.napoleon
+  - sphinx.ext.viewcode
   config:
     add_module_names: False

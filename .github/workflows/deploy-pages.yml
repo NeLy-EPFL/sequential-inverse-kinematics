@@ -38,6 +38,7 @@ jobs:
       # Build the book
       - name: Build the book
         run: |
+          sphinx-apidoc -o docs/ seqikpy/
           jupyter-book build docs
 
       # Upload the book's HTML as an artifact

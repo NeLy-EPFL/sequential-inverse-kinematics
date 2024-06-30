@@ -7,6 +7,7 @@
 
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-red)](https://opensource.org/license/apache-2-0)
+[![python](https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10-blue)]()
 
 </div>
 
