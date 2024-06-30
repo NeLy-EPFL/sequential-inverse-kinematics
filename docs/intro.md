@@ -32,4 +32,14 @@ If you encounter any bugs or request a new feature, please open an issue in our 
 If you find this package useful in your research, please consider citing it using the following BibTeX entry:
 
 ```bibtex
+@software{ozdil2024seqikpy,
+  author       = {Ozdil, Pembe Gizem and Ijspeert, Auke and Ramdya, Pavan},
+  title        = {sequential-inverse-kinematics: v1.0.0},
+  month        = jun,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {v1.0.0},
+  doi          = {10.5281/zenodo.12601317},
+  url          = {https://doi.org/10.5281/zenodo.12601317}
+} 
 ```
