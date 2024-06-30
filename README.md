@@ -46,12 +46,7 @@ Documentation can be found [here](https://nely-epfl.github.io/sequential-inverse
 
 # 🛠️ Installation
 
-You can pip install the package by running the following line in the terminal:
-```bash
-$ pip install seqikpy
-```
-
-Or, you can install the newest version of the package manually by running the following line in the terminal:
+You can install the newest version of the package manually by running the following line in the terminal:
 ```bash
 $ pip install https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git
 ```
@@ -85,5 +80,5 @@ If you find this package useful in your research, please consider citing it usin
   version      = {v1.0.0},
   doi          = {10.5281/zenodo.12601317},
   url          = {https://doi.org/10.5281/zenodo.12601317}
-} 
+}
 ```
