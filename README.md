@@ -5,9 +5,9 @@
 <img src="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/docs/images/logo.png" width="95%">
 </p>
 
-
 [![License](https://img.shields.io/badge/License-Apache_2.0-red)](https://opensource.org/license/apache-2-0)
 [![python](https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10-blue)]()
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12601317.svg)](https://doi.org/10.5281/zenodo.12601317)
 
 </div>
 
@@ -76,4 +76,14 @@ If you encounter any bugs or request a new feature, please open an issue in our 
 If you find this package useful in your research, please consider citing it using the following BibTeX entry:
 
 ```bibtex
+@software{ozdil2024seqikpy,
+  author       = {Ozdil, Pembe Gizem and Ijspeert, Auke and Ramdya, Pavan},
+  title        = {sequential-inverse-kinematics: v1.0.0},
+  month        = jun,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {v1.0.0},
+  doi          = {10.5281/zenodo.12601317},
+  url          = {https://doi.org/10.5281/zenodo.12601317}
+} 
 ```
