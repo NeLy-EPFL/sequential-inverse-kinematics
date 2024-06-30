@@ -36,14 +36,6 @@ seqikpy.kinematic\_chain module
    :undoc-members:
    :show-inheritance:
 
-seqikpy.kinematic\_chain\_trochanter module
--------------------------------------------
-
-.. automodule:: seqikpy.kinematic_chain_trochanter
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 seqikpy.leg\_inverse\_kinematics module
 ---------------------------------------
 
