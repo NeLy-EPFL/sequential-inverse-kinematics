@@ -5,7 +5,6 @@ from typing import Dict, List
 import pickle
 import numpy as np
 import cv2
-from nptyping import NDArray
 from scipy.interpolate import pchip_interpolate
 
 
@@ -88,9 +87,9 @@ def get_stim_intervals(stim_data):
 
 
 def calculate_body_size(
-    body_template: Dict[str, NDArray],
+    body_template: Dict[str, np.ndarray],
     legs_list: List[str] = ["RF", "LF", "RM", "LM", "RH", "LH"],
-) -> Dict[str, NDArray]:
+) -> Dict[str, np.ndarray]:
     """ Calculates body segment sizes from the template data."""
     if set(legs_list).difference(set(["RF", "LF", "RM", "LM", "RH", "LH"])):
         raise NameError(
@@ -115,7 +114,9 @@ def calculate_body_size(
                 )
     # Assuming right and left hand-side are symmetric, checking for one side is enough
     if "R_Antenna_base" in body_template:
-        body_size["Antenna"] = np.linalg.norm(body_template["R_Antenna_base"] - body_template["R_Antenna_edge"])
+        body_size["Antenna"] = np.linalg.norm(
+            body_template["R_Antenna_base"] -
+            body_template["R_Antenna_edge"])
         body_size["Antenna_mid_thorax"] = np.linalg.norm(
             body_template["R_Antenna_base"] - body_template["Thorax_mid"])
 
@@ -278,7 +279,7 @@ def df_to_nparray(data_frame, side, claw_is_end_effector, segment="F"):
          3))  # timestep, key points, axes
 
     for i, kp in enumerate(key_points):
-        position_array[:,i,:] = np.array(
+        position_array[:, i, :] = np.array(
             [
                 data_frame[f"Pose_{side}{segment}_{kp}_x"].to_numpy(),
                 data_frame[f"Pose_{side}{segment}_{kp}_y"].to_numpy(),
