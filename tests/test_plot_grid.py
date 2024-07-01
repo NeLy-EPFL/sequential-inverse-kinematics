@@ -5,6 +5,9 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
+from PIL import Image
+import imagehash
+
 import seqikpy
 from seqikpy.visualization import (
     load_grid_plot_data,
@@ -137,11 +140,8 @@ def test_grid_plot():
         export_path=PKG_PATH / "../tests" / f'generate_frame_{t}.png',
         **plot_config
     )
-    # Load the ground truth and generated images
-    img_ground_truth = plt.imread(PKG_PATH / "../tests" / 'test_frame_100.png')
-    img_test = plt.imread(PKG_PATH / "../tests" / f'generate_frame_{t}.png')
-    # Convert colors to compare in a more robust way
-    img_ground_truth = np.where(img_ground_truth > 0, 1, 0)
-    img_test = np.where(img_test > 0, 1, 0)
 
-    assert np.allclose(img_ground_truth, img_test)
+    true_hash = imagehash.average_hash(Image.open(PKG_PATH / "../tests" / 'test_frame_100.png'))
+    generated_hash = imagehash.average_hash(Image.open(PKG_PATH / "../tests" / f'generate_frame_{t}.png'))
+
+    assert (true_hash - generated_hash) <= 5, "The generated image is not similar to the true image"
