@@ -31,7 +31,7 @@ setup(
     packages=find_packages(include=["seqikpy", "seqikpy.*"]),
     test_suite="tests",
     url="https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git",
-    version="1.0.1",
+    version="1.0.2",
     zip_safe=False,
     classifiers=[
         "Development Status :: 4 - Beta",

@@ -2,7 +2,7 @@
 
 
 <p align="center">
-<img src="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/e10f700ef9dd925b49cb98858763225e3d64bc7b/docs/images/logo.png" width="95%">
+<img src="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/main/docs/images/logo.png?raw=true" width="95%">
 </p>
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-red)](https://opensource.org/license/apache-2-0)
@@ -17,7 +17,7 @@
 `SeqIKPy` is a Python package that provides an implementation of inverse kinematics (IK) that is based on the open-source Python package [IKPy](https://github.com/Phylliade/ikpy). In constrast to the current IK approaches that aims to match only the end-effector, `SeqIKPy` is designed to calculate the joint angles of the fly body parts to align the 3D pose of the entire kinematic chain to a desired 3D pose. In particular, you can use `SeqIKPy` in the pipeline shown below.
 
 <p align="center">
-<img src="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/a6ec5560825f4d5570dc2f61c9e07fd6e2fbb8d7/docs/images/pipeline.png" width="95%">
+<img src="https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/main/docs/images/pipeline.png?raw=true" width="95%">
 </p>
 
 
