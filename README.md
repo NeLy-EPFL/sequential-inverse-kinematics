@@ -78,7 +78,7 @@ If you find this package useful in your research, please consider citing it usin
   year         = 2024,
   publisher    = {Zenodo},
   version      = {v1.0.0},
-  doi          = {10.5281/zenodo.12601317},
-  url          = {https://doi.org/10.5281/zenodo.12601317}
+  doi          = {10.5281/zenodo.12601316},
+  url          = {https://doi.org/10.5281/zenodo.12601316}
 }
 ```
