@@ -17,7 +17,7 @@ from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
 from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
-from seqikpy.utils import save_file
+from seqikpy.utils import save_file, from_sdf
 
 logging.basicConfig(
     format=" %(asctime)s - %(levelname)s- %(message)s",
@@ -42,6 +42,11 @@ def parse_args():
         action="store_true",
         help="Plot the joint angles.",
     )
+    parser.add_argument(
+        "--sdf",
+        default=None,
+        help="SDF path for the template model.",
+    )
     return parser.parse_args()
 
 
@@ -54,6 +59,11 @@ if __name__ == "__main__":
 
     paths = Path(path_name).rglob("pose-3d")
 
+    if args.sdf:
+        sdf_name = args.sdf
+        sdf_name += "/" if not sdf_name.endswith("/") else ""
+        NMF_TEMPLATE, BOUNDS = from_sdf(sdf_name)
+        
     for data_path in paths:
 
         logging.info("Running code in %s", data_path)

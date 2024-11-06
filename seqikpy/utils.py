@@ -7,6 +7,9 @@ import numpy as np
 import cv2
 from scipy.interpolate import pchip_interpolate
 
+import xml
+import xml.etree.ElementTree as ET
+import numpy as np
 
 def get_fps_from_video(video_dir):
     """ Finds the fps of a video. """
@@ -357,3 +360,13 @@ def interpolate_joint_angles(joint_angles_dict, **kwargs):
         interpolated_joint_angles[dof] = interpolate_signal(signal=joint_angles_dict[dof], **kwargs)
 
     return interpolated_joint_angles
+
+def from_sdf(sdf_file):
+    sdf_in = ET.parse(sdf_file)
+    root_in = sdf_in.getroot()
+    model_in = root_in.find('world').find('model')
+    links = model_in.findall('link')
+    joints = model_in.findall('joint')
+    NMF_TEMPLATE = {link.attrib['name']:link.find('pose').text for link in links}
+    BOUNDS = {joint.attrib['name']:(joint.find('axis').find('limit').find('lower').text,joint.find('axis').find('limit').find('upper').text) for joint in joints}
+    return NMF_TEMPLATE, BOUNDS

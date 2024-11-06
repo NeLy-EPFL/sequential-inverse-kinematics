@@ -1,0 +1,647 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+	<world name="world">
+		<model name="nmf_example">
+			<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+			<link name="RF_Coxa">
+				<pose>0.35 -0.27 0.4 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RF_Coxa_roll">
+				<pose>0.35 -0.27 0.4 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RF_Coxa_yaw">
+				<pose>0.35 -0.27 0.4 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RF_Femur">
+				<pose>0.35 -0.27 -0.025 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RF_Femur_roll">
+				<pose>0.35 -0.27 -0.025 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RF_Tibia">
+				<pose>0.35 -0.27 -0.731 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RF_Tarsus">
+				<pose>0.35 -0.27 -1.249 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Coxa">
+				<pose>0.35 0.27 0.4 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Coxa_roll">
+				<pose>0.35 0.27 0.4 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Coxa_yaw">
+				<pose>0.35 0.27 0.4 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Femur">
+				<pose>0.35 0.27 -0.025 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Femur_roll">
+				<pose>0.35 0.27 -0.025 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Tibia">
+				<pose>0.35 0.27 -0.731 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Tarsus">
+				<pose>0.35 0.27 -1.249 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RM_Coxa">
+				<pose>0.0 -0.125 0.0 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RM_Coxa_roll">
+				<pose>0.0 -0.125 0.0 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RM_Femur">
+				<pose>0.0 -0.125 -0.182 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RM_Femur_roll">
+				<pose>0.0 -0.125 -0.182 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RM_Tibia">
+				<pose>0.0 -0.125 -0.965 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RM_Tarsus">
+				<pose>0.0 -0.125 -1.633 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LM_Coxa">
+				<pose>0.0 0.125 0.0 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LM_Coxa_roll">
+				<pose>0.0 0.125 0.0 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LM_Femur">
+				<pose>0.0 0.125 -0.182 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LM_Femur_roll">
+				<pose>0.0 0.125 -0.182 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LM_Tibia">
+				<pose>0.0 0.125 -0.965 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LM_Tarsus">
+				<pose>0.0 0.125 -1.633 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RH_Coxa">
+				<pose>-0.215 -0.087 -0.073 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RH_Coxa_roll">
+				<pose>-0.215 -0.087 -0.073 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RH_Femur">
+				<pose>-0.215 -0.087 -0.272 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RH_Femur_roll">
+				<pose>-0.215 -0.087 -0.272 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RH_Tibia">
+				<pose>-0.215 -0.087 -1.108 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RH_Tarsus">
+				<pose>-0.215 -0.087 -1.793 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LH_Coxa">
+				<pose>-0.215 0.087 -0.073 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LH_Coxa_roll">
+				<pose>-0.215 0.087 -0.073 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LH_Femur">
+				<pose>-0.215 0.087 -0.272 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LH_Femur_roll">
+				<pose>-0.215 0.087 -0.272 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LH_Tibia">
+				<pose>-0.215 0.087 -1.108 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LH_Tarsus">
+				<pose>-0.215 0.087 -1.793 0.0 0.0 0.0</pose>
+			</link>
+			<link name="Thorax_mid">
+				<pose>0.08 0.0 1.43 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LF_Claw">
+				<pose>0.35 0.27 -1.912 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RF_Claw">
+				<pose>0.35 -0.27 -1.912 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LM_Claw">
+				<pose>0.0 0.125 -2.328 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RM_Claw">
+				<pose>0.0 -0.125 -2.328 0.0 0.0 0.0</pose>
+			</link>
+			<link name="LH_Claw">
+				<pose>-0.215 0.087 -2.588 0.0 0.0 0.0</pose>
+			</link>
+			<link name="RH_Claw">
+				<pose>-0.215 -0.087 -2.588 0.0 0.0 0.0</pose>
+			</link>
+			<joint name="LF_ThC_yaw">
+				<parent>Thorax_mid</parent>
+				<child>LF_Coxa_yaw</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>1.0 0.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LF_ThC_pitch">
+				<parent>LF_Coxa_yaw</parent>
+				<child>LF_Coxa</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-1.5707963267948966</lower>
+						<upper>1.5707963267948966</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LF_ThC_roll">
+				<parent>LF_Coxa</parent>
+				<child>LF_Coxa_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LF_CTr_pitch">
+				<parent>LF_Coxa_roll</parent>
+				<child>LF_Femur</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LF_CTr_roll">
+				<parent>LF_Femur</parent>
+				<child>LF_Femur_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LF_FTi_pitch">
+				<parent>LF_Femur_roll</parent>
+				<child>LF_Tibia</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LF_TiTa_pitch">
+				<parent>LF_Tibia</parent>
+				<child>LF_Tarsus</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RF_ThC_yaw">
+				<parent>Thorax_mid</parent>
+				<child>RF_Coxa_yaw</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>1.0 0.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RF_ThC_pitch">
+				<parent>RF_Coxa_yaw</parent>
+				<child>RF_Coxa</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-1.5707963267948966</lower>
+						<upper>1.5707963267948966</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RF_ThC_roll">
+				<parent>RF_Coxa</parent>
+				<child>RF_Coxa_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RF_CTr_pitch">
+				<parent>RF_Coxa_roll</parent>
+				<child>RF_Femur</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RF_CTr_roll">
+				<parent>RF_Femur</parent>
+				<child>RF_Femur_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RF_FTi_pitch">
+				<parent>RF_Femur_roll</parent>
+				<child>RF_Tibia</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RF_TiTa_pitch">
+				<parent>RF_Tibia</parent>
+				<child>RF_Tarsus</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LM_ThC_yaw">
+				<parent>Thorax_mid</parent>
+				<child>LM_Coxa_yaw</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>1.0 0.0 0.0</xyz>
+					<limit>
+						<lower>-0.8726646259971648</lower>
+						<upper>0.8726646259971648</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LM_ThC_pitch">
+				<parent>LM_Coxa_yaw</parent>
+				<child>LM_Coxa</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LM_ThC_roll">
+				<parent>LM_Coxa</parent>
+				<child>LM_Coxa_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LM_CTr_pitch">
+				<parent>LM_Coxa_roll</parent>
+				<child>LM_Femur</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LM_CTr_roll">
+				<parent>LM_Femur</parent>
+				<child>LM_Femur_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LM_FTi_pitch">
+				<parent>LM_Femur_roll</parent>
+				<child>LM_Tibia</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LM_TiTa_pitch">
+				<parent>LM_Tibia</parent>
+				<child>LM_Tarsus</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RM_ThC_yaw">
+				<parent>Thorax_mid</parent>
+				<child>RM_Coxa_yaw</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>1.0 0.0 0.0</xyz>
+					<limit>
+						<lower>-0.8726646259971648</lower>
+						<upper>0.8726646259971648</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RM_ThC_pitch">
+				<parent>RM_Coxa_yaw</parent>
+				<child>RM_Coxa</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RM_ThC_roll">
+				<parent>RM_Coxa</parent>
+				<child>RM_Coxa_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RM_CTr_pitch">
+				<parent>RM_Coxa_roll</parent>
+				<child>RM_Femur</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RM_CTr_roll">
+				<parent>RM_Femur</parent>
+				<child>RM_Femur_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RM_FTi_pitch">
+				<parent>RM_Femur_roll</parent>
+				<child>RM_Tibia</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RM_TiTa_pitch">
+				<parent>RM_Tibia</parent>
+				<child>RM_Tarsus</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LH_ThC_yaw">
+				<parent>Thorax_mid</parent>
+				<child>LH_Coxa_yaw</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>1.0 0.0 0.0</xyz>
+					<limit>
+						<lower>-0.8726646259971648</lower>
+						<upper>0.8726646259971648</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LH_ThC_pitch">
+				<parent>LH_Coxa_yaw</parent>
+				<child>LH_Coxa</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-0.8726646259971648</lower>
+						<upper>0.8726646259971648</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LH_ThC_roll">
+				<parent>LH_Coxa</parent>
+				<child>LH_Coxa_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>0</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LH_CTr_pitch">
+				<parent>LH_Coxa_roll</parent>
+				<child>LH_Femur</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LH_CTr_roll">
+				<parent>LH_Femur</parent>
+				<child>LH_Femur_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LH_FTi_pitch">
+				<parent>LH_Femur_roll</parent>
+				<child>LH_Tibia</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="LH_TiTa_pitch">
+				<parent>LH_Tibia</parent>
+				<child>LH_Tarsus</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RH_ThC_yaw">
+				<parent>Thorax_mid</parent>
+				<child>RH_Coxa_yaw</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>1.0 0.0 0.0</xyz>
+					<limit>
+						<lower>-0.8726646259971648</lower>
+						<upper>0.8726646259971648</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RH_ThC_pitch">
+				<parent>RH_Coxa_yaw</parent>
+				<child>RH_Coxa</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-0.8726646259971648</lower>
+						<upper>0.8726646259971648</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RH_ThC_roll">
+				<parent>RH_Coxa</parent>
+				<child>RH_Coxa_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>0</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RH_CTr_pitch">
+				<parent>RH_Coxa_roll</parent>
+				<child>RH_Femur</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RH_CTr_roll">
+				<parent>RH_Femur</parent>
+				<child>RH_Femur_roll</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 0.0 1.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RH_FTi_pitch">
+				<parent>RH_Femur_roll</parent>
+				<child>RH_Tibia</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>3.141592653589793</upper>
+					</limit>
+				</axis>
+			</joint>
+			<joint name="RH_TiTa_pitch">
+				<parent>RH_Tibia</parent>
+				<child>RH_Tarsus</child>
+				<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+				<axis>
+					<xyz>0.0 1.0 0.0</xyz>
+					<limit>
+						<lower>-3.141592653589793</lower>
+						<upper>0.0</upper>
+					</limit>
+				</axis>
+			</joint>
+		</model>
+	</world>
+</sdf>
