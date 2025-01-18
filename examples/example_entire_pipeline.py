@@ -5,6 +5,7 @@
     Example usage:
 
     >>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001 --plot
+
 """
 import logging
 from pathlib import Path
@@ -42,11 +43,6 @@ def parse_args():
         action="store_true",
         help="Plot the joint angles.",
     )
-    parser.add_argument(
-        "--sdf",
-        default=None,
-        help="SDF path for the template model.",
-    )
     return parser.parse_args()
 
 
@@ -59,11 +55,6 @@ if __name__ == "__main__":
 
     paths = Path(path_name).rglob("pose-3d")
 
-    if args.sdf:
-        sdf_name = args.sdf
-        sdf_name += "/" if not sdf_name.endswith("/") else ""
-        NMF_TEMPLATE, BOUNDS = from_sdf(sdf_name)
-        
     for data_path in paths:
 
         logging.info("Running code in %s", data_path)
