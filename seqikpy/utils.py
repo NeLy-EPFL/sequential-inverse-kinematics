@@ -1,4 +1,5 @@
 """ Utilities. """
+
 from pathlib import Path
 import logging
 from typing import Dict, List
@@ -11,15 +12,16 @@ import xml
 import xml.etree.ElementTree as ET
 import numpy as np
 
+
 def get_fps_from_video(video_dir):
-    """ Finds the fps of a video. """
+    """Finds the fps of a video."""
     cap = cv2.VideoCapture(str(video_dir))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     return fps
 
 
 def load_stim_data(main_dir: Path):
-    """ Loads the stimulus info from txt."""
+    """Loads the stimulus info from txt."""
     stim_dir = main_dir / "stimulusSequence.txt"
 
     try:
@@ -32,12 +34,13 @@ def load_stim_data(main_dir: Path):
 
 
 def get_stim_array(
-        lines: list,
-        frame_rate: int,
-        scale: int = 1,
-        hamming_window_size: int = 0,
-        time_scale: int = 1e-3):
-    """ Computes a stimulus array from the stimulus information.
+    lines: list,
+    frame_rate: int,
+    scale: int = 1,
+    hamming_window_size: int = 0,
+    time_scale: int = 1e-3,
+):
+    """Computes a stimulus array from the stimulus information.
 
     Parameters
     ----------
@@ -65,19 +68,21 @@ def get_stim_array(
     start = 0
     for repeat_no in range(repeat):
         for line_no in range(2, len(lines) - 1):
-            duration = int(int(lines[line_no].split()[-1])
-                           * frame_rate * time_scale * scale)
-            stim_array[start:start +
-                       duration] = False if lines[line_no].startswith("off") else True
+            duration = int(
+                int(lines[line_no].split()[-1]) * frame_rate * time_scale * scale
+            )
+            stim_array[start : start + duration] = (
+                False if lines[line_no].startswith("off") else True
+            )
             start += duration
 
     trim_ind = int(hamming_window_size * 0.5)
-    return stim_array[trim_ind: stim_array.shape[0] - trim_ind]
+    return stim_array[trim_ind : stim_array.shape[0] - trim_ind]
 
 
 def get_stim_intervals(stim_data):
-    """ Reads stimulus array and returns the stim intervals for plotting purposes.
-    Use get_stim_array otherwise. """
+    """Reads stimulus array and returns the stim intervals for plotting purposes.
+    Use get_stim_array otherwise."""
     stim_on = np.where(stim_data)[0]
     stim_start_end = [stim_on[0]]
     for ind in list(np.where(np.diff(stim_on) > 1)[0]):
@@ -93,7 +98,7 @@ def calculate_body_size(
     body_template: Dict[str, np.ndarray],
     legs_list: List[str] = ["RF", "LF", "RM", "LM", "RH", "LH"],
 ) -> Dict[str, np.ndarray]:
-    """ Calculates body segment sizes from the template data."""
+    """Calculates body segment sizes from the template data."""
     if set(legs_list).difference(set(["RF", "LF", "RM", "LM", "RH", "LH"])):
         raise NameError(
             f"""
@@ -106,36 +111,43 @@ def calculate_body_size(
 
     for i, segment_name in enumerate(leg_segments):
         for leg in legs_list:
-            # If Claw, calculate the length of the entire leg
+            # If Claw, calculate the length of the entire leg
             if segment_name == "Claw":
-                body_size[leg] = body_size[f"{leg}_Coxa"] + body_size[f"{leg}_Femur"] + \
-                    body_size[f"{leg}_Tibia"] + body_size[f"{leg}_Tarsus"]
+                body_size[leg] = (
+                    body_size[f"{leg}_Coxa"]
+                    + body_size[f"{leg}_Femur"]
+                    + body_size[f"{leg}_Tibia"]
+                    + body_size[f"{leg}_Tarsus"]
+                )
             else:
                 body_size[f"{leg}_{segment_name}"] = np.linalg.norm(
-                    body_template[f"{leg}_{segment_name}"] -
-                    body_template[f"{leg}_{leg_segments[i+1]}"]
+                    body_template[f"{leg}_{segment_name}"]
+                    - body_template[f"{leg}_{leg_segments[i+1]}"]
                 )
-    # Assuming right and left hand-side are symmetric, checking for one side is enough
+    # Assuming right and left hand-side are symmetric, checking for one side is enough
     if "R_Antenna_base" in body_template:
         body_size["Antenna"] = np.linalg.norm(
-            body_template["R_Antenna_base"] -
-            body_template["R_Antenna_edge"])
+            body_template["R_Antenna_base"] - body_template["R_Antenna_edge"]
+        )
         body_size["Antenna_mid_thorax"] = np.linalg.norm(
-            body_template["R_Antenna_base"] - body_template["Thorax_mid"])
+            body_template["R_Antenna_base"] - body_template["Thorax_mid"]
+        )
 
     return body_size
 
 
 def drop_level_dlc(data_frame):
-    """ Converts DLC type dataframe into one level df. """
+    """Converts DLC type dataframe into one level df."""
     data_frame.columns = data_frame.columns.droplevel()
     data_frame.columns = ["_".join(col) for col in data_frame.columns.values]
 
     return data_frame
 
 
-def fix_coxae_pos(points3d, right_coxa_kp="thorax_coxa_R", left_coxa_kp="thorax_coxa_L"):
-    """ Calculates the fixed coxae location based on the quantiles. """
+def fix_coxae_pos(
+    points3d, right_coxa_kp="thorax_coxa_R", left_coxa_kp="thorax_coxa_L"
+):
+    """Calculates the fixed coxae location based on the quantiles."""
     coxa_right = get_array(right_coxa_kp, points3d)
     coxa_left = get_array(left_coxa_kp, points3d)
     coxa_right_fixed = (
@@ -165,7 +177,7 @@ def leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool):
 
 
 def get_length_of_segments(points3d, claw_is_ee=False):
-    """ Returns a dictionary with segment sizes. """
+    """Returns a dictionary with segment sizes."""
     segments = {
         "Coxa": ("thorax_coxa", "coxa_femur"),
         "Femur": ("coxa_femur", "femur_tibia"),
@@ -184,7 +196,7 @@ def get_length_of_segments(points3d, claw_is_ee=False):
 
 
 def compute_mean_length_of_segments(segment_lengths):
-    """Computes mean length of each segment. """
+    """Computes mean length of each segment."""
     mean_segment_length = {}
     for segment, length_array in segment_lengths.items():
         mean_segment_length[segment] = np.mean(length_array)
@@ -193,13 +205,13 @@ def compute_mean_length_of_segments(segment_lengths):
 
 
 def get_mean_length_of_segments(points3d):
-    """ Gets a dictionary with segment lengths. """
+    """Gets a dictionary with segment lengths."""
     lengths = get_length_of_segments(points3d)
     return compute_mean_length_of_segments(lengths)
 
 
 def get_leg_length(mean_segment_size):
-    """ Returns the leg size from the mean segment lengths."""
+    """Returns the leg size from the mean segment lengths."""
     leg_length_r = np.sum(
         [size for name, size in mean_segment_size.items() if "R_" in name]
     )
@@ -223,7 +235,8 @@ def get_array(kp_name, kp_dict):
 
 def get_mean_quantile(vector, quantile_diff=0.05):
     return 0.5 * (
-        np.quantile(vector, q=0.5 - quantile_diff) + np.quantile(vector, q=0.5 + quantile_diff)
+        np.quantile(vector, q=0.5 - quantile_diff)
+        + np.quantile(vector, q=0.5 + quantile_diff)
     )
 
 
@@ -270,23 +283,22 @@ def from_anipose_to_array(points3d, claw_is_end_effector=False):
 
 
 def df_to_nparray(data_frame, side, claw_is_end_effector, segment="F"):
-    """ Convert usual dataframe format into a three dimensional array. """
+    """Convert usual dataframe format into a three dimensional array."""
     if claw_is_end_effector:
         key_points = ["Coxa", "Femur", "Tibia", "Tarsus", "Claw"]
     else:
         key_points = ["Coxa", "Femur", "Tibia", "Tarsus"]
 
     position_array = np.empty(
-        (data_frame[f"Pose_{side}F_Coxa_x"].shape[0],
-         len(key_points),
-         3))  # timestep, key points, axes
+        (data_frame[f"Pose_{side}F_Coxa_x"].shape[0], len(key_points), 3)
+    )  # timestep, key points, axes
 
     for i, kp in enumerate(key_points):
         position_array[:, i, :] = np.array(
             [
                 data_frame[f"Pose_{side}{segment}_{kp}_x"].to_numpy(),
                 data_frame[f"Pose_{side}{segment}_{kp}_y"].to_numpy(),
-                data_frame[f"Pose_{side}{segment}_{kp}_z"].to_numpy()
+                data_frame[f"Pose_{side}{segment}_{kp}_z"].to_numpy(),
             ]
         )
 
@@ -294,7 +306,7 @@ def df_to_nparray(data_frame, side, claw_is_end_effector, segment="F"):
 
 
 def dict_to_nparray_pose(pose_dict, claw_is_end_effector):
-    """ Convert usual df3dPP dictionary format into a three dimensional array. """
+    """Convert usual df3dPP dictionary format into a three dimensional array."""
 
     if claw_is_end_effector:
         key_points = ["Coxa", "Femur", "Tibia", "Tarsus", "Claw"]
@@ -302,71 +314,117 @@ def dict_to_nparray_pose(pose_dict, claw_is_end_effector):
         key_points = ["Coxa", "Femur", "Tibia", "Tarsus"]
 
     position_array = np.empty(
-        (pose_dict["Coxa"]["raw_pos_aligned"].shape[0],
-         len(key_points),
-         3))  # timestep, key points, axes
+        (pose_dict["Coxa"]["raw_pos_aligned"].shape[0], len(key_points), 3)
+    )  # timestep, key points, axes
 
     for i, kp in enumerate(key_points):
-        position_array[:, i, :] = np.array(
-            pose_dict[kp]["raw_pos_aligned"])
+        position_array[:, i, :] = np.array(pose_dict[kp]["raw_pos_aligned"])
 
     return position_array
 
 
 def dict_to_nparray_angle(angle_dict, leg, claw_is_end_effector):
-    """ Convert usual df3dPP dictionary format into a three dimensional array. """
+    """Convert usual df3dPP dictionary format into a three dimensional array."""
 
     if claw_is_end_effector:
-        dofs = ["ThC_roll", "ThC_yaw", "ThC_pitch", "CTr_pitch", "CTr_roll", "FTi_pitch", "TiTa_pitch"]
+        dofs = [
+            "ThC_roll",
+            "ThC_yaw",
+            "ThC_pitch",
+            "CTr_pitch",
+            "CTr_roll",
+            "FTi_pitch",
+            "TiTa_pitch",
+        ]
     else:
-        dofs = ["ThC_roll", "ThC_yaw", "ThC_pitch", "CTr_pitch", "CTr_roll", "FTi_pitch"]
+        dofs = [
+            "ThC_roll",
+            "ThC_yaw",
+            "ThC_pitch",
+            "CTr_pitch",
+            "CTr_roll",
+            "FTi_pitch",
+        ]
 
     angle_array = np.empty(
-        (len(angle_dict[f"{leg}_leg"][dofs[0]]),
-         len(dofs)))  # timestep, dofs
+        (len(angle_dict[f"{leg}_leg"][dofs[0]]), len(dofs))
+    )  # timestep, dofs
 
     for i, kp in enumerate(dofs):
-        angle_array[:, i, ] = np.array(
-            angle_dict[f"{leg}_leg"][kp])
+        angle_array[
+            :,
+            i,
+        ] = np.array(angle_dict[f"{leg}_leg"][kp])
 
     return angle_array
 
 
 def interpolate_signal(signal, original_ts, new_ts):
-    """ Interpolates signals. """
+    """Interpolates signals."""
     total_time = signal.shape[0] * original_ts
     original_x = np.arange(0, total_time, original_ts)
     new_x = np.arange(0, total_time, new_ts)
 
     try:
-        interpolated = np.array(
-            pchip_interpolate(original_x, signal, new_x)
-        )
+        interpolated = np.array(pchip_interpolate(original_x, signal, new_x))
     except BaseException:
         signal[np.isinf(signal)] = 0
         signal[-1] = 0
-        interpolated = np.array(
-            pchip_interpolate(original_x, signal, new_x)
-        )
+        interpolated = np.array(pchip_interpolate(original_x, signal, new_x))
 
     return interpolated
 
 
 def interpolate_joint_angles(joint_angles_dict, **kwargs):
-    """ Interpolates joint angles. """
+    """Interpolates joint angles."""
     interpolated_joint_angles = {}
 
     for dof in joint_angles_dict:
-        interpolated_joint_angles[dof] = interpolate_signal(signal=joint_angles_dict[dof], **kwargs)
+        interpolated_joint_angles[dof] = interpolate_signal(
+            signal=joint_angles_dict[dof], **kwargs
+        )
 
     return interpolated_joint_angles
 
-def from_sdf(sdf_file):
+
+def from_sdf(sdf_file: str):
+    """Extracts a body template and joint bounds from an SDF file.
+
+    Parameters
+    ----------
+    sdf_file : str
+        Path to the SDF file.
+
+    Returns
+    -------
+    Dict, Dict
+        Body template and joint bounds.
+    """
+    # Parse the SDF file
     sdf_in = ET.parse(sdf_file)
     root_in = sdf_in.getroot()
-    model_in = root_in.find('world').find('model')
-    links = model_in.findall('link')
-    joints = model_in.findall('joint')
-    NMF_TEMPLATE = {link.attrib['name']:link.find('pose').text for link in links}
-    BOUNDS = {joint.attrib['name']:(joint.find('axis').find('limit').find('lower').text,joint.find('axis').find('limit').find('upper').text) for joint in joints}
-    return NMF_TEMPLATE, BOUNDS
+    model_in = root_in.find("world").find("model")
+    # Get links and joints
+    links = model_in.findall("link")
+    joints = model_in.findall("joint")
+    # Extract the body template
+    body_template = {}
+    for link in links:
+        if not any(dof in link.attrib["name"] for dof in ["roll", "pitch", "yaw"]):
+            # Get location of the joint
+            joint_loc_str = link.find("pose").text
+            # Convert string into a numpy array
+            joint_loc = np.array([float(val) for val in joint_loc_str.split(" ")])
+            # Get only the x, y, z coordinates
+            body_template[link.attrib["name"]] = joint_loc[:3]
+
+    # Extract the joint bounds
+    joint_bounds = {
+        joint.attrib["name"]: (
+            float(joint.find("axis").find("limit").find("lower").text),
+            float(joint.find("axis").find("limit").find("upper").text),
+        )
+        for joint in joints
+
+    }
+    return body_template, joint_bounds
