@@ -5,6 +5,7 @@
     Example usage:
 
     >>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001 --plot
+
 """
 import logging
 from pathlib import Path
@@ -17,7 +18,7 @@ from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
 from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
-from seqikpy.utils import save_file
+from seqikpy.utils import save_file, from_sdf
 
 logging.basicConfig(
     format=" %(asctime)s - %(levelname)s- %(message)s",
