@@ -34,7 +34,7 @@ seq_ik = LegInvKinSeq(
     aligned_pos=aligned_pos,
     kinematic_chain_class=KinematicChainSeq(
         bounds_dof=BOUNDS,
-        legs_list=["RF"],
+        legs_list=["RF", "LF"],
         body_size=calculate_body_size(NMF_TEMPLATE),
     ),
     initial_angles=INITIAL_ANGLES,
@@ -56,7 +56,7 @@ gen_ik = LegInvKinGeneric(
     aligned_pos=aligned_pos,
     kinematic_chain_class=KinematicChainGeneric(
         bounds_dof=BOUNDS,
-        legs_list=["RF"],
+        legs_list=["RF", "LF"],
         body_size=None,
     ),
     initial_angles=INITIAL_ANGLES,
