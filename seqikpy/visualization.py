@@ -294,8 +294,7 @@ def animate_3d_points(
     color_map_right = generate_color_map(cmap="Reds", n=len(points3d))
     color_map_left = generate_color_map(cmap="Blues", n=len(points3d))
     color_map_scatter = generate_color_map(cmap="RdBu", n=len(points3d))
-
-    i, j, k = 1, 1, 1
+    i, j, k = 0, 0, 0
     line_data = []
     line_data_second = []
 
@@ -337,7 +336,7 @@ def animate_3d_points(
             )
             i += 1
 
-    i, j, k = 1, 1, 1
+    i, j, k = 0,0,0
 
     if points3d_second is not None:
 
@@ -466,6 +465,7 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
             j += 1
         else:
             color = "lightgrey"
+
 
         if order > 3:
             ax3d.plot(
