@@ -31,6 +31,10 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: Install seqikpy
+        run: |
+          pip install -e .
+
       - name: Install dependencies
         run: |
           pip install -r ./docs/requirements.txt
