@@ -1,23 +1,28 @@
 """ Data, constants, and paths. """
+
 import numpy as np
 
 INITIAL_ANGLES = {
     "RF": {
-        # Base ThC yaw pitch CTr pitch
+        # Base ThC yaw pitch CTr pitch
         "stage_1": np.array([0.0, 0.45, -0.07, -2.14]),
         # Base ThC yaw pitch roll CTr pitch CTr roll
         "stage_2": np.array([0.0, 0.45, -0.07, -0.32, -2.14, 1.4]),
-        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch
+        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch
         "stage_3": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0]),
-        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch TiTa pitch
-        "stage_4": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0, 0.0]),
+        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch TiTa pitch
+        "stage_4": np.array(
+            [0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0, 0.0]
+        ),
     },
     # Same order for the contralateral leg
     "LF": {
         "stage_1": np.array([0.0, -0.45, -0.07, -2.14]),
         "stage_2": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.4]),
         "stage_3": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0]),
-        "stage_4": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0, 0.0]),
+        "stage_4": np.array(
+            [0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0, 0.0]
+        ),
     },
 }
 
@@ -99,7 +104,7 @@ PTS2ALIGN = {
 
 
 def get_pts2align(path: str):
-    """ Deletes the keys from the PTS2ALIGN dictionary."""
+    """Deletes the keys from the PTS2ALIGN dictionary."""
     pts_temp = PTS2ALIGN.copy()
     if "_RF" in path:
         del pts_temp["RF_leg"]

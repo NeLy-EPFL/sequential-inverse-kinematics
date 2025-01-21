@@ -64,6 +64,7 @@ in the right format. If not, use the static method `convert_from_anipose`.
 >>> aligned_pos = align.align_pose(export_path=data_path)
 
 """
+
 from pathlib import Path
 from typing import Dict, List, Union, Optional, Literal, Callable
 import pickle
@@ -76,19 +77,20 @@ from seqikpy.utils import save_file, calculate_body_size, dict_to_nparray_pose
 
 logging.basicConfig(
     format=" %(asctime)s - %(levelname)s- %(message)s",
-    handlers=[logging.StreamHandler()]
+    handlers=[logging.StreamHandler()],
 )
 
 
 def _get_mean_quantile(vector, quantile_diff=0.05):
-    """ Returns the mean of upper and lower quantiles. """
+    """Returns the mean of upper and lower quantiles."""
     return 0.5 * (
-        np.quantile(vector, q=0.5 - quantile_diff) + np.quantile(vector, q=0.5 + quantile_diff)
+        np.quantile(vector, q=0.5 - quantile_diff)
+        + np.quantile(vector, q=0.5 + quantile_diff)
     )
 
 
 def _leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool):
-    """ Sums up the segments of the model leg size."""
+    """Sums up the segments of the model leg size."""
     if claw_is_ee:
         return nmf_size[leg_name]
 
@@ -96,13 +98,12 @@ def _leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool):
 
 
 def _get_distance_btw_vecs(vector1, vector2):
-    """ Calculates the distance between two vectors. """
+    """Calculates the distance between two vectors."""
     return np.linalg.norm(vector1 - vector2, axis=1)
 
 
 def convert_from_anipose_to_dict(
-    pose_3d: Dict[str, np.ndarray],
-    pts2align: Dict[str, List[str]]
+    pose_3d: Dict[str, np.ndarray], pts2align: Dict[str, List[str]]
 ) -> Dict[str, np.ndarray]:
     """Loads anipose 3D pose data into a dictionary.
     See data.py for a mapping from keypoint name to segment name.
@@ -141,7 +142,9 @@ def convert_from_anipose_to_dict(
 
     for segment in pts2align:
         segment_kps = pts2align[segment]
-        temp_array = np.empty((pose_3d[f"{segment_kps[0]}_x"].shape[0], len(segment_kps), 3))
+        temp_array = np.empty(
+            (pose_3d[f"{segment_kps[0]}_x"].shape[0], len(segment_kps), 3)
+        )
         for i, kp_name in enumerate(segment_kps):
             temp_array[:, i, 0] = pose_3d[f"{kp_name}_x"]
             temp_array[:, i, 1] = pose_3d[f"{kp_name}_y"]
@@ -153,8 +156,7 @@ def convert_from_anipose_to_dict(
 
 
 def convert_from_df3d_to_dict(
-    pose_3d: np.ndarray,
-    pts2align: Dict[str, np.ndarray]
+    pose_3d: np.ndarray, pts2align: Dict[str, np.ndarray]
 ) -> Dict[str, np.ndarray]:
     """Loads DeepFly3D data into a dictionary.
     See the original DeepFly3D repository for indices of
@@ -193,7 +195,7 @@ def convert_from_df3d_to_dict(
 
 def convert_from_df3dpp_to_dict(
     pose_3d: Dict[str, Dict[str, np.ndarray]],
-    pts2align: Optional[List[str]] = None
+    pts2align: Optional[List[str]] = None,
 ) -> Dict[str, np.ndarray]:
     """Load DeepFly3DPostProcessing data into a dictionary.
 
@@ -276,7 +278,9 @@ class AlignPose:
     ) -> None:
         self.pose_data_dict = pose_data_dict
         self.include_claw = include_claw
-        self.body_template = NMF_TEMPLATE if body_template is None else body_template
+        self.body_template = (
+            NMF_TEMPLATE if body_template is None else body_template
+        )
         # Calculate the size of the limbs from the template
         if body_size is None:
             self.body_size = calculate_body_size(self.body_template, legs_list)
@@ -290,11 +294,12 @@ class AlignPose:
 
     @classmethod
     def from_file_path(
-        cls, main_dir: Union[str, Path],
+        cls,
+        main_dir: Union[str, Path],
         file_name: Optional[str] = "pose3d.*",
         convert_func: Optional[Callable] = None,
         pts2align: Optional[Dict[str, List[str]]] = None,
-        **kwargs
+        **kwargs,
     ):
         """
         Class method to load pose3d data and convert it into a proper
@@ -343,8 +348,7 @@ class AlignPose:
         return cls(pose_3d, **kwargs)
 
     def align_pose(
-        self,
-        export_path: Optional[Union[str, Path]] = None
+        self, export_path: Optional[Union[str, Path]] = None
     ) -> Dict[str, np.ndarray]:
         """Aligns the leg and head key point positions.
 
@@ -373,7 +377,9 @@ class AlignPose:
                 continue
         # Take the neck as in the template as the other points are already aligned
         if "Neck" in self.body_template:
-            aligned_pose["Neck"] = self.body_template["Neck"].reshape((-1, 1, 3))
+            aligned_pose["Neck"] = self.body_template["Neck"].reshape(
+                (-1, 1, 3)
+            )
 
         if export_path is not None:
             export_full_path = export_path / "pose3d_aligned.pkl"
@@ -384,14 +390,16 @@ class AlignPose:
 
     @property
     def thorax_mid_pts(self) -> np.ndarray:
-        """ Gets the middle point of right and left wing hinges. """
-        assert "Thorax" in self.pose_data_dict, "To align the head, you need to have a `Thorax` key point"
+        """Gets the middle point of right and left wing hinges."""
+        assert (
+            "Thorax" in self.pose_data_dict
+        ), "To align the head, you need to have a `Thorax` key point"
         thorax_pts = self.pose_data_dict["Thorax"]
         return 0.5 * (thorax_pts[:, 0, :] + thorax_pts[:, -1, :])
 
     @staticmethod
     def get_fixed_pos(points_3d: np.ndarray) -> np.ndarray:
-        """ Gets the fixed pose of a steady key point determined by the quantiles. """
+        """Gets the fixed pose of a steady key point determined by the quantiles."""
         fixed_pos = [
             _get_mean_quantile(points_3d[:, 0]),
             _get_mean_quantile(points_3d[:, 1]),
@@ -399,8 +407,10 @@ class AlignPose:
         ]
         return np.array(fixed_pos)
 
-    def get_mean_length(self, segment_array: np.ndarray, segment_is_leg: bool) -> Dict[str, float]:
-        """ Computes the mean length of a body segment. """
+    def get_mean_length(
+        self, segment_array: np.ndarray, segment_is_leg: bool
+    ) -> Dict[str, float]:
+        """Computes the mean length of a body segment."""
         lengths = np.linalg.norm(np.diff(segment_array, axis=1), axis=2)
 
         if segment_is_leg:
@@ -415,9 +425,13 @@ class AlignPose:
         return length_mean
 
     def find_scale_leg(self, leg_name: str, mean_length: Dict) -> float:
-        """ Computes the ratio between the model size and the real fly size. """
-        nmf_size = _leg_length_model(self.body_size, leg_name, self.include_claw)
-        fly_leg_size = mean_length["coxa"] + mean_length["femur"] + mean_length["tibia"]
+        """Computes the ratio between the model size and the real fly size."""
+        nmf_size = _leg_length_model(
+            self.body_size, leg_name, self.include_claw
+        )
+        fly_leg_size = (
+            mean_length["coxa"] + mean_length["femur"] + mean_length["tibia"]
+        )
         fly_leg_size += mean_length["tarsus"] if self.include_claw else 0
 
         return nmf_size / fly_leg_size
@@ -425,7 +439,7 @@ class AlignPose:
     def find_stationary_indices(
         self, array: np.ndarray, threshold: Optional[float] = 5e-5
     ) -> np.ndarray:
-        """ Find the indices in an array where the function value does not move significantly."""
+        """Find the indices in an array where the function value does not move significantly."""
         indices_stat = np.where((np.diff(np.diff(array)) < threshold))
         assert (
             indices_stat
@@ -436,7 +450,7 @@ class AlignPose:
     def align_leg(
         self,
         leg_array: np.ndarray,
-        leg_name: Literal["RF", "LF", "RM", "LM", "RH", "LH"]
+        leg_name: Literal["RF", "LF", "RM", "LM", "RH", "LH"],
     ) -> np.ndarray:
         """Scales and translates the leg key point locations based on the model size and configuration.
 
@@ -520,7 +534,9 @@ class AlignPose:
         antbase2thoraxmid_real = _get_distance_btw_vecs(
             head_array[:, 0, :], self.thorax_mid_pts
         )
-        ant_size = self.get_mean_length(head_array, segment_is_leg=False)["antenna"]
+        ant_size = self.get_mean_length(head_array, segment_is_leg=False)[
+            "antenna"
+        ]
 
         if self.body_size["Antenna_mid_thorax"] and self.body_size["Antenna"]:
             antbase2thoraxmid_tmp = self.body_size["Antenna_mid_thorax"]
@@ -532,7 +548,9 @@ class AlignPose:
                 Please check the dictionary you provided."""
             )
 
-        stationary_indices = self.find_stationary_indices(antbase2thoraxmid_real)
+        stationary_indices = self.find_stationary_indices(
+            antbase2thoraxmid_real
+        )
         antenna_origin_fixed = AlignPose.get_fixed_pos(
             head_array[stationary_indices, 0, :]
         )
@@ -541,7 +559,10 @@ class AlignPose:
         )
         scale_tip_ant = ant_tmp / _get_mean_quantile(ant_size)
         self.logger.info(
-            "Scale factor antenna base %s: %s, ant itself: %s", side, scale_base_ant, scale_tip_ant
+            "Scale factor antenna base %s: %s, ant itself: %s",
+            side,
+            scale_base_ant,
+            scale_tip_ant,
         )
 
         aligned_array = np.empty_like(head_array)

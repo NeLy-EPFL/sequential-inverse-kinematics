@@ -1,4 +1,5 @@
 """ Test visualization tools """
+
 import pytest
 
 from pathlib import Path
@@ -13,7 +14,8 @@ from seqikpy.visualization import (
     load_grid_plot_data,
     get_plot_config,
     plot_grid,
-    video_frames_generator)
+    video_frames_generator,
+)
 
 PKG_PATH = Path(seqikpy.__path__[0])
 
@@ -24,30 +26,30 @@ def test_plot_config():
     # plot config determines which body parts to plot
     exp_type, plot_config = get_plot_config(data_path)
     assert exp_type == "coxa"
-    assert plot_config['plot_head'] == True
-    assert plot_config['plot_right_leg'] == True
-    assert plot_config['plot_left_leg'] == True
+    assert plot_config["plot_head"] == True
+    assert plot_config["plot_right_leg"] == True
+    assert plot_config["plot_left_leg"] == True
     # Load the data - right left legs are completely amputated
     data_path = Path("./Fly001/001_RLF/behData/pose-3d")
     exp_type, plot_config = get_plot_config(data_path)
     assert exp_type == "RLF"
-    assert plot_config['plot_head'] == True
-    assert plot_config['plot_right_leg'] == False
-    assert plot_config['plot_left_leg'] == False
+    assert plot_config["plot_head"] == True
+    assert plot_config["plot_right_leg"] == False
+    assert plot_config["plot_left_leg"] == False
     # Load the data - right leg amputated
     data_path = Path("./Fly001/001_RF/behData/pose-3d")
     exp_type, plot_config = get_plot_config(data_path)
     assert exp_type == "RF"
-    assert plot_config['plot_head'] == True
-    assert plot_config['plot_right_leg'] == False
-    assert plot_config['plot_left_leg'] == True
+    assert plot_config["plot_head"] == True
+    assert plot_config["plot_right_leg"] == False
+    assert plot_config["plot_left_leg"] == True
     # Load the data - intact
     data_path = Path("./Fly001/001_Beh/behData/pose-3d")
     exp_type, plot_config = get_plot_config(data_path)
     assert exp_type == "Beh"
-    assert plot_config['plot_head'] == True
-    assert plot_config['plot_right_leg'] == True
-    assert plot_config['plot_left_leg'] == True
+    assert plot_config["plot_head"] == True
+    assert plot_config["plot_right_leg"] == True
+    assert plot_config["plot_left_leg"] == True
     # Check error with a wrong path name
     data_path = Path("./Fly001/001_Beh/pose-3d")
     with pytest.raises(Exception):
@@ -82,9 +84,9 @@ def test_grid_plot():
     # plot config determines which body parts to plot
     # as our path is not standard, we need to specify plot config
     plot_config = {
-        'plot_head': True,
-        'plot_right_leg': True,
-        'plot_left_leg': True,
+        "plot_head": True,
+        "plot_right_leg": True,
+        "plot_left_leg": True,
     }
 
     # loads the joint angles and the aligned pos
@@ -92,8 +94,7 @@ def test_grid_plot():
 
     # as neck pose is one dimensional, make it consistent with the other key points
     aligned_pose["Neck"] = np.tile(
-        aligned_pose["Neck"],
-        (aligned_pose["RF_leg"].shape[0], 1)
+        aligned_pose["Neck"], (aligned_pose["RF_leg"].shape[0], 1)
     ).reshape(-1, 1, 3)
 
     # Start, end of the plotting data
@@ -111,15 +112,11 @@ def test_grid_plot():
     crop_time = 400
 
     fly_frames_front = video_frames_generator(
-        video_path_front,
-        t_start + crop_time,
-        t_end + crop_time,
-        stim_lines)
+        video_path_front, t_start + crop_time, t_end + crop_time, stim_lines
+    )
     fly_frames_side = video_frames_generator(
-        video_path_side,
-        t_start + crop_time,
-        t_end + crop_time,
-        stim_lines)
+        video_path_side, t_start + crop_time, t_end + crop_time, stim_lines
+    )
 
     fig = plot_grid(
         img_front=list(fly_frames_front)[t - t_start],
@@ -128,7 +125,7 @@ def test_grid_plot():
         joint_angles=joint_angles,
         leg_angles_to_plot=leg_joint_angle_names,
         head_angles_to_plot=head_angles_to_plot,
-        key_points_to_trail={'LF_leg': [3], 'RF_leg': [3]},
+        key_points_to_trail={"LF_leg": [3], "RF_leg": [3]},
         marker_trail="x",
         t=t,
         t_start=t_start,
@@ -137,11 +134,17 @@ def test_grid_plot():
         trail=30,
         t_interval=100,
         stim_lines=stim_lines,
-        export_path=PKG_PATH / "../tests" / f'generate_frame_{t}.png',
-        **plot_config
+        export_path=PKG_PATH / "../tests" / f"generate_frame_{t}.png",
+        **plot_config,
     )
 
-    true_hash = imagehash.average_hash(Image.open(PKG_PATH / "../tests" / 'test_frame_100.png'))
-    generated_hash = imagehash.average_hash(Image.open(PKG_PATH / "../tests" / f'generate_frame_{t}.png'))
+    true_hash = imagehash.average_hash(
+        Image.open(PKG_PATH / "../tests" / "test_frame_100.png")
+    )
+    generated_hash = imagehash.average_hash(
+        Image.open(PKG_PATH / "../tests" / f"generate_frame_{t}.png")
+    )
 
-    assert (true_hash - generated_hash) <= 5, "The generated image is not similar to the true image"
+    assert (
+        true_hash - generated_hash
+    ) <= 5, "The generated image is not similar to the true image"

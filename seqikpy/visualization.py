@@ -1,4 +1,5 @@
 """ Functions for plotting and animation. """
+
 import logging
 import subprocess
 import warnings
@@ -20,9 +21,7 @@ from seqikpy.utils import load_file
 warnings.filterwarnings("ignore")
 
 # Change the logging level here
-logging.basicConfig(
-    format=" %(asctime)s - %(levelname)s- %(message)s"
-)
+logging.basicConfig(format=" %(asctime)s - %(levelname)s- %(message)s")
 # Get the logger of the module
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -43,8 +42,8 @@ def get_video_writer(video_path, fps, output_shape):
 
 def resize_frame(original_size, target_size):
     """
-        Resize a frame to the target size
-        while preserving the width length ratio.
+    Resize a frame to the target size
+    while preserving the width length ratio.
     """
     if target_size[0] == -1 and target_size[1] == -1:
         new_size = original_size
@@ -64,7 +63,7 @@ def resize_frame(original_size, target_size):
 
 
 def resize_rgb_frame(frame, output_shape):
-    """ resize the frame and convert it to RGB"""
+    """resize the frame and convert it to RGB"""
     resized = cv2.resize(frame, output_shape[::-1])
     return cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
@@ -74,9 +73,9 @@ def make_video(
     frame_generator: Iterable,
     fps: int,
     output_shape: Tuple = (-1, 2880),
-    n_frames: int = -1
+    n_frames: int = -1,
 ):
-    """ Makes videos from a generator of images. """
+    """Makes videos from a generator of images."""
     first_frame = next(frame_generator)
     frame_generator = itertools.chain([first_frame], frame_generator)
 
@@ -93,9 +92,16 @@ def make_video(
     logging.info("Video is saved at %s", video_path)
 
 
-def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
-                           stim_lines: List[int], radius=30, center=(50, 50), color=(255, 0, 0)):
-    """ Returns the frames as a generator in a given interval.
+def video_frames_generator(
+    video_path: Path,
+    start_frame: int,
+    end_frame: int,
+    stim_lines: List[int],
+    radius=30,
+    center=(50, 50),
+    color=(255, 0, 0),
+):
+    """Returns the frames as a generator in a given interval.
     Modifies the brightness and contrast of the images.
 
     Parameters
@@ -124,7 +130,9 @@ def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
         adjusted_frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
         # if stimulation, add a red dot
         if stim_lines[0] <= t <= stim_lines[-1]:
-            adjusted_frame = cv2.circle(adjusted_frame, center, radius, color, -1)
+            adjusted_frame = cv2.circle(
+                adjusted_frame, center, radius, color, -1
+            )
 
         if not ret:
             break
@@ -134,12 +142,16 @@ def video_frames_generator(video_path: Path, start_frame: int, end_frame: int,
 
 
 def get_plot_config(data_path: Path):
-    """ Get experimental conditions from the data path.
-        Data path should look like:
-        "/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d"
+    """Get experimental conditions from the data path.
+    Data path should look like:
+    "/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d"
     """
-    assert data_path.parts[-1] == "pose-3d", "The data path should end with pose-3d"
-    assert data_path.parts[-2] == "behData", "The data path should contain behData"
+    assert (
+        data_path.parts[-1] == "pose-3d"
+    ), "The data path should end with pose-3d"
+    assert (
+        data_path.parts[-2] == "behData"
+    ), "The data path should contain behData"
 
     plot_config = {}
     trial_type = data_path.parts[-3]
@@ -174,7 +186,7 @@ def get_plot_config(data_path: Path):
 
 
 def get_frames_from_video_ffmpeg(path):
-    """ Saves frames of a video using FFMPEG.
+    """Saves frames of a video using FFMPEG.
 
     Parameters
     ----------
@@ -184,12 +196,19 @@ def get_frames_from_video_ffmpeg(path):
     """
     write_path = path.parents[0] / str(path.name).replace(".mp4", "_frames")
     write_path.mkdir()
-    cmd = ["ffmpeg", "-i", str(path), "-r", "1", str(write_path / "frame_%d.jpg")]
+    cmd = [
+        "ffmpeg",
+        "-i",
+        str(path),
+        "-r",
+        "1",
+        str(write_path / "frame_%d.jpg"),
+    ]
     subprocess.run(cmd, check=True)
 
 
 def load_grid_plot_data(data_path: Path) -> [Dict, Dict]:
-    """ Loads the set of data necessary for plotting the grid.
+    """Loads the set of data necessary for plotting the grid.
 
     Parameters
     ----------
@@ -205,8 +224,11 @@ def load_grid_plot_data(data_path: Path) -> [Dict, Dict]:
         joint_angles = load_file(data_path / "body_joint_angles.pkl")
     else:
         head_joint_angles = load_file(data_path / "head_joint_angles.pkl")
-        leg_joint_angles = load_file(data_path / "leg_joint_angles.pkl") \
-            if (data_path / "leg_joint_angles.pkl").is_file() else {}
+        leg_joint_angles = (
+            load_file(data_path / "leg_joint_angles.pkl")
+            if (data_path / "leg_joint_angles.pkl").is_file()
+            else {}
+        )
         joint_angles = {**head_joint_angles, **leg_joint_angles}
     aligned_pose = load_file(data_path / "pose3d_aligned.pkl")
 
@@ -225,7 +247,7 @@ def animate_3d_points(
     elev: int = 10,
     azim: int = 90,
     title: str = "",
-    marker_types: Dict[str, str] = None
+    marker_types: Dict[str, str] = None,
 ) -> None:
     """Makes an animation of 3D pose.
     This code is intended for animating the raw 3D pose and
@@ -258,18 +280,21 @@ def animate_3d_points(
     marker_types : Dict[str, str], optional
         Marker types for each key point, by default None
     """
-    # Dark background
-    plt.rcParams.update({
-        "axes.facecolor": "black",
-        "axes.edgecolor": "black",
-        "axes.labelcolor": "white",
-        "xtick.color": "white",
-        "ytick.color": "white",
-        "grid.color": "lightgray",
-        "figure.facecolor": "black",
-        "figure.edgecolor": "black",
-        "savefig.facecolor": "black",
-        "savefig.edgecolor": "black"})
+    # Dark background
+    plt.rcParams.update(
+        {
+            "axes.facecolor": "black",
+            "axes.edgecolor": "black",
+            "axes.labelcolor": "white",
+            "xtick.color": "white",
+            "ytick.color": "white",
+            "grid.color": "lightgray",
+            "figure.facecolor": "black",
+            "figure.edgecolor": "black",
+            "savefig.facecolor": "black",
+            "savefig.edgecolor": "black",
+        }
+    )
 
     if marker_types is None:
         marker_types = {
@@ -336,7 +361,7 @@ def animate_3d_points(
             )
             i += 1
 
-    i, j, k = 0,0,0
+    i, j, k = 0, 0, 0
 
     if points3d_second is not None:
 
@@ -413,9 +438,12 @@ def animate_3d_points(
             j = 0
             for kp, points3d_second_array in points3d_second.items():
                 lines_second[j].set_data(
-                    points3d_second_array[frame, :, 0], points3d_second_array[frame, :, 1]
+                    points3d_second_array[frame, :, 0],
+                    points3d_second_array[frame, :, 1],
                 )
-                lines_second[j].set_3d_properties(points3d_second_array[frame, :, 2])
+                lines_second[j].set_3d_properties(
+                    points3d_second_array[frame, :, 2]
+                )
                 j += 1
 
     # Creating the Animation object
@@ -423,23 +451,24 @@ def animate_3d_points(
         fig,
         update,
         frame_no,
-        fargs=(
-            line_data,
-            points3d,
-            line_data_second,
-            points3d_second),
+        fargs=(line_data, points3d, line_data_second, points3d_second),
         interval=10,
-        blit=False)
+        blit=False,
+    )
     logger.info("Making animation...")
     export_path = str(export_path)
     export_path += (
-        f".{format_video}" if not export_path.endswith((".mp4", ".avi", ".mov")) else ""
+        f".{format_video}"
+        if not export_path.endswith((".mp4", ".avi", ".mov"))
+        else ""
     )
     line_ani.save(export_path, fps=fps, dpi=300)
     logger.info(f"Animation is saved at {export_path}")
 
 
-def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, line_style="solid"):
+def plot_3d_points(
+    ax3d, points3d, export_path=None, t=0, marker_types=None, line_style="solid"
+):
     """Plots 3D points at time t."""
 
     if marker_types is None:
@@ -449,8 +478,12 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
             "Neck": "x",
         }
 
-    color_map_right = generate_color_map(cmap="Reds", n=len([kp for kp in points3d if "R" in kp]) + 1)
-    color_map_left = generate_color_map(cmap="Blues", n=len([kp for kp in points3d if "L" in kp]) + 1)
+    color_map_right = generate_color_map(
+        cmap="Reds", n=len([kp for kp in points3d if "R" in kp]) + 1
+    )
+    color_map_left = generate_color_map(
+        cmap="Blues", n=len([kp for kp in points3d if "L" in kp]) + 1
+    )
 
     i, j = 1, 1
 
@@ -465,7 +498,6 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
             j += 1
         else:
             color = "lightgrey"
-
 
         if order > 3:
             ax3d.plot(
@@ -492,8 +524,16 @@ def plot_3d_points(ax3d, points3d, export_path=None, t=0, marker_types=None, lin
         plt.savefig(export_path, bbox_inches="tight")
 
 
-def plot_trailing_kp(ax3d, points3d, segments_to_plot, export_path=None, t=0, trail=5, marker_type="x"):
-    """ Plots the traces of key points from t-trail to t. """
+def plot_trailing_kp(
+    ax3d,
+    points3d,
+    segments_to_plot,
+    export_path=None,
+    t=0,
+    trail=5,
+    marker_type="x",
+):
+    """Plots the traces of key points from t-trail to t."""
 
     color_map_right = generate_color_map(cmap="Reds", n=len(points3d) + 1)
     color_map_left = generate_color_map(cmap="Blues", n=len(points3d) + 1)
@@ -511,9 +551,9 @@ def plot_trailing_kp(ax3d, points3d, segments_to_plot, export_path=None, t=0, tr
             color = "grey"
 
         ax3d.scatter(
-            points3d[kp][max(0, t - trail):t, ind, 0],
-            points3d[kp][max(0, t - trail):t, ind, 1],
-            points3d[kp][max(0, t - trail):t, ind, 2],
+            points3d[kp][max(0, t - trail) : t, ind, 0],
+            points3d[kp][max(0, t - trail) : t, ind, 1],
+            points3d[kp][max(0, t - trail) : t, ind, 2],
             label=kp,
             marker=marker_type,
             #             markersize=9,
@@ -532,7 +572,7 @@ def plot_joint_angle(
     until_t: int = -1,
     stim_lines: List[int] = None,
     show_legend: bool = True,
-    export_path: Path = None
+    export_path: Path = None,
 ):
     """Plot joint angles from a given kinematics data.
 
@@ -563,7 +603,14 @@ def plot_joint_angle(
 
         label = " ".join((joint_name.split("_")[-2], joint_name.split("_")[-1]))
 
-        if label in ["pitch R", "pitch L", "yaw R", "yaw L", "roll R", "roll L"]:
+        if label in [
+            "pitch R",
+            "pitch L",
+            "yaw R",
+            "yaw L",
+            "roll R",
+            "roll L",
+        ]:
             label = "ant. " + label
 
         convert2deg = 180 / np.pi if degrees else 1
@@ -583,7 +630,7 @@ def plot_joint_angle(
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     if show_legend:
-        ax.legend(bbox_to_anchor=(1.2, 1), frameon=False, borderaxespad=0.)
+        ax.legend(bbox_to_anchor=(1.2, 1), frameon=False, borderaxespad=0.0)
 
     if export_path is not None:
         plt.savefig(export_path, bbox_inches="tight")
@@ -607,7 +654,7 @@ def plot_grid(
     marker_trail: Optional[str] = None,
     stim_lines: Optional[List[int]] = None,
     export_path: Optional[Path] = None,
-    **kwargs
+    **kwargs,
 ):
     """
     Plots an instance of the animal recording, 3D pose,
@@ -676,7 +723,9 @@ def plot_grid(
     plot_head = kwargs.pop("plot_head", True)
     azim = kwargs.pop("azim", 7)
 
-    assert t_start <= t <= t_end, "t_start should be smaller than t_end, t should be in between"
+    assert (
+        t_start <= t <= t_end
+    ), "t_start should be smaller than t_end, t should be in between"
     # import pylustrator
     # pylustrator.start()
 
@@ -688,14 +737,14 @@ def plot_grid(
     # 7cam recording
     ax_img_side = fig.add_subplot(gs[0, :2])
     ax_img_front = fig.add_subplot(gs[1, :2])
-    # 3D pose
+    # 3D pose
     ax1 = fig.add_subplot(gs[2, :2], projection="3d")
-    # head, right leg, left leg joint angles
+    # head, right leg, left leg joint angles
     ax2 = fig.add_subplot(gs[0, 2:])
     ax3 = fig.add_subplot(gs[1, 2:])
     ax4 = fig.add_subplot(gs[2, 2:])
 
-    # load the image
+    # load the image
 
     # img = cv2.imread(str(img_path / f"frame_{t}.jpg"), 0)
     ax_img_side.imshow(img_side, vmin=0, vmax=255, cmap="gray")
@@ -703,31 +752,39 @@ def plot_grid(
 
     plot_3d_points(ax1, aligned_pose, marker_types=marker_types_3d, t=t)
     if key_points_to_trail is not None:
-        plot_trailing_kp(ax1, aligned_pose, key_points_to_trail, marker_type=marker_trail, trail=trail, t=t)
+        plot_trailing_kp(
+            ax1,
+            aligned_pose,
+            key_points_to_trail,
+            marker_type=marker_trail,
+            trail=trail,
+            t=t,
+        )
     if plot_head:
         plot_joint_angle(
             ax2,
             joint_angles,
             angles_to_plot=head_angles_to_plot,
             until_t=t,
-            stim_lines=stim_lines)
+            stim_lines=stim_lines,
+        )
     if plot_left_leg:
         plot_joint_angle(
             ax3,
             joint_angles,
-            angles_to_plot=[
-                f"Angle_LF_{ja}" for ja in leg_angles_to_plot],
+            angles_to_plot=[f"Angle_LF_{ja}" for ja in leg_angles_to_plot],
             until_t=t,
-            stim_lines=stim_lines)
+            stim_lines=stim_lines,
+        )
     if plot_right_leg:
         plot_joint_angle(
             ax4,
             joint_angles,
-            angles_to_plot=[
-                f"Angle_RF_{ja}" for ja in leg_angles_to_plot],
+            angles_to_plot=[f"Angle_RF_{ja}" for ja in leg_angles_to_plot],
             until_t=t,
             show_legend=False,
-            stim_lines=stim_lines)
+            stim_lines=stim_lines,
+        )
 
     ax_img_side.axis("off")
     ax_img_front.axis("off")
@@ -762,7 +819,7 @@ def plot_grid(
     ax3.set_yticks(ticks=[-160, 0, 160])
     ax3.set_yticklabels(labels=[-160, 0, 160])
 
-    # ax4 properties
+    # ax4 properties
     ax4.set_xlim((t_start, t_end))
     ax4.set_ylim((-160, 160))
     ax4.spines["top"].set_visible(False)
@@ -771,21 +828,28 @@ def plot_grid(
     ax4.set_yticklabels(labels=[-160, 0, 160])
 
     ax4.set_xticks(ticks=np.arange(t_start, t_end + t_interval, t_interval))
-    ax4.set_xticklabels(labels=np.arange(t_start, t_end + t_interval, t_interval) / fps)
+    ax4.set_xticklabels(
+        labels=np.arange(t_start, t_end + t_interval, t_interval) / fps
+    )
     ax4.set_xlabel("Time (s)")
 
     # #% start: automatic generated code from pylustrator
     fig.set_size_inches(22.710000 / 2.54, 11.430000 / 2.54, forward=True)
     fig.text(
-        0.3865, 0.9184, "Head and antennae joint angles (deg)", transform=fig.transFigure,
+        0.3865,
+        0.9184,
+        "Head and antennae joint angles (deg)",
+        transform=fig.transFigure,
     )
     fig.text(
-        0.3865, 0.6346,
+        0.3865,
+        0.6346,
         "Left front leg joint angles (deg)",
         transform=fig.transFigure,
     )  # id=fig.texts[0].new
     fig.text(
-        0.3865, 0.3502,
+        0.3865,
+        0.3502,
         "Right front leg joint angles (deg)",
         transform=fig.transFigure,
     )  # id=fig.texts[1].new
@@ -831,11 +895,13 @@ def plot_grid_generator(
     marker_trail: Optional[str] = "x",
     stim_lines: List[int] = None,
     export_path: Path = None,
-    **kwargs
+    **kwargs,
 ):
-    """ Generator for plotting grid."""
+    """Generator for plotting grid."""
 
-    for t, (fly_img_front, fly_img_side) in enumerate(zip(fly_frames_front, fly_frames_side)):
+    for t, (fly_img_front, fly_img_side) in enumerate(
+        zip(fly_frames_front, fly_frames_side)
+    ):
         fig = plot_grid(
             img_front=fly_img_front,
             img_side=fly_img_side,
@@ -854,14 +920,14 @@ def plot_grid_generator(
             trail=trail,
             stim_lines=stim_lines,
             export_path=export_path,
-            **kwargs
+            **kwargs,
         )
         plt.close(fig)
         yield fig_to_array(fig)
 
 
 def fig_to_array(fig):
-    """ Converts a matplotlib figure into an array. """
+    """Converts a matplotlib figure into an array."""
     canvas = FigureCanvas(fig)
     canvas.draw()
     data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)

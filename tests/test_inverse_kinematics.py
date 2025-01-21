@@ -136,7 +136,9 @@ def test_from_sdf(body_template):
         assert np.isclose(nmf_template[key], body_template[key]).all()
 
 
-def test_seq_ik(fake_3d_pose, body_template, bounds, initial_angles, true_joint_angles):
+def test_seq_ik(
+    fake_3d_pose, body_template, bounds, initial_angles, true_joint_angles
+):
     # Sequential inverse kinematics
     seq_ik = LegInvKinSeq(
         aligned_pos=fake_3d_pose,
@@ -154,7 +156,10 @@ def test_seq_ik(fake_3d_pose, body_template, bounds, initial_angles, true_joint_
     # Test unknown entries
     with pytest.raises(ValueError):
         seq_ik.calculate_ik_stage(
-            np.array([0, 0, 0]), np.array([0, 0, 0]), initial_angles, segment_name="AB"
+            np.array([0, 0, 0]),
+            np.array([0, 0, 0]),
+            initial_angles,
+            segment_name="AB",
         )
 
     with pytest.raises(ValueError):

@@ -69,7 +69,10 @@ def get_stim_array(
     for repeat_no in range(repeat):
         for line_no in range(2, len(lines) - 1):
             duration = int(
-                int(lines[line_no].split()[-1]) * frame_rate * time_scale * scale
+                int(lines[line_no].split()[-1])
+                * frame_rate
+                * time_scale
+                * scale
             )
             stim_array[start : start + duration] = (
                 False if lines[line_no].startswith("off") else True
@@ -151,10 +154,12 @@ def fix_coxae_pos(
     coxa_right = get_array(right_coxa_kp, points3d)
     coxa_left = get_array(left_coxa_kp, points3d)
     coxa_right_fixed = (
-        np.quantile(coxa_right, 0.3, axis=1) + np.quantile(coxa_right, 0.7, axis=1)
+        np.quantile(coxa_right, 0.3, axis=1)
+        + np.quantile(coxa_right, 0.7, axis=1)
     ) * 0.5
     coxa_left_fixed = (
-        np.quantile(coxa_left, 0.3, axis=1) + np.quantile(coxa_left, 0.7, axis=1)
+        np.quantile(coxa_left, 0.3, axis=1)
+        + np.quantile(coxa_left, 0.7, axis=1)
     ) * 0.5
 
     return {"R": coxa_right_fixed, "L": coxa_left_fixed}
@@ -169,7 +174,8 @@ def compute_length_of_segment(points3d, segment_beg, segment_end):
     )
 
 
-def leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool):
+def leg_length_model(nmf_size: dict, leg_name: str, claw_is_ee: bool) -> float:
+    """Returns the leg size from the nmf size dictionary."""
     if claw_is_ee:
         return nmf_size[leg_name]
 
@@ -241,7 +247,9 @@ def get_mean_quantile(vector, quantile_diff=0.05):
 
 
 def dist_calc(v1, v2):
-    return np.sqrt((v1[0] - v2[0]) ** 2 + (v1[1] - v2[1]) ** 2 + (v1[2] - v2[2]) ** 2)
+    return np.sqrt(
+        (v1[0] - v2[0]) ** 2 + (v1[1] - v2[1]) ** 2 + (v1[2] - v2[2]) ** 2
+    )
 
 
 def get_distance_btw_vecs(vector1, vector2):
@@ -261,10 +269,13 @@ def load_file(output_fname):
     return pts
 
 
-def from_anipose_to_array(points3d, claw_is_end_effector=False):
+def from_anipose_to_array(
+    points3d,
+    claw_is_end_effector=False,
+    kps=["thorax_coxa", "coxa_femur", "femur_tibia", "tibia_tarsus"],
+) -> np.ndarray:
     """Convert usual dataframe format into a three dimensional array of size (N,KeyPoints,3)."""
 
-    kps = ["thorax_coxa", "coxa_femur", "femur_tibia", "tibia_tarsus"]
     if claw_is_end_effector:
         kps += ["claw"]
         key_points = [f"{kp}_{side}" for side in ["R", "L"] for kp in kps]
@@ -410,11 +421,15 @@ def from_sdf(sdf_file: str):
     # Extract the body template
     body_template = {}
     for link in links:
-        if not any(dof in link.attrib["name"] for dof in ["roll", "pitch", "yaw"]):
+        if not any(
+            dof in link.attrib["name"] for dof in ["roll", "pitch", "yaw"]
+        ):
             # Get location of the joint
             joint_loc_str = link.find("pose").text
             # Convert string into a numpy array
-            joint_loc = np.array([float(val) for val in joint_loc_str.split(" ")])
+            joint_loc = np.array(
+                [float(val) for val in joint_loc_str.split(" ")]
+            )
             # Get only the x, y, z coordinates
             body_template[link.attrib["name"]] = joint_loc[:3]
 
@@ -425,6 +440,5 @@ def from_sdf(sdf_file: str):
             float(joint.find("axis").find("limit").find("upper").text),
         )
         for joint in joints
-
     }
     return body_template, joint_bounds

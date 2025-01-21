@@ -17,11 +17,7 @@ warnings.filterwarnings("ignore")
 
 # Axes as a named tuple to ensure immutability
 AxesTuple = namedtuple("AxesTuple", "X_AXIS Y_AXIS Z_AXIS")
-Axes = AxesTuple(
-    X_AXIS=[1, 0, 0],
-    Y_AXIS=[0, 1, 0],
-    Z_AXIS=[0, 0, 1]
-)
+Axes = AxesTuple(X_AXIS=[1, 0, 0], Y_AXIS=[0, 1, 0], Z_AXIS=[0, 0, 1])
 
 
 class KinematicChainBase(ABC):
@@ -45,21 +41,18 @@ class KinematicChainBase(ABC):
         body_size: Dict[str, float] = None,
     ) -> None:
         # NMF size is calculated internally if size is not provided
-        self.body_size = calculate_body_size(
-            NMF_TEMPLATE,
-            legs_list
-        ) if body_size is None else body_size
+        self.body_size = (
+            calculate_body_size(NMF_TEMPLATE, legs_list)
+            if body_size is None
+            else body_size
+        )
         self.bounds_dof = bounds_dof
 
     def __call__(self):
         print("Base kinematic chain is called.")
 
     @abstractmethod
-    def create_leg_chain(
-        self,
-        leg_name: str,
-        **kwargs
-    ) -> Chain:
+    def create_leg_chain(self, leg_name: str, **kwargs) -> Chain:
         """Returns the respective leg chain based on the stage.
 
         Parameters
@@ -96,11 +89,7 @@ class KinematicChainSeq(KinematicChainBase):
     def __call__(self):
         print("Sequential kinematic chain is called.")
 
-    def create_leg_chain(
-        self,
-        leg_name: str,
-        **kwargs
-    ) -> Chain:
+    def create_leg_chain(self, leg_name: str, **kwargs) -> Chain:
         """Returns the respective leg chain based on the stage.
 
         Parameters
@@ -136,16 +125,24 @@ class KinematicChainSeq(KinematicChainBase):
             raise ValueError(f"Unknown leg name ({leg_name}) is provided!")
 
         if not 1 <= stage <= 4:
-            raise ValueError(f"Unknown stage number ({stage}) number is provided!")
+            raise ValueError(
+                f"Unknown stage number ({stage}) number is provided!"
+            )
 
         if stage == 1:
             kinematic_chain = self.create_leg_chain_stage_1(leg_name)
         elif stage == 2:
-            kinematic_chain = self.create_leg_chain_stage_2(leg_name, angles=angles, t=t)
+            kinematic_chain = self.create_leg_chain_stage_2(
+                leg_name, angles=angles, t=t
+            )
         elif stage == 3:
-            kinematic_chain = self.create_leg_chain_stage_3(leg_name, angles=angles, t=t)
+            kinematic_chain = self.create_leg_chain_stage_3(
+                leg_name, angles=angles, t=t
+            )
         elif stage == 4:
-            kinematic_chain = self.create_leg_chain_stage_4(leg_name, angles=angles, t=t)
+            kinematic_chain = self.create_leg_chain_stage_4(
+                leg_name, angles=angles, t=t
+            )
 
         return kinematic_chain
 
@@ -197,7 +194,9 @@ class KinematicChainSeq(KinematicChainBase):
 
         return Chain(name="chain_stage_1", links=kinematic_chain)
 
-    def create_leg_chain_stage_2(self, leg_name: str, angles: Dict[str, np.ndarray], t: int) -> Chain:
+    def create_leg_chain_stage_2(
+        self, leg_name: str, angles: Dict[str, np.ndarray], t: int
+    ) -> Chain:
         """Leg chain to calculate thorax/coxa roll and coxa/femur pitch.
 
         Parameters
@@ -217,7 +216,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_yaw",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[angles[f"Angle_{leg_name}_ThC_yaw"][t], 0, 0],
+                origin_orientation=[
+                    angles[f"Angle_{leg_name}_ThC_yaw"][t],
+                    0,
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_yaw"],
@@ -225,7 +228,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_pitch",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[0, angles[f"Angle_{leg_name}_ThC_pitch"][t], 0],
+                origin_orientation=[
+                    0,
+                    angles[f"Angle_{leg_name}_ThC_pitch"][t],
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_pitch"],
@@ -258,7 +265,9 @@ class KinematicChainSeq(KinematicChainBase):
 
         return Chain(name="chain_stage_2", links=kinematic_chain)
 
-    def create_leg_chain_stage_3(self, leg_name: str, angles: Dict[str, np.ndarray], t: int) -> Chain:
+    def create_leg_chain_stage_3(
+        self, leg_name: str, angles: Dict[str, np.ndarray], t: int
+    ) -> Chain:
         """Leg chain to calculate coxa/femur roll and femur/tibia pitch.
 
         Parameters
@@ -278,7 +287,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_yaw",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[angles[f"Angle_{leg_name}_ThC_yaw"][t], 0, 0],
+                origin_orientation=[
+                    angles[f"Angle_{leg_name}_ThC_yaw"][t],
+                    0,
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_yaw"],
@@ -286,7 +299,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_pitch",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[0, angles[f"Angle_{leg_name}_ThC_pitch"][t], 0],
+                origin_orientation=[
+                    0,
+                    angles[f"Angle_{leg_name}_ThC_pitch"][t],
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_pitch"],
@@ -294,7 +311,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_roll",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[0, 0, angles[f"Angle_{leg_name}_ThC_roll"][t]],
+                origin_orientation=[
+                    0,
+                    0,
+                    angles[f"Angle_{leg_name}_ThC_roll"][t],
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_roll"],
@@ -302,7 +323,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_CTr_pitch",
                 origin_translation=[0, 0, -self.body_size[f"{leg_name}_Coxa"]],
-                origin_orientation=[0, angles[f"Angle_{leg_name}_CTr_pitch"][t], 0],
+                origin_orientation=[
+                    0,
+                    angles[f"Angle_{leg_name}_CTr_pitch"][t],
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_CTr_pitch"],
@@ -335,7 +360,9 @@ class KinematicChainSeq(KinematicChainBase):
 
         return Chain(name="chain_stage_3", links=kinematic_chain)
 
-    def create_leg_chain_stage_4(self, leg_name: str, angles: Dict[str, np.ndarray], t: int) -> Chain:
+    def create_leg_chain_stage_4(
+        self, leg_name: str, angles: Dict[str, np.ndarray], t: int
+    ) -> Chain:
         """Leg chain to calculate tibia/tarsus pitch.
 
         Parameters
@@ -355,7 +382,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_yaw",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[angles[f"Angle_{leg_name}_ThC_yaw"][t], 0, 0],
+                origin_orientation=[
+                    angles[f"Angle_{leg_name}_ThC_yaw"][t],
+                    0,
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_yaw"],
@@ -363,7 +394,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_pitch",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[0, angles[f"Angle_{leg_name}_ThC_pitch"][t], 0],
+                origin_orientation=[
+                    0,
+                    angles[f"Angle_{leg_name}_ThC_pitch"][t],
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_pitch"],
@@ -371,7 +406,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_ThC_roll",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[0, 0, angles[f"Angle_{leg_name}_ThC_roll"][t]],
+                origin_orientation=[
+                    0,
+                    0,
+                    angles[f"Angle_{leg_name}_ThC_roll"][t],
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_ThC_roll"],
@@ -379,7 +418,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_CTr_pitch",
                 origin_translation=[0, 0, -self.body_size[f"{leg_name}_Coxa"]],
-                origin_orientation=[0, angles[f"Angle_{leg_name}_CTr_pitch"][t], 0],
+                origin_orientation=[
+                    0,
+                    angles[f"Angle_{leg_name}_CTr_pitch"][t],
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_CTr_pitch"],
@@ -387,7 +430,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_CTr_roll",
                 origin_translation=[0, 0, 0],
-                origin_orientation=[0, 0, angles[f"Angle_{leg_name}_CTr_roll"][t]],
+                origin_orientation=[
+                    0,
+                    0,
+                    angles[f"Angle_{leg_name}_CTr_roll"][t],
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_CTr_roll"],
@@ -395,7 +442,11 @@ class KinematicChainSeq(KinematicChainBase):
             URDFLink(
                 name=f"{leg_name}_FTi_pitch",
                 origin_translation=[0, 0, -self.body_size[f"{leg_name}_Femur"]],
-                origin_orientation=[0, angles[f"Angle_{leg_name}_FTi_pitch"][t], 0],
+                origin_orientation=[
+                    0,
+                    angles[f"Angle_{leg_name}_FTi_pitch"][t],
+                    0,
+                ],
                 rotation=None,
                 joint_type="fixed",
                 bounds=self.bounds_dof[f"{leg_name}_FTi_pitch"],
@@ -410,7 +461,11 @@ class KinematicChainSeq(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_Claw",
-                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Tarsus"]],
+                origin_translation=[
+                    0,
+                    0,
+                    -self.body_size[f"{leg_name}_Tarsus"],
+                ],
                 origin_orientation=[0, 0, 0],
                 rotation=[0, 0, 0],
                 joint_type="revolute",
@@ -439,11 +494,7 @@ class KinematicChainGeneric(KinematicChainBase):
     def __call__(self):
         print("Generic kinematic chain is called.")
 
-    def create_leg_chain(
-        self,
-        leg_name: str,
-        **kwargs
-    ) -> Chain:
+    def create_leg_chain(self, leg_name: str, **kwargs) -> Chain:
         """Returns the respective leg chain based on the stage.
 
         Parameters
@@ -521,7 +572,11 @@ class KinematicChainGeneric(KinematicChainBase):
             ),
             URDFLink(
                 name=f"{leg_name}_Claw",
-                origin_translation=[0, 0, -self.body_size[f"{leg_name}_Tarsus"]],
+                origin_translation=[
+                    0,
+                    0,
+                    -self.body_size[f"{leg_name}_Tarsus"],
+                ],
                 origin_orientation=[0, 0, 0],
                 rotation=[0, 0, 0],
                 joint_type="revolute",
