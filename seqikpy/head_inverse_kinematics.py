@@ -78,9 +78,7 @@ class HeadInverseKinematics:
         self.body_template = body_template
 
         # Check self.aligned_pos keys
-        if not all(
-            key in self.aligned_pos for key in ["R_head", "L_head", "Neck"]
-        ):
+        if not all(key in self.aligned_pos for key in ["R_head", "L_head", "Neck"]):
             raise ValueError(
                 """self.aligned_pos must have R_head, L_head, Neck as keys,
                 at least one of them is missing in the current data"""
@@ -135,14 +133,10 @@ class HeadInverseKinematics:
 
         if compute_ant_angles:
             for side in ["L", "R"]:
-                head_angles[
-                    f"Angle_antenna_yaw_{side}"
-                ] = self.compute_antenna_yaw(
+                head_angles[f"Angle_antenna_yaw_{side}"] = self.compute_antenna_yaw(
                     side=side, head_roll=head_angles["Angle_head_roll"]
                 )
-                head_angles[
-                    f"Angle_antenna_pitch_{side}"
-                ] = self.compute_antenna_pitch(
+                head_angles[f"Angle_antenna_pitch_{side}"] = self.compute_antenna_pitch(
                     side=side, head_roll=head_angles["Angle_head_roll"]
                 )
 
@@ -162,18 +156,14 @@ class HeadInverseKinematics:
     def get_head_vector_mid(self) -> np.ndarray:
         """Vector ((N,3) array) from mid antenna base (or any head key point) to neck."""
         return (
-            self.aligned_pos["R_head"][:, 0, :]
-            + self.aligned_pos["L_head"][:, 0, :]
+            self.aligned_pos["R_head"][:, 0, :] + self.aligned_pos["L_head"][:, 0, :]
         ) * 0.5 - self.aligned_pos["Neck"][:, 0, :]
 
     def get_head_vector_horizontal(self) -> np.ndarray:
         """Vector ((N,3) array) from right antenna base (or any head key point)
         to left antenna base (or any head key point).
         """
-        return (
-            self.aligned_pos["L_head"][:, 0, :]
-            - self.aligned_pos["R_head"][:, 0, :]
-        )
+        return self.aligned_pos["L_head"][:, 0, :] - self.aligned_pos["R_head"][:, 0, :]
 
     def get_ant_vector(self, side: Literal["R", "L"]) -> np.ndarray:
         """Vector ((N,3) array) from antenna base to antenna edge."""
@@ -203,9 +193,7 @@ class HeadInverseKinematics:
 
         for row in range(v1_norm.shape[0]):
             mask[row] = (
-                1
-                if np.linalg.det([rot_axis, v1[row, :], v2[row, :]]) > 0
-                else -1
+                1 if np.linalg.det([rot_axis, v1[row, :], v2[row, :]]) > 0 else -1
             )
 
         return np.arccos(np.einsum("ij,ij->i", v1_norm, v2_norm)) * mask
@@ -280,9 +268,7 @@ class HeadInverseKinematics:
         if side not in {"R", "L"}:
             raise ValueError("Side should be either R or L")
 
-        v_derotate = np.vectorize(
-            self.derotate_vector, signature="(m),(m,n)->(m,n)"
-        )
+        v_derotate = np.vectorize(self.derotate_vector, signature="(m),(m,n)->(m,n)")
 
         antenna_vector = self.get_ant_vector(side).copy()
         assert (
@@ -325,9 +311,7 @@ class HeadInverseKinematics:
         if side not in {"R", "L"}:
             raise ValueError("Side should be either R or L")
 
-        v_derotate = np.vectorize(
-            self.derotate_vector, signature="(m),(m,n)->(m,n)"
-        )
+        v_derotate = np.vectorize(self.derotate_vector, signature="(m),(m,n)->(m,n)")
 
         antenna_vector = self.get_ant_vector(side).copy()
         antenna_vector = v_derotate(head_roll, antenna_vector)
@@ -348,15 +332,12 @@ class HeadInverseKinematics:
 
     def get_rest_antenna_pitch(self) -> float:
         """Antenna pitch angle at zero pose in the fly biomechanical model."""
-        head_vector = (
-            self.body_template["Neck"] - self.body_template["R_Antenna_base"]
-        )
+        head_vector = self.body_template["Neck"] - self.body_template["R_Antenna_base"]
         # project onto x-z plane
         head_vector[1] = 0
         # We consider only one side as the model is symmetrical
         antenna_vector = (
-            self.body_template["R_Antenna_edge"]
-            - self.body_template["R_Antenna_base"]
+            self.body_template["R_Antenna_edge"] - self.body_template["R_Antenna_base"]
         )
         # project onto x-z plane
         antenna_vector[1] = 0
@@ -367,8 +348,7 @@ class HeadInverseKinematics:
     def get_rest_head_pitch(self) -> float:
         """Head pitch angle at zero pose in the fly biomechanical model."""
         head_vector = (
-            self.body_template["R_Antenna_base"]
-            + self.body_template["L_Antenna_base"]
+            self.body_template["R_Antenna_base"] + self.body_template["L_Antenna_base"]
         ) * 0.5 - self.body_template["Neck"]
         # project onto x-z plane
         head_vector[1] = 0

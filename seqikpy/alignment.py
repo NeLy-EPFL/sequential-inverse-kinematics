@@ -278,9 +278,7 @@ class AlignPose:
     ) -> None:
         self.pose_data_dict = pose_data_dict
         self.include_claw = include_claw
-        self.body_template = (
-            NMF_TEMPLATE if body_template is None else body_template
-        )
+        self.body_template = NMF_TEMPLATE if body_template is None else body_template
         # Calculate the size of the limbs from the template
         if body_size is None:
             self.body_size = calculate_body_size(self.body_template, legs_list)
@@ -377,9 +375,7 @@ class AlignPose:
                 continue
         # Take the neck as in the template as the other points are already aligned
         if "Neck" in self.body_template:
-            aligned_pose["Neck"] = self.body_template["Neck"].reshape(
-                (-1, 1, 3)
-            )
+            aligned_pose["Neck"] = self.body_template["Neck"].reshape((-1, 1, 3))
 
         if export_path is not None:
             export_full_path = export_path / "pose3d_aligned.pkl"
@@ -426,12 +422,8 @@ class AlignPose:
 
     def find_scale_leg(self, leg_name: str, mean_length: Dict) -> float:
         """Computes the ratio between the model size and the real fly size."""
-        nmf_size = _leg_length_model(
-            self.body_size, leg_name, self.include_claw
-        )
-        fly_leg_size = (
-            mean_length["coxa"] + mean_length["femur"] + mean_length["tibia"]
-        )
+        nmf_size = _leg_length_model(self.body_size, leg_name, self.include_claw)
+        fly_leg_size = mean_length["coxa"] + mean_length["femur"] + mean_length["tibia"]
         fly_leg_size += mean_length["tarsus"] if self.include_claw else 0
 
         return nmf_size / fly_leg_size
@@ -534,9 +526,7 @@ class AlignPose:
         antbase2thoraxmid_real = _get_distance_btw_vecs(
             head_array[:, 0, :], self.thorax_mid_pts
         )
-        ant_size = self.get_mean_length(head_array, segment_is_leg=False)[
-            "antenna"
-        ]
+        ant_size = self.get_mean_length(head_array, segment_is_leg=False)["antenna"]
 
         if self.body_size["Antenna_mid_thorax"] and self.body_size["Antenna"]:
             antbase2thoraxmid_tmp = self.body_size["Antenna_mid_thorax"]
@@ -548,9 +538,7 @@ class AlignPose:
                 Please check the dictionary you provided."""
             )
 
-        stationary_indices = self.find_stationary_indices(
-            antbase2thoraxmid_real
-        )
+        stationary_indices = self.find_stationary_indices(antbase2thoraxmid_real)
         antenna_origin_fixed = AlignPose.get_fixed_pos(
             head_array[stationary_indices, 0, :]
         )

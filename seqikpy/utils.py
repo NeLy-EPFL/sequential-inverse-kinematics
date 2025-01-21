@@ -69,10 +69,7 @@ def get_stim_array(
     for repeat_no in range(repeat):
         for line_no in range(2, len(lines) - 1):
             duration = int(
-                int(lines[line_no].split()[-1])
-                * frame_rate
-                * time_scale
-                * scale
+                int(lines[line_no].split()[-1]) * frame_rate * time_scale * scale
             )
             stim_array[start : start + duration] = (
                 False if lines[line_no].startswith("off") else True
@@ -154,12 +151,10 @@ def fix_coxae_pos(
     coxa_right = get_array(right_coxa_kp, points3d)
     coxa_left = get_array(left_coxa_kp, points3d)
     coxa_right_fixed = (
-        np.quantile(coxa_right, 0.3, axis=1)
-        + np.quantile(coxa_right, 0.7, axis=1)
+        np.quantile(coxa_right, 0.3, axis=1) + np.quantile(coxa_right, 0.7, axis=1)
     ) * 0.5
     coxa_left_fixed = (
-        np.quantile(coxa_left, 0.3, axis=1)
-        + np.quantile(coxa_left, 0.7, axis=1)
+        np.quantile(coxa_left, 0.3, axis=1) + np.quantile(coxa_left, 0.7, axis=1)
     ) * 0.5
 
     return {"R": coxa_right_fixed, "L": coxa_left_fixed}
@@ -247,9 +242,7 @@ def get_mean_quantile(vector, quantile_diff=0.05):
 
 
 def dist_calc(v1, v2):
-    return np.sqrt(
-        (v1[0] - v2[0]) ** 2 + (v1[1] - v2[1]) ** 2 + (v1[2] - v2[2]) ** 2
-    )
+    return np.sqrt((v1[0] - v2[0]) ** 2 + (v1[1] - v2[1]) ** 2 + (v1[2] - v2[2]) ** 2)
 
 
 def get_distance_btw_vecs(vector1, vector2):
@@ -421,15 +414,11 @@ def from_sdf(sdf_file: str):
     # Extract the body template
     body_template = {}
     for link in links:
-        if not any(
-            dof in link.attrib["name"] for dof in ["roll", "pitch", "yaw"]
-        ):
+        if not any(dof in link.attrib["name"] for dof in ["roll", "pitch", "yaw"]):
             # Get location of the joint
             joint_loc_str = link.find("pose").text
             # Convert string into a numpy array
-            joint_loc = np.array(
-                [float(val) for val in joint_loc_str.split(" ")]
-            )
+            joint_loc = np.array([float(val) for val in joint_loc_str.split(" ")])
             # Get only the x, y, z coordinates
             body_template[link.attrib["name"]] = joint_loc[:3]
 

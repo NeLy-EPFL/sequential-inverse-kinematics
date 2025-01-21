@@ -125,9 +125,7 @@ class KinematicChainSeq(KinematicChainBase):
             raise ValueError(f"Unknown leg name ({leg_name}) is provided!")
 
         if not 1 <= stage <= 4:
-            raise ValueError(
-                f"Unknown stage number ({stage}) number is provided!"
-            )
+            raise ValueError(f"Unknown stage number ({stage}) number is provided!")
 
         if stage == 1:
             kinematic_chain = self.create_leg_chain_stage_1(leg_name)

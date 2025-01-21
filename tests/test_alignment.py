@@ -87,9 +87,7 @@ def test_scale_factor(main_folder, segment_name):
 
     aligned_head = np.load(PKG_PATH / "../tests" / "antenna.npy")
     ground_truth = (
-        aligned_head[:, :2, :]
-        if segment_name[0] == "R"
-        else aligned_head[:, 2:, :]
+        aligned_head[:, :2, :] if segment_name[0] == "R" else aligned_head[:, 2:, :]
     )
 
     assert np.allclose(aligned_head_kin, ground_truth)

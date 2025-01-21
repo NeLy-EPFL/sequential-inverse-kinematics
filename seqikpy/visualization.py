@@ -130,9 +130,7 @@ def video_frames_generator(
         adjusted_frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
         # if stimulation, add a red dot
         if stim_lines[0] <= t <= stim_lines[-1]:
-            adjusted_frame = cv2.circle(
-                adjusted_frame, center, radius, color, -1
-            )
+            adjusted_frame = cv2.circle(adjusted_frame, center, radius, color, -1)
 
         if not ret:
             break
@@ -146,12 +144,8 @@ def get_plot_config(data_path: Path):
     Data path should look like:
     "/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d"
     """
-    assert (
-        data_path.parts[-1] == "pose-3d"
-    ), "The data path should end with pose-3d"
-    assert (
-        data_path.parts[-2] == "behData"
-    ), "The data path should contain behData"
+    assert data_path.parts[-1] == "pose-3d", "The data path should end with pose-3d"
+    assert data_path.parts[-2] == "behData", "The data path should contain behData"
 
     plot_config = {}
     trial_type = data_path.parts[-3]
@@ -429,9 +423,7 @@ def animate_3d_points(
     def update(frame, lines, points3d, lines_second, points3d_second):
         i = 0
         for kp, points3d_array in points3d.items():
-            lines[i].set_data(
-                points3d_array[frame, :, 0], points3d_array[frame, :, 1]
-            )
+            lines[i].set_data(points3d_array[frame, :, 0], points3d_array[frame, :, 1])
             lines[i].set_3d_properties(points3d_array[frame, :, 2])
             i += 1
         if lines_second:
@@ -441,9 +433,7 @@ def animate_3d_points(
                     points3d_second_array[frame, :, 0],
                     points3d_second_array[frame, :, 1],
                 )
-                lines_second[j].set_3d_properties(
-                    points3d_second_array[frame, :, 2]
-                )
+                lines_second[j].set_3d_properties(points3d_second_array[frame, :, 2])
                 j += 1
 
     # Creating the Animation object
@@ -458,9 +448,7 @@ def animate_3d_points(
     logger.info("Making animation...")
     export_path = str(export_path)
     export_path += (
-        f".{format_video}"
-        if not export_path.endswith((".mp4", ".avi", ".mov"))
-        else ""
+        f".{format_video}" if not export_path.endswith((".mp4", ".avi", ".mov")) else ""
     )
     line_ani.save(export_path, fps=fps, dpi=300)
     logger.info(f"Animation is saved at {export_path}")
@@ -828,9 +816,7 @@ def plot_grid(
     ax4.set_yticklabels(labels=[-160, 0, 160])
 
     ax4.set_xticks(ticks=np.arange(t_start, t_end + t_interval, t_interval))
-    ax4.set_xticklabels(
-        labels=np.arange(t_start, t_end + t_interval, t_interval) / fps
-    )
+    ax4.set_xticklabels(labels=np.arange(t_start, t_end + t_interval, t_interval) / fps)
     ax4.set_xlabel("Time (s)")
 
     # #% start: automatic generated code from pylustrator

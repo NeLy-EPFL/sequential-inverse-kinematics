@@ -82,9 +82,7 @@ class LegInvKinBase(ABC):
         self, kinematic_chain: Chain, joint_angles: np.ndarray
     ) -> np.ndarray:
         """Calculates the forward kinematics from the joint dof angles."""
-        fk = kinematic_chain.forward_kinematics(
-            joint_angles, full_kinematics=True
-        )
+        fk = kinematic_chain.forward_kinematics(joint_angles, full_kinematics=True)
         end_effector_positions = np.zeros((len(kinematic_chain.links), 3))
         for link in range(len(kinematic_chain.links)):
             end_effector_positions[link, :] = fk[link][:3, 3]
@@ -205,9 +203,7 @@ class LegInvKinSeq(LegInvKinBase):
         initial_angles: Optional[Dict[str, np.ndarray]] = None,
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
-        super().__init__(
-            aligned_pos, kinematic_chain_class, initial_angles, log_level
-        )
+        super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
         # Create an empty dict for joint angles
         self.joint_angles_dict = {}
 
@@ -287,9 +283,7 @@ class LegInvKinSeq(LegInvKinBase):
 
             # For the first frame, use the given initial angles, for the rest
             # use the calculated joint angles from the previous time step
-            initial_angles = (
-                initial_angles if t == 0 else joint_angles[t - 1, :]
-            )
+            initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
             # Calculate the inverse kinematics
             joint_angles[t, :] = self.calculate_ik(
                 kinematic_chain, end_effector_pos_diff[t, :], initial_angles
@@ -308,36 +302,36 @@ class LegInvKinSeq(LegInvKinBase):
         # Store the joint angles based on the stage number
         # Stage 1: Thorax-Coxa pitch and yaw
         if stage == 1:
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_ThC_yaw"
-            ] = joint_angles[:, link_names.index(f"{segment_name}_ThC_yaw")]
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_ThC_pitch"
-            ] = joint_angles[:, link_names.index(f"{segment_name}_ThC_pitch")]
+            self.joint_angles_dict[f"Angle_{segment_name}_ThC_yaw"] = joint_angles[
+                :, link_names.index(f"{segment_name}_ThC_yaw")
+            ]
+            self.joint_angles_dict[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_ThC_pitch")
+            ]
             self.logger.debug("Stage 1 is completed!")
         # Stage 2: Thorax-Coxa roll, Coxa-Trochanter pitch
         elif stage == 2:
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_ThC_roll"
-            ] = joint_angles[:, link_names.index(f"{segment_name}_ThC_roll")]
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_CTr_pitch"
-            ] = joint_angles[:, link_names.index(f"{segment_name}_CTr_pitch")]
+            self.joint_angles_dict[f"Angle_{segment_name}_ThC_roll"] = joint_angles[
+                :, link_names.index(f"{segment_name}_ThC_roll")
+            ]
+            self.joint_angles_dict[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_CTr_pitch")
+            ]
             self.logger.debug("Stage 2 is completed!")
         # Stage 3: Coxa-Trochanter roll, Femur-Tibia pitch
         elif stage == 3:
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_CTr_roll"
-            ] = joint_angles[:, link_names.index(f"{segment_name}_CTr_roll")]
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_FTi_pitch"
-            ] = joint_angles[:, link_names.index(f"{segment_name}_FTi_pitch")]
+            self.joint_angles_dict[f"Angle_{segment_name}_CTr_roll"] = joint_angles[
+                :, link_names.index(f"{segment_name}_CTr_roll")
+            ]
+            self.joint_angles_dict[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_FTi_pitch")
+            ]
             self.logger.debug("Stage 3 is completed!")
         # Stage 4: Tibia-Tarsus pitch
         elif stage == 4:
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_TiTa_pitch"
-            ] = joint_angles[:, link_names.index(f"{segment_name}_TiTa_pitch")]
+            self.joint_angles_dict[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[
+                :, link_names.index(f"{segment_name}_TiTa_pitch")
+            ]
             self.logger.debug("Stage 4 is completed!")
 
         return forward_kinematics
@@ -393,13 +387,9 @@ class LegInvKinSeq(LegInvKinBase):
                 for stage in stages:
                     # for each stage, the end effector is the corresponding joint
                     end_effector_pos = segment_array[:, stage, :]
-                    initial_angles = self.initial_angles[leg_name][
-                        f"stage_{stage}"
-                    ]
+                    initial_angles = self.initial_angles[leg_name][f"stage_{stage}"]
 
-                    forward_kinematics_dict[
-                        segment_name
-                    ] = self.calculate_ik_stage(
+                    forward_kinematics_dict[segment_name] = self.calculate_ik_stage(
                         end_effector_pos=end_effector_pos,
                         origin=origin,
                         initial_angles=initial_angles,
@@ -490,9 +480,7 @@ class LegInvKinGeneric(LegInvKinBase):
         initial_angles: Optional[Dict[str, np.ndarray]] = None,
         log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
-        super().__init__(
-            aligned_pos, kinematic_chain_class, initial_angles, log_level
-        )
+        super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
         # Create an empty dict for joint angles
         self.joint_angles_dict = {}
 
@@ -555,17 +543,14 @@ class LegInvKinGeneric(LegInvKinBase):
         ):
             # For the first frame, use the given initial angles, for the rest
             # use the calculated joint angles from the previous time step
-            initial_angles = (
-                initial_angles if t == 0 else joint_angles[t - 1, :]
-            )
+            initial_angles = initial_angles if t == 0 else joint_angles[t - 1, :]
             # Calculate the inverse kinematics
             joint_angles[t, :] = self.calculate_ik(
                 kinematic_chain, end_effector_pos_diff[t, :], initial_angles
             )
 
             forward_kinematics[t, :] = (
-                self.calculate_fk(kinematic_chain, joint_angles[t, :])
-                + origin[t, :]
+                self.calculate_fk(kinematic_chain, joint_angles[t, :]) + origin[t, :]
             )
 
         # Link names

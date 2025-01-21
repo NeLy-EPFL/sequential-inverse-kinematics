@@ -43,9 +43,7 @@ def test_kin_chain_seq(leg_name, setup_kinematic_chain_seq):
         f"{leg_name}_ThC_pitch",
         f"{leg_name}_CTr_pitch",
     }
-    leg_chain_stage2 = kin_chain.create_leg_chain(
-        leg_name, angles=leg_angles, stage=2
-    )
+    leg_chain_stage2 = kin_chain.create_leg_chain(leg_name, angles=leg_angles, stage=2)
     chain2_link_names = [link.name for link in leg_chain_stage2.links]
     assert set(chain2_link_names) == {
         "Base link",
@@ -55,9 +53,7 @@ def test_kin_chain_seq(leg_name, setup_kinematic_chain_seq):
         f"{leg_name}_CTr_pitch",
         f"{leg_name}_FTi_pitch",
     }
-    leg_chain_stage3 = kin_chain.create_leg_chain(
-        leg_name, angles=leg_angles, stage=3
-    )
+    leg_chain_stage3 = kin_chain.create_leg_chain(leg_name, angles=leg_angles, stage=3)
     chain3_link_names = [link.name for link in leg_chain_stage3.links]
     assert set(chain3_link_names) == {
         "Base link",
@@ -70,9 +66,7 @@ def test_kin_chain_seq(leg_name, setup_kinematic_chain_seq):
         f"{leg_name}_TiTa_pitch",
     }
 
-    leg_chain_stage4 = kin_chain.create_leg_chain(
-        leg_name, angles=leg_angles, stage=4
-    )
+    leg_chain_stage4 = kin_chain.create_leg_chain(leg_name, angles=leg_angles, stage=4)
     chain4_link_names = [link.name for link in leg_chain_stage4.links]
     assert set(chain4_link_names) == {
         "Base link",
