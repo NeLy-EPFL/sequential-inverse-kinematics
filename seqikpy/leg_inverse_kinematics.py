@@ -308,36 +308,36 @@ class LegInvKinSeq(LegInvKinBase):
         # Store the joint angles based on the stage number
         # Stage 1: Thorax-Coxa pitch and yaw
         if stage == 1:
-            self.joint_angles_dict[f"Angle_{segment_name}_ThC_yaw"] = (
-                joint_angles[:, link_names.index(f"{segment_name}_ThC_yaw")]
-            )
-            self.joint_angles_dict[f"Angle_{segment_name}_ThC_pitch"] = (
-                joint_angles[:, link_names.index(f"{segment_name}_ThC_pitch")]
-            )
+            self.joint_angles_dict[
+                f"Angle_{segment_name}_ThC_yaw"
+            ] = joint_angles[:, link_names.index(f"{segment_name}_ThC_yaw")]
+            self.joint_angles_dict[
+                f"Angle_{segment_name}_ThC_pitch"
+            ] = joint_angles[:, link_names.index(f"{segment_name}_ThC_pitch")]
             self.logger.debug("Stage 1 is completed!")
         # Stage 2: Thorax-Coxa roll, Coxa-Trochanter pitch
         elif stage == 2:
-            self.joint_angles_dict[f"Angle_{segment_name}_ThC_roll"] = (
-                joint_angles[:, link_names.index(f"{segment_name}_ThC_roll")]
-            )
-            self.joint_angles_dict[f"Angle_{segment_name}_CTr_pitch"] = (
-                joint_angles[:, link_names.index(f"{segment_name}_CTr_pitch")]
-            )
+            self.joint_angles_dict[
+                f"Angle_{segment_name}_ThC_roll"
+            ] = joint_angles[:, link_names.index(f"{segment_name}_ThC_roll")]
+            self.joint_angles_dict[
+                f"Angle_{segment_name}_CTr_pitch"
+            ] = joint_angles[:, link_names.index(f"{segment_name}_CTr_pitch")]
             self.logger.debug("Stage 2 is completed!")
         # Stage 3: Coxa-Trochanter roll, Femur-Tibia pitch
         elif stage == 3:
-            self.joint_angles_dict[f"Angle_{segment_name}_CTr_roll"] = (
-                joint_angles[:, link_names.index(f"{segment_name}_CTr_roll")]
-            )
-            self.joint_angles_dict[f"Angle_{segment_name}_FTi_pitch"] = (
-                joint_angles[:, link_names.index(f"{segment_name}_FTi_pitch")]
-            )
+            self.joint_angles_dict[
+                f"Angle_{segment_name}_CTr_roll"
+            ] = joint_angles[:, link_names.index(f"{segment_name}_CTr_roll")]
+            self.joint_angles_dict[
+                f"Angle_{segment_name}_FTi_pitch"
+            ] = joint_angles[:, link_names.index(f"{segment_name}_FTi_pitch")]
             self.logger.debug("Stage 3 is completed!")
         # Stage 4: Tibia-Tarsus pitch
         elif stage == 4:
-            self.joint_angles_dict[f"Angle_{segment_name}_TiTa_pitch"] = (
-                joint_angles[:, link_names.index(f"{segment_name}_TiTa_pitch")]
-            )
+            self.joint_angles_dict[
+                f"Angle_{segment_name}_TiTa_pitch"
+            ] = joint_angles[:, link_names.index(f"{segment_name}_TiTa_pitch")]
             self.logger.debug("Stage 4 is completed!")
 
         return forward_kinematics
@@ -397,15 +397,15 @@ class LegInvKinSeq(LegInvKinBase):
                         f"stage_{stage}"
                     ]
 
-                    forward_kinematics_dict[segment_name] = (
-                        self.calculate_ik_stage(
-                            end_effector_pos=end_effector_pos,
-                            origin=origin,
-                            initial_angles=initial_angles,
-                            stage=stage,
-                            segment_name=leg_name,
-                            hide_progress_bar=hide_progress_bar,
-                        )
+                    forward_kinematics_dict[
+                        segment_name
+                    ] = self.calculate_ik_stage(
+                        end_effector_pos=end_effector_pos,
+                        origin=origin,
+                        initial_angles=initial_angles,
+                        stage=stage,
+                        segment_name=leg_name,
+                        hide_progress_bar=hide_progress_bar,
                     )
             else:
                 self.logger.debug(

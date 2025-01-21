@@ -135,15 +135,15 @@ class HeadInverseKinematics:
 
         if compute_ant_angles:
             for side in ["L", "R"]:
-                head_angles[f"Angle_antenna_yaw_{side}"] = (
-                    self.compute_antenna_yaw(
-                        side=side, head_roll=head_angles["Angle_head_roll"]
-                    )
+                head_angles[
+                    f"Angle_antenna_yaw_{side}"
+                ] = self.compute_antenna_yaw(
+                    side=side, head_roll=head_angles["Angle_head_roll"]
                 )
-                head_angles[f"Angle_antenna_pitch_{side}"] = (
-                    self.compute_antenna_pitch(
-                        side=side, head_roll=head_angles["Angle_head_roll"]
-                    )
+                head_angles[
+                    f"Angle_antenna_pitch_{side}"
+                ] = self.compute_antenna_pitch(
+                    side=side, head_roll=head_angles["Angle_head_roll"]
                 )
 
         if export_path is not None:
