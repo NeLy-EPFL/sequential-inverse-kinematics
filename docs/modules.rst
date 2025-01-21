@@ -1,5 +1,3 @@
-seqikpy
-=======
 
 .. toctree::
    :maxdepth: 4
