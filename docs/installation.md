@@ -2,10 +2,10 @@
 
 First, create a virtual environment by running the following line in the terminal:
 ```bash
-conda create -n seqikpy python=3.8
+conda create -n seqikpy python=3.9
 ```
 
-Note that Python versions 3.8, 3.9, 3.10 are tested and supported. Next, activate the virtual environment by running the following line in the terminal:
+Note that Python versions 3.9, 3.10 are tested and supported. Next, activate the virtual environment by running the following line in the terminal:
 ```bash
 conda activate seqikpy
 ```
@@ -13,11 +13,6 @@ conda activate seqikpy
 To install `seqikpy`, you can run the following line in the terminal:
 ```bash
 pip install seqikpy
-```
-
-Or, you can install the newest version of the package manually by running the following line in the terminal:
-```bash
-pip install https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git
 ```
 
 You can as well clone the repository and install the package by running the following lines in the terminal:
