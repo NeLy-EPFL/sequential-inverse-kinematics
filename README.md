@@ -6,7 +6,7 @@
 </p>
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-red)](https://opensource.org/license/apache-2-0)
-[![python](https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10-blue)]()
+[![python](https://img.shields.io/badge/python-3.9%2C%203.10-blue)]()
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12601317.svg)](https://doi.org/10.5281/zenodo.12601317)
 
 </div>
@@ -28,7 +28,7 @@
 * **Head inverse kinematics:** Calculate head and antenna joint angles using the vector dot product method.
 * **Visualization and animation:** Visualize and animate the results in 3D.
 
-<!-- # Summary of directories
+# 🗂️ Summary of directories
 
 ```
 .
@@ -37,7 +37,7 @@
 ├── examples: Examples and tutorials on how to use the package.
 ├── seqikpy: Main package.
 └── tests: Tests for the package.
-``` -->
+```
 
 
 # 📚 Documentation
