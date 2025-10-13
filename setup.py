@@ -15,6 +15,7 @@ setup(
         "tqdm",
         "matplotlib",
         "pandas",
+        "joblib>=1.5,<2",
     ],
     extras_require={
         "dev": [
