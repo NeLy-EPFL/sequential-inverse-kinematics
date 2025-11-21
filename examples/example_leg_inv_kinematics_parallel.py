@@ -1,21 +1,20 @@
 """
-    Example usage of leg inverse kinematics module.
-    It speeds up the process by running the pipeline in parallel.
-    Experiment on a Macbook Pro 2.3 GHz Quad-Core Intel Core i7, running IK on 6 legs:
-    Sequential IK took 1.7729304512341817 mins [serial]
-    Sequential IK took 0.58028298219045 mins [parallel]
+Example usage of leg inverse kinematics module.
+It speeds up the process by running the pipeline in parallel.
+Experiment on a Macbook Pro 2.3 GHz Quad-Core Intel Core i7, running IK on 6 legs:
+Sequential IK took 1.7729304512341817 mins [serial]
+Sequential IK took 0.58028298219045 mins [parallel]
 
 """
-import time
-from pathlib import Path
 
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-from multiprocessing import Pool
+from time import time
+from pathlib import Path
 
-from seqikpy.kinematic_chain import KinematicChainSeq, KinematicChainGeneric
-from seqikpy.leg_inverse_kinematics import LegInvKinSeq, LegInvKinGeneric
-from seqikpy.data import NMF_SIZE
+from seqikpy.kinematic_chain import KinematicChainSeq
+from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.utils import load_file, calculate_body_size
 
 TEMPLATE_NMF_LOCOMOTION = {
@@ -140,71 +139,124 @@ BOUNDS_LOCOMOTION = {
 }
 
 
-def worker_wrapper(aligned_pos, single_leg):
-    """ Wrapper for the function to run single leg IK. """
+if __name__ == "__main__":
+    import seqikpy
+
+    legs = [f"{side}{pos}" for side in "RL" for pos in ["F", "M", "H"]]
+
+    # Load aligned pose
+    data_dir = (
+        Path(seqikpy.__path__[0]).parent / "data/df3d_pose_result__210902_PR_Fly1"
+    )
+    aligned_pose_data_original = load_file(data_dir / "pose3d_aligned.pkl")
+
+    # Artificially repeat data to increase sequence length for benchmarking
+    n_repeats = 8
+    aligned_pose_data = {}
+    for key, arr in aligned_pose_data_original.items():
+        arr_backward = arr[::-1, ...]
+        aligned_pose_data[key] = np.concatenate(
+            [arr, arr_backward] * (n_repeats // 2) + [arr] * (n_repeats % 2), axis=0
+        )
+
+    # Define kinematic chains
     kin_chain = KinematicChainSeq(
         bounds_dof=BOUNDS_LOCOMOTION,
-        body_size=calculate_body_size(
-            TEMPLATE_NMF_LOCOMOTION,
-            [single_leg]
-        ),
-        legs_list=[single_leg],
+        body_size=calculate_body_size(TEMPLATE_NMF_LOCOMOTION, legs),
+        legs_list=legs,
     )
+
+    # Define leg IK instance
     class_seq_ik = LegInvKinSeq(
-        aligned_pos=aligned_pos,
+        aligned_pos=aligned_pose_data,
         kinematic_chain_class=kin_chain,
         initial_angles=INITIAL_ANGLES_LOCOMOTION,
-        log_level="ERROR"
-    )
-    leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(hide_progress_bar=True)
-    return leg_joint_angles, forward_kinematics
-
-
-if __name__ == "__main__":
-    # Aligned pose
-    data_path = Path("../data/df3d_pose_result__210902_PR_Fly1")
-    pose_data = load_file(
-        data_path / "pose3d_aligned.pkl"
+        log_level="INFO",
     )
 
-    legs_to_align = ["RF", "RM", "RH", "LF", "LM", "LH"]
+    # # Run inverse and forward kinematics
+    # # Serial processing
+    # print("Running in series...")
+    # start = time()
+    # results_serial = class_seq_ik.run_ik_and_fk(n_workers=1)
+    # walltime_serial = time() - start
+    # print(f"Sequential IK took {walltime_serial} secs")
 
-    # start = time.time()
+    # # Parallel over legs only
+    # print("Running in parallel over legs only...")
+    # start = time()
+    # leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
+    #     n_workers=-1,
+    #     parallel_over_time=False,
+    #     chunk_overlap=10,
+    #     min_chunk_size=20,
+    # )
+    # walltime_parallel_legs = time() - start
+    # print(f"Parallel IK over legs took {walltime_parallel_legs} secs")
 
-    # for leg in legs_to_align:
-    #     worker_wrapper(pose_data, leg)
-    # end = time.time()
-    # total_time = (end - start) / 60.0
+    # # Parallel over legs and over time
+    # print("Running in parallel over legs and over time...")
+    # start = time()
+    # leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
+    #     n_workers=-1,
+    #     parallel_over_time=True,
+    #     chunk_overlap=10,
+    #     min_chunk_size=20,
+    # )
+    # walltime_parallel_legs_and_time = time() - start
+    # print(f"Parallel IK over legs and time took {walltime_parallel_legs_and_time} secs")
 
-    # print(f'Sequential IK took {total_time} mins [serial]')
+    # Save results
+    output_path = data_dir / "parallel_inv_and_fwd_kinematics_benchmark.pkl"
+    print(f"Saving results to {output_path}...")
+    with open(output_path, "wb") as f:
+        data = {
+            "serial": {
+                "walltime_secs": walltime_serial,
+                "leg_joint_angles": results_serial[0],
+                "forward_kinematics": results_serial[1],
+            },
+            "parallel_legs": {
+                "walltime_secs": walltime_parallel_legs,
+                "leg_joint_angles": leg_joint_angles,
+                "forward_kinematics": forward_kinematics,
+            },
+            "parallel_legs_and_time": {
+                "walltime_secs": walltime_parallel_legs_and_time,
+                "leg_joint_angles": leg_joint_angles,
+                "forward_kinematics": forward_kinematics,
+            },
+        }
+        pickle.dump(data, f)
 
-    start = time.time()
-    # Dictionary to hold concatenated results
-    all_legs_joint_angles = {}
-    all_legs_for_kins = []
+    # Load and inspect saved results
+    with open(data_dir / "parallel_inv_and_fwd_kinematics_benchmark.pkl", "rb") as f:
+        data = pickle.load(f)
+        print(data.keys())
 
-    pool = Pool(processes=6)
-    results = pool.starmap(worker_wrapper, [(pose_data, leg) for leg in legs_to_align])
-    pool.close()
-    pool.join()
-
-    for ik, fk in results:
-        all_legs_joint_angles.update(ik)
-        all_legs_for_kins.append(fk)
-
-    end = time.time()
-    total_time = (end - start) / 60.0
-
-    print(f'Sequential IK took {total_time} mins [parallel]')
-
-    # Compare the joint angles
-    fig, ax = plt.subplots(1, 1, figsize=(10, 5))
-    for key in all_legs_joint_angles:
-        plt.plot(all_legs_joint_angles[key], label=key[6:], lw=2)
-
-    plt.xlabel('Frames (AU)')
-    plt.ylabel('Angles (rad)')
-    plt.title('Leg joint angles from SeqIK')
+    example_dof = "Angle_RF_ThC_pitch"
+    plt.plot(
+        np.rad2deg(data["serial"]["leg_joint_angles"][example_dof]),
+        linestyle="-",
+        color="black",
+        label="Serial",
+    )
+    plt.plot(
+        np.rad2deg(data["parallel_legs"]["leg_joint_angles"][example_dof]),
+        linestyle=":",
+        color="tab:blue",
+        label="Parallel over legs",
+    )
+    plt.plot(
+        np.rad2deg(data["parallel_legs_and_time"]["leg_joint_angles"][example_dof]),
+        linestyle="-",
+        color="tab:green",
+        label="Parallel over legs and time",
+    )
+    plt.xlabel("Frame index")
+    plt.ylabel(f"{example_dof} (deg)")
     plt.legend()
-    plt.grid(True)
+    plt.title("Leg Inverse Kinematics Result Comparison")
     plt.show()
+
+    1

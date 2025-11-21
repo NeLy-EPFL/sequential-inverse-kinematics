@@ -1,17 +1,18 @@
-""" Module to calculate inverse kinematics from 3D pose based on IKPy."""
+"""Module to calculate inverse kinematics from 3D pose based on IKPy."""
 
+import logging
+import warnings
+from collections import defaultdict
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, Tuple, Union, Literal, Optional
-import logging
-import warnings
 
 import numpy as np
 from tqdm import trange
 from joblib import Parallel, delayed
 from ikpy.chain import Chain
 
-from seqikpy.utils import save_file
+from seqikpy.utils import save_file, split_arrays_into_chunks, merge_chunks_into_arrays
 from seqikpy.data import INITIAL_ANGLES
 from seqikpy.kinematic_chain import (
     KinematicChainBase,
@@ -22,10 +23,7 @@ from seqikpy.kinematic_chain import (
 # Ignore the warnings
 warnings.filterwarnings("ignore")
 
-logging.basicConfig(
-    format=" %(asctime)s - %(levelname)s- %(message)s",
-    handlers=[logging.StreamHandler()],
-)
+_logger = logging.getLogger(__name__)
 
 
 class LegInvKinBase(ABC):
@@ -63,9 +61,9 @@ class LegInvKinBase(ABC):
         )
 
         # Get the logger of the module
-        self.logger = logging.getLogger(self.__class__.__name__)
+        _logger = logging.getLogger(self.__class__.__name__)
         numeric_level = getattr(logging, log_level.upper(), None)
-        self.logger.setLevel(numeric_level)
+        _logger.setLevel(numeric_level)
 
     def calculate_ik(
         self,
@@ -209,31 +207,33 @@ class LegInvKinSeq(LegInvKinBase):
         self.joint_angles_dict = {}
 
     @staticmethod
-    def _process_single_leg(segment_name, segment_array, stages, kinematic_chain_class, initial_angles_dict, hide_progress_bar):
+    def _process_single_leg_sequence(
+        segment_name,
+        segment_array,
+        stages,
+        kinematic_chain_class,
+        initial_angles_dict,
+        hide_progress_bar,
+    ):
         """Process a single leg through all stages."""
         leg_name = segment_name.split("_")[0]
-        
+
         if not leg_name in kinematic_chain_class.body_size:
             return segment_name, None, {}
-        
+
         # Create a temporary instance to process this leg
         temp_instance = LegInvKinSeq.__new__(LegInvKinSeq)
         temp_instance.kinematic_chain_class = kinematic_chain_class
         temp_instance.initial_angles = initial_angles_dict
         temp_instance.joint_angles_dict = {}
-        
-        # Setup minimal logger
-        import logging
-        temp_instance.logger = logging.getLogger("LegInvKinSeq")
-        temp_instance.logger.setLevel(logging.INFO)
-        
+
         origin = segment_array[:, 0, :]
         forward_kinematics_result = None
-        
+
         for stage in stages:
             end_effector_pos = segment_array[:, stage, :]
             initial_angles = initial_angles_dict[leg_name][f"stage_{stage}"]
-            
+
             forward_kinematics_result = temp_instance.calculate_ik_stage(
                 end_effector_pos=end_effector_pos,
                 origin=origin,
@@ -242,7 +242,7 @@ class LegInvKinSeq(LegInvKinBase):
                 segment_name=leg_name,
                 hide_progress_bar=hide_progress_bar,
             )
-        
+
         return segment_name, forward_kinematics_result, temp_instance.joint_angles_dict
 
     def calculate_ik_stage(
@@ -346,7 +346,7 @@ class LegInvKinSeq(LegInvKinBase):
             self.joint_angles_dict[f"Angle_{segment_name}_ThC_pitch"] = joint_angles[
                 :, link_names.index(f"{segment_name}_ThC_pitch")
             ]
-            self.logger.debug("Stage 1 is completed!")
+            _logger.debug("Stage 1 is completed!")
         # Stage 2: Thorax-Coxa roll, Coxa-Trochanter pitch
         elif stage == 2:
             self.joint_angles_dict[f"Angle_{segment_name}_ThC_roll"] = joint_angles[
@@ -355,7 +355,7 @@ class LegInvKinSeq(LegInvKinBase):
             self.joint_angles_dict[f"Angle_{segment_name}_CTr_pitch"] = joint_angles[
                 :, link_names.index(f"{segment_name}_CTr_pitch")
             ]
-            self.logger.debug("Stage 2 is completed!")
+            _logger.debug("Stage 2 is completed!")
         # Stage 3: Coxa-Trochanter roll, Femur-Tibia pitch
         elif stage == 3:
             self.joint_angles_dict[f"Angle_{segment_name}_CTr_roll"] = joint_angles[
@@ -364,13 +364,13 @@ class LegInvKinSeq(LegInvKinBase):
             self.joint_angles_dict[f"Angle_{segment_name}_FTi_pitch"] = joint_angles[
                 :, link_names.index(f"{segment_name}_FTi_pitch")
             ]
-            self.logger.debug("Stage 3 is completed!")
+            _logger.debug("Stage 3 is completed!")
         # Stage 4: Tibia-Tarsus pitch
         elif stage == 4:
             self.joint_angles_dict[f"Angle_{segment_name}_TiTa_pitch"] = joint_angles[
                 :, link_names.index(f"{segment_name}_TiTa_pitch")
             ]
-            self.logger.debug("Stage 4 is completed!")
+            _logger.debug("Stage 4 is completed!")
 
         return forward_kinematics
 
@@ -378,8 +378,12 @@ class LegInvKinSeq(LegInvKinBase):
         self,
         export_path: Union[Path, str] = None,
         n_workers: int = 1,
+        parallel_over_time: bool = True,
+        chunk_overlap: int = 100,
+        avg_workloads_per_worker: int = 2,
+        min_chunk_size: int = 500,
         hide_progress_bar: bool = False,
-        **kwargs
+        **kwargs,
     ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
         """Runs inverse and forward kinematics for leg joints.
 
@@ -410,40 +414,111 @@ class LegInvKinSeq(LegInvKinBase):
             )
         forward_kinematics_dict = {}
 
-        # Get parallel processing parameters        
-        self.logger.info("Computing joint angles and forward kinematics...")
-        
+        # Get parallel processing parameters
+        _logger.info("Computing joint angles and forward kinematics...")
+
         # Filter leg segments
-        leg_segments = [(name, array) for name, array in self.aligned_pos.items() 
-                       if "leg" in name.lower()]
-        
+        leg_segments = [
+            (name, array)  # each array has shape (N_frames, N_key_points, 3)
+            for name, array in self.aligned_pos.items()
+            if "leg" in name.lower()
+        ]
+        seq_length = leg_segments[0][1].shape[0]
+
         if n_workers == 1 or len(leg_segments) <= 1:
             # Sequential processing
             for segment_name, segment_array in leg_segments:
-                result_name, result_fk, local_joint_angles = self._process_single_leg(
-                    segment_name, segment_array, stages, 
-                    self.kinematic_chain_class, self.initial_angles, hide_progress_bar
+                result_name, result_fk, local_joint_angles = (
+                    self._process_single_leg_sequence(
+                        segment_name,
+                        segment_array,
+                        stages,
+                        self.kinematic_chain_class,
+                        self.initial_angles,
+                        hide_progress_bar,
+                    )
                 )
                 if result_fk is not None:
                     forward_kinematics_dict[result_name] = result_fk
                     self.joint_angles_dict.update(local_joint_angles)
-        else:
-            # Parallel processing of legs
+
+        elif not parallel_over_time:
+            # Parallel processing over legs only (each leg gets a process)
             results = Parallel(n_jobs=n_workers)(
-                delayed(self._process_single_leg)(
-                    segment_name, segment_array, stages,
-                    self.kinematic_chain_class, self.initial_angles, hide_progress_bar
+                delayed(self._process_single_leg_sequence)(
+                    segment_name,
+                    segment_array,
+                    stages,
+                    self.kinematic_chain_class,
+                    self.initial_angles,
+                    hide_progress_bar,
                 )
                 for segment_name, segment_array in leg_segments
             )
-            
             # Collect results
             for segment_name, result_fk, local_joint_angles in results:
                 if result_fk is not None:
                     forward_kinematics_dict[segment_name] = result_fk
                     self.joint_angles_dict.update(local_joint_angles)
 
-        self.logger.debug("Joint angles and forward kinematics are computed.")
+        else:
+            # Parallel processing over legs and time (time series is split into chunks)
+            # Figure out number of frames per payload
+            parallel_executor = Parallel(n_jobs=n_workers)
+            n_workers_effective = parallel_executor._effective_n_jobs()
+            input_chunks = split_arrays_into_chunks(
+                [array for name, array in leg_segments],
+                approx_n_chunks_total=n_workers_effective * avg_workloads_per_worker,
+                overlap=chunk_overlap,
+                min_chunk_size=min_chunk_size,
+            )
+
+            # Define processing function for each payload
+            def process_chunk(array_idx, chunk_arr):
+                segment_name = leg_segments[array_idx][0]
+                return self._process_single_leg_sequence(
+                    segment_name,
+                    chunk_arr,
+                    stages,
+                    self.kinematic_chain_class,
+                    self.initial_angles,
+                    hide_progress_bar,
+                )
+
+            # Execute in parallel
+            results_by_chunk = parallel_executor(
+                delayed(process_chunk)(array_idx, chunk_arr)
+                for array_idx, start_idx, chunk_arr in input_chunks
+            )
+
+            # Merge results
+            result_chunks_fk = []
+            result_chunks_joint_angles = defaultdict(list)
+            for chunk_idx in range(len(input_chunks)):
+                array_idx, start_idx, _ = input_chunks[chunk_idx]
+                _, result_fk_chunk, local_joint_angles = results_by_chunk[chunk_idx]
+                result_chunks_fk.append((array_idx, start_idx, result_fk_chunk))
+                for key, arr in local_joint_angles.items():
+                    result_chunks_joint_angles[key].append((array_idx, start_idx, arr))
+
+            # Merge results
+            output_arrays_fk = merge_chunks_into_arrays(
+                result_chunks_fk,
+                n_arrays=len(leg_segments),
+                seq_length=seq_length,
+                overlap=chunk_overlap,
+            )
+            for i, (segment_name, _) in enumerate(leg_segments):
+                forward_kinematics_dict[segment_name] = output_arrays_fk[i]
+            for key, arr_chunks in result_chunks_joint_angles.items():
+                self.joint_angles_dict[key] = merge_chunks_into_arrays(
+                    arr_chunks,
+                    n_arrays=len(leg_segments),
+                    seq_length=seq_length,
+                    overlap=chunk_overlap,
+                )
+
+        _logger.debug("Joint angles and forward kinematics are computed.")
 
         if export_path is not None:
             save_file(
@@ -454,7 +529,7 @@ class LegInvKinSeq(LegInvKinBase):
                 Path(export_path) / "leg_joint_angles.pkl",
                 self.joint_angles_dict,
             )
-            self.logger.info(
+            _logger.info(
                 "Joint angles and forward kinematics are saved at %s",
                 export_path,
             )
@@ -525,28 +600,35 @@ class LegInvKinGeneric(LegInvKinBase):
         self.joint_angles_dict = {}
 
     @staticmethod
-    def _process_single_leg_generic(segment_name, segment_array, kinematic_chain_class, initial_angles_dict, hide_progress_bar):
+    def _process_single_leg_generic(
+        segment_name,
+        segment_array,
+        kinematic_chain_class,
+        initial_angles_dict,
+        hide_progress_bar,
+    ):
         """Process a single leg for generic inverse kinematics."""
         leg_name = segment_name.split("_")[0]
-        
+
         if not leg_name in kinematic_chain_class.body_size:
             return segment_name, None, {}
-        
+
         # Create a temporary instance to process this leg
         temp_instance = LegInvKinGeneric.__new__(LegInvKinGeneric)
         temp_instance.kinematic_chain_class = kinematic_chain_class
         temp_instance.initial_angles = initial_angles_dict
         temp_instance.joint_angles_dict = {}
-        
+
         # Setup minimal logger
         import logging
+
         temp_instance.logger = logging.getLogger("LegInvKinGeneric")
         temp_instance.logger.setLevel(logging.INFO)
-        
+
         origin = segment_array[:, 0, :]
         end_effector_pos = segment_array[:, -1, :]
         initial_angles = initial_angles_dict[leg_name]["stage_4"]
-        
+
         forward_kinematics_result = temp_instance.calculate_ik_stage(
             end_effector_pos=end_effector_pos,
             origin=origin,
@@ -554,7 +636,7 @@ class LegInvKinGeneric(LegInvKinBase):
             segment_name=leg_name,
             hide_progress_bar=hide_progress_bar,
         )
-        
+
         return segment_name, forward_kinematics_result, temp_instance.joint_angles_dict
 
     def calculate_ik_stage(
@@ -642,7 +724,8 @@ class LegInvKinGeneric(LegInvKinBase):
         self,
         export_path: Union[Path, str] = None,
         n_workers: int = 1,
-        hide_progress_bar=False,**kwargs
+        hide_progress_bar=False,
+        **kwargs,
     ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
         """Runs inverse and forward kinematics for leg joints.
 
@@ -661,19 +744,27 @@ class LegInvKinGeneric(LegInvKinBase):
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
-        forward_kinematics_dict = {}        
-        self.logger.info("Computing joint angles and forward kinematics...")
-        
+        forward_kinematics_dict = {}
+        _logger.info("Computing joint angles and forward kinematics...")
+
         # Filter leg segments
-        leg_segments = [(name, array) for name, array in self.aligned_pos.items() 
-                       if "leg" in name.lower()]
-        
+        leg_segments = [
+            (name, array)
+            for name, array in self.aligned_pos.items()
+            if "leg" in name.lower()
+        ]
+
         if n_workers == 1 or len(leg_segments) <= 1:
             # Sequential processing
             for segment_name, segment_array in leg_segments:
-                result_name, result_fk, local_joint_angles = self._process_single_leg_generic(
-                    segment_name, segment_array, 
-                    self.kinematic_chain_class, self.initial_angles, hide_progress_bar
+                result_name, result_fk, local_joint_angles = (
+                    self._process_single_leg_generic(
+                        segment_name,
+                        segment_array,
+                        self.kinematic_chain_class,
+                        self.initial_angles,
+                        hide_progress_bar,
+                    )
                 )
                 if result_fk is not None:
                     forward_kinematics_dict[result_name] = result_fk
@@ -682,19 +773,22 @@ class LegInvKinGeneric(LegInvKinBase):
             # Parallel processing of legs
             results = Parallel(n_jobs=n_workers)(
                 delayed(self._process_single_leg_generic)(
-                    segment_name, segment_array,
-                    self.kinematic_chain_class, self.initial_angles, hide_progress_bar
+                    segment_name,
+                    segment_array,
+                    self.kinematic_chain_class,
+                    self.initial_angles,
+                    hide_progress_bar,
                 )
                 for segment_name, segment_array in leg_segments
             )
-            
+
             # Collect results
             for segment_name, result_fk, local_joint_angles in results:
                 if result_fk is not None:
                     forward_kinematics_dict[segment_name] = result_fk
                     self.joint_angles_dict.update(local_joint_angles)
 
-        self.logger.debug("Joint angles and forward kinematics are computed.")
+        _logger.debug("Joint angles and forward kinematics are computed.")
 
         if export_path is not None:
             save_file(
@@ -705,7 +799,7 @@ class LegInvKinGeneric(LegInvKinBase):
                 Path(export_path) / "leg_joint_angles.pkl",
                 self.joint_angles_dict,
             )
-            self.logger.info(
+            _logger.info(
                 "Joint angles and forward kinematics are saved at %s",
                 export_path,
             )
