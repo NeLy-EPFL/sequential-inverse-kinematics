@@ -377,6 +377,7 @@ class LegInvKinSeq(LegInvKinBase):
     def run_ik_and_fk(
         self,
         export_path: Union[Path, str] = None,
+        stages: list[int] = [1, 2, 3, 4],
         n_workers: int = 1,
         parallel_over_time: bool = True,
         chunk_overlap: int = 20,
@@ -393,12 +394,27 @@ class LegInvKinSeq(LegInvKinBase):
             Path where the results will be saved,
             if None, nothing is saveed, by default None
         stages (kwargs) : List[int], optional
-            Stages to run the inverse kinematics.
+            Stages to run the inverse kinematics. Default is all stages
+            ([1, 2, 3, 4]).
         n_workers (kwargs) : int, optional
             Number of parallel jobs for leg processing. -1 uses all cores,
-            1 disables  parallelization, by default 1.
+            1 disables parallelization, by default 1.
+        parallel_over_time (kwargs) : bool, optional
+            Ignored unless n_workers > 1. This flag determins whether to
+            parallelize over time and legs or legs only. By default True.
+        avg_workloads_per_worker (kwargs) : int, optional
+            Ignored unless n_workers > 1 and parallel_over_time is True.
+            This is the rough number of workloads to be assigned to each
+            worker. Larger numbers lead to load balancing at the cost of
+            higher overhead. This number is approximate - scheduler will
+            change it for better rounding. By default 2.
+        min_chunk_size (kwargs) : int, optional
+            Ignored unless n_workers > 1 and parallel_over_time is True.
+            Minimum chunk size (in frames) for each time series payload.
+            If the time series is shorter than this size, the number of
+            workers will be reduced accordingly. By default 100.
         hide_progress_bar (kwargs) : Optional[bool], optional
-            Hide the progress bar, by default True
+            Hide the progress bar, by default False.
 
         Returns
         -------
@@ -406,12 +422,11 @@ class LegInvKinSeq(LegInvKinBase):
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
-        stages = kwargs.get("stages", [1, 2, 3, 4])
-
         if max(stages) > 4 or not all(np.diff(stages) == 1):
             raise ValueError(
                 "Maximum stage number is 4 and the list should be strictly incremental."
             )
+
         forward_kinematics_dict = {}
 
         # Get parallel processing parameters

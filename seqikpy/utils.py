@@ -472,7 +472,6 @@ def split_arrays_into_chunks(
     seq_length = arrays[0].shape[0]
 
     # If the chunk size is too small, return the entire arrays as single chunks
-    print(seq_length, min_chunk_size)
     if seq_length <= min_chunk_size:
         return [(arr_idx, 0, arr) for arr_idx, arr in enumerate(arrays)]
 
