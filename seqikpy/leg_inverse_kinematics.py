@@ -387,31 +387,31 @@ class LegInvKinSeq(LegInvKinBase):
         export_path : Union[Path, str], optional
             Path where the results will be saved,
             if None, nothing is saved, by default None
-        stages (kwargs) : List[int], optional
+        stages : List[int], optional
             Stages to run the inverse kinematics. Default is all stages
             ([1, 2, 3, 4]).
-        n_workers (kwargs) : int, optional
+        n_workers : int, optional
             Number of parallel jobs for leg processing. -1 uses all cores,
             1 disables parallelization, by default 1.
-        parallel_over_time (kwargs) : bool, optional
+        parallel_over_time : bool, optional
             Ignored unless n_workers > 1. This flag determines whether to
             parallelize over time and legs or legs only. By default True.
-        chunk_overlap (kwargs) : int, optional
+        chunk_overlap : int, optional
             Ignored unless n_workers > 1 and parallel_over_time is True.
             This is the number of overlapping frames between time series
             chunks. By default 20.
-        avg_workloads_per_worker (kwargs) : int, optional
+        avg_workloads_per_worker : int, optional
             Ignored unless n_workers > 1 and parallel_over_time is True.
             This is the rough number of workloads to be assigned to each
             worker. Larger numbers lead to load balancing at the cost of
             higher overhead. This number is approximate - scheduler will
             change it for better rounding. By default 2.
-        min_chunk_size (kwargs) : int, optional
+        min_chunk_size : int, optional
             Ignored unless n_workers > 1 and parallel_over_time is True.
             Minimum chunk size (in frames) for each time series payload.
             If the time series is shorter than this size, the number of
             workers will be reduced accordingly. By default 100.
-        hide_progress_bar (kwargs) : bool, optional
+        hide_progress_bar : bool, optional
             Hide the progress bar, by default False.
 
         Returns
@@ -422,6 +422,8 @@ class LegInvKinSeq(LegInvKinBase):
         """
         if stages is None:
             stages = [1, 2, 3, 4]
+        if len(stages) == 0:
+            raise ValueError("At least one stage should be provided.")
         if max(stages) > 4 or not all(np.diff(stages) == 1):
             raise ValueError(
                 "Maximum stage number is 4 and the list should be strictly incremental."
@@ -789,6 +791,8 @@ class LegInvKinGeneric(LegInvKinBase):
         n_workers : int, optional
             Number of parallel jobs for leg processing. -1 uses all cores,
             1 disables parallelization, by default 1.
+        hide_progress_bar : bool, optional
+            Hide the progress bar, by default False.
 
         Returns
         -------

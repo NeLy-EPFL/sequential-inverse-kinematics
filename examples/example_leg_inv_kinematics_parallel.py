@@ -177,7 +177,6 @@ if __name__ == "__main__":
             aligned_pos=aligned_pose_data,
             kinematic_chain_class=kin_chain,
             initial_angles=INITIAL_ANGLES_LOCOMOTION,
-            log_level="INFO",
         )
 
         # Solve inverse and forward kinematics
