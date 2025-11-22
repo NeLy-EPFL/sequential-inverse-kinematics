@@ -17,7 +17,6 @@ parts:
 - caption: 📚 Tutorials
   chapters:
   - file: seqikpy_grooming
-  - file: seqikpy_locomotion
   - file: visualization
 - caption: 💬 References
   chapters:
