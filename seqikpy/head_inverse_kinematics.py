@@ -60,7 +60,7 @@ class HeadInverseKinematics:
         Check the sample data for more detailed example.
     body_template : Dict[str, np.ndarray]
         Dictionary containing the positions of fly model body segments.
-        Check data.py for the default dictionary.
+        Check body_config.py for the default dictionary.
     """
 
     def __init__(

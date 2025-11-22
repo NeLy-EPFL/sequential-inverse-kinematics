@@ -20,8 +20,6 @@ from seqikpy.kinematic_chain import (
     KinematicChainGeneric,
 )
 
-# # Ignore the warnings
-# warnings.filterwarnings("ignore")
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +40,7 @@ class LegInvKinBase(ABC):
         Kinematic chain of the leg.
     initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
-        If not provided, the default values from data.py will be used.
+        If not provided, the default values from body_config.py will be used.
     """
 
     def __init__(
@@ -153,7 +151,7 @@ class LegInvKinSeq(LegInvKinBase):
         Kinematic chain of the leg.
     initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
-        If not provided, the default values from data.py will be used.
+        If not provided, the default values from body_config.py will be used.
 
     Examples
     --------
@@ -609,7 +607,7 @@ class LegInvKinGeneric(LegInvKinBase):
         Kinematic chain of the leg.
     initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
-        If not provided, the default values from data.py will be used.
+        If not provided, the default values from body_config.py will be used.
 
     Examples
     --------

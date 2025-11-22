@@ -603,7 +603,6 @@ class TestChunkUtilities:
         assert np.allclose(merged[0][45:], 3.0), "Final chunk should have value 3.0"
 
 
-@pytest.mark.performance
 class TestPerformance:
     """Performance tests for parallelization (marked as performance to allow skipping)."""
 

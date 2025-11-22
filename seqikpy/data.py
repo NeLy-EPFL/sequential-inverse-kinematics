@@ -5,7 +5,7 @@ from .body_config import neuromechfly_body_config as _default_nmf_config
 
 # Issue deprecation warning upon import
 message = (
-    f"Constant in `seqikpy.data` (i.e. `INITIAL_ANGLES`, `BOUNDS`, `NMF_SIZE`,"
+    f"Constants in `seqikpy.data` (i.e. `INITIAL_ANGLES`, `BOUNDS`, `NMF_SIZE`, "
     "`PTS2ALIGN`, `SKELETON`, and `NMF_TEMPLATE`) are deprecated and will be removed "
     "in a future version. Use the `seqikpy.body_config.BodyConfig` dataclass instead. "
     "The new way to access these constants is to import the default configuration "

@@ -104,7 +104,7 @@ def convert_from_anipose_to_dict(
     pose_3d: Dict[str, np.ndarray], pts2align: Dict[str, List[str]]
 ) -> Dict[str, np.ndarray]:
     """Loads anipose 3D pose data into a dictionary.
-    See data.py for a mapping from keypoint name to segment name.
+    See body_config.py for a mapping from keypoint name to segment name.
 
     Parameters
     ----------
@@ -119,7 +119,7 @@ def convert_from_anipose_to_dict(
         }
     pts2align : Dict[str, List[str]]
         Segment names and corresponding key point names to be aligned,
-        check data.py for an example, by default None
+        check body_config.py for an example, by default None
 
     Returns
     -------
@@ -252,14 +252,14 @@ class AlignPose:
         If True, claw is included in the scaling process, by default False
     body_template : Dict[str, np.ndarray], optional
         A dictionary containing the positions of fly model body segments.
-        Check ./data.py for the default dictionary, by default None
+        Check ./body_config.py for the default dictionary, by default None
     body_size : Dict[str, float], optional
         A dictionary containing the  limb size of the fly.
         If the user wants to scale the animal data to match the
         biomechanical model, then `body_size` should be the same as
         the model body size. Otherwise, the user should calculate the
         animal's body size.
-        Check ./data.py for an example.
+        Check ./body_config.py for an example.
     """
 
     def __init__(
@@ -311,7 +311,7 @@ class AlignPose:
             by default None
         pts2align : Dict[str, List[str]], optional
             Body part names and corresponding key points names to be aligned,
-            check data.py for an example, by default None
+            check body_config.py for an example, by default None
 
         Returns
         -------
