@@ -13,7 +13,7 @@ seqikpy.alignment module
    :show-inheritance:
 
 seqikpy.body_config module
--------------------
+--------------------------
 
 .. automodule:: seqikpy.body_config
    :members:

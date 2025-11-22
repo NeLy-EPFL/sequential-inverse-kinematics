@@ -21,6 +21,5 @@ parts:
   - file: visualization
 - caption: 💬 References
   chapters:
-  - file: seqikpy.rst
-  - file: modules.rst
+  - file: seqikpy
   - file: references
