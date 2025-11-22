@@ -5,12 +5,11 @@
 
 import time
 from pathlib import Path
-
 import matplotlib.pyplot as plt
 
 from seqikpy.kinematic_chain import KinematicChainSeq, KinematicChainGeneric
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq, LegInvKinGeneric
-from seqikpy.data import BOUNDS, INITIAL_ANGLES
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import load_file, from_sdf, calculate_body_size
 
 
@@ -21,11 +20,13 @@ f_path = DATA_PATH / "pose3d_aligned.pkl"
 
 aligned_pos = load_file(f_path)
 
+body_config = neuromechfly_body_config.deepcopy()
+
 LOAD_FROM_SDF = True
 # If you want to load the template from an sdf file
 if LOAD_FROM_SDF:
     sdf_path = Path("../tests/nmf_example.sdf")
-    NMF_TEMPLATE, BOUNDS = from_sdf(sdf_path)
+    body_config.template, body_config.dof_bounds_rad = from_sdf(sdf_path)
 
 start = time.time()
 
@@ -33,11 +34,11 @@ start = time.time()
 seq_ik = LegInvKinSeq(
     aligned_pos=aligned_pos,
     kinematic_chain_class=KinematicChainSeq(
-        bounds_dof=BOUNDS,
+        bounds_dof=body_config.dof_bounds_rad,
         legs_list=["RF", "LF"],
-        body_size=calculate_body_size(NMF_TEMPLATE),
+        body_size=calculate_body_size(body_config.template),
     ),
-    initial_angles=INITIAL_ANGLES,
+    initial_angles=body_config.initial_angles_rad,
 )
 
 leg_joint_angles_seq, forward_kinematics_seq = seq_ik.run_ik_and_fk(
@@ -55,11 +56,11 @@ start = time.time()
 gen_ik = LegInvKinGeneric(
     aligned_pos=aligned_pos,
     kinematic_chain_class=KinematicChainGeneric(
-        bounds_dof=BOUNDS,
+        bounds_dof=body_config.dof_bounds_rad,
         legs_list=["RF", "LF"],
         body_size=None,
     ),
-    initial_angles=INITIAL_ANGLES,
+    initial_angles=body_config.initial_angles_rad,
 )
 
 leg_joint_angles_gen, forward_kinematics_gen = gen_ik.run_ik_and_fk(

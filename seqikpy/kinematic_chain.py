@@ -1,23 +1,31 @@
 """ Module that contains a set of kinematic chains."""
 
+import warnings
+import numpy as np
 from abc import ABC, abstractmethod
 from collections import namedtuple
 from typing import Dict, List
-import warnings
-
-import numpy as np
 from ikpy.chain import Chain
 from ikpy.link import OriginLink, URDFLink
 
-from seqikpy.data import NMF_TEMPLATE
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import calculate_body_size
 
-# Ignore the warnings
-warnings.filterwarnings("ignore")
 
 # Axes as a named tuple to ensure immutability
 AxesTuple = namedtuple("AxesTuple", "X_AXIS Y_AXIS Z_AXIS")
 Axes = AxesTuple(X_AXIS=[1, 0, 0], Y_AXIS=[0, 1, 0], Z_AXIS=[0, 0, 1])
+
+
+def _create_chain_with_warning_filter(name, links) -> Chain:
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*is of type 'fixed' but set as active in the active_links_mask.*",
+            category=UserWarning,
+        )
+        chain = Chain(name=name, links=links)
+    return chain
 
 
 class KinematicChainBase(ABC):
@@ -42,7 +50,7 @@ class KinematicChainBase(ABC):
     ) -> None:
         # NMF size is calculated internally if size is not provided
         self.body_size = (
-            calculate_body_size(NMF_TEMPLATE, legs_list)
+            calculate_body_size(neuromechfly_body_config.template, legs_list)
             if body_size is None
             else body_size
         )
@@ -189,8 +197,7 @@ class KinematicChainSeq(KinematicChainBase):
                 bounds=self.bounds_dof[f"{leg_name}_CTr_pitch"],
             ),
         ]
-
-        return Chain(name="chain_stage_1", links=kinematic_chain)
+        return _create_chain_with_warning_filter("chain_stage_1", links=kinematic_chain)
 
     def create_leg_chain_stage_2(
         self, leg_name: str, angles: Dict[str, np.ndarray], t: int
@@ -260,8 +267,7 @@ class KinematicChainSeq(KinematicChainBase):
                 bounds=self.bounds_dof[f"{leg_name}_FTi_pitch"],
             ),
         ]
-
-        return Chain(name="chain_stage_2", links=kinematic_chain)
+        return _create_chain_with_warning_filter("chain_stage_2", links=kinematic_chain)
 
     def create_leg_chain_stage_3(
         self, leg_name: str, angles: Dict[str, np.ndarray], t: int
@@ -355,8 +361,7 @@ class KinematicChainSeq(KinematicChainBase):
                 bounds=self.bounds_dof[f"{leg_name}_TiTa_pitch"],
             ),
         ]
-
-        return Chain(name="chain_stage_3", links=kinematic_chain)
+        return _create_chain_with_warning_filter("chain_stage_3", links=kinematic_chain)
 
     def create_leg_chain_stage_4(
         self, leg_name: str, angles: Dict[str, np.ndarray], t: int
@@ -470,8 +475,7 @@ class KinematicChainSeq(KinematicChainBase):
                 bounds=[-np.pi, np.pi],
             ),
         ]
-
-        return Chain(name="chain_stage_4", links=kinematic_chain)
+        return _create_chain_with_warning_filter("chain_stage_4", links=kinematic_chain)
 
 
 class KinematicChainGeneric(KinematicChainBase):
@@ -581,5 +585,4 @@ class KinematicChainGeneric(KinematicChainBase):
                 bounds=[-np.pi, np.pi],
             ),
         ]
-
-        return Chain(name="chain", links=kinematic_chain)
+        return _create_chain_with_warning_filter("chain", links=kinematic_chain)

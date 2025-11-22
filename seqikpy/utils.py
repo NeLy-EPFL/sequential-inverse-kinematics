@@ -556,7 +556,7 @@ def merge_chunks_into_arrays(
 
     # Blend chunks into full arrays
     merged_arrays = [
-        np.empty((seq_length, *ref_arr.shape[1:]), dtype=ref_arr.dtype)
+        np.zeros((seq_length, *ref_arr.shape[1:]), dtype=ref_arr.dtype)
         for _ in range(n_arrays)
     ]
     for array_idx, start_idx, chunk_arr in chunks:

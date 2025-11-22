@@ -1,12 +1,11 @@
 """ Example usage of head inverse kinematics module. """
 
-import pickle
-from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
-from seqikpy.data import NMF_TEMPLATE
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import load_file
 
 DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')
@@ -17,7 +16,7 @@ data = load_file(f_path)
 
 class_hk = HeadInverseKinematics(
     aligned_pos=data,
-    body_template=NMF_TEMPLATE,
+    body_template=neuromechfly_body_config.template,
 )
 joint_angles = class_hk.compute_head_angles(
     export_path=DATA_PATH,

@@ -4,7 +4,7 @@ Example usage:
 >>> import pickle
 >>> from pathlib import Path
 >>> from seqikpy.head_inverse_kinematics import HeadInverseKinematics
->>> from seqikpy.data import NMF_TEMPLATE
+>>> from seqikpy.body_config import neuromechfly_body_config
 
 >>> DATA_PATH = Path("../data/anipose/normal_case/pose-3d")
 >>> f_path = DATA_PATH / "aligned_pose3d.h5"
@@ -13,7 +13,7 @@ Example usage:
 
 >>> class_hk = HeadInverseKinematics(
         aligned_pos = data,
-        body_template=NMF_TEMPLATE,
+        body_template=neuromechfly_body_config.template,
     )
 >>> joint_angles = class_hk.compute_head_angles(export_path = DATA_PATH)
 
@@ -45,10 +45,7 @@ Axes = AxesTuple(
 )
 
 
-logging.basicConfig(
-    format=" %(asctime)s - %(levelname)s- %(message)s",
-    handlers=[logging.StreamHandler()],
-)
+_logger = logging.getLogger(__name__)
 
 
 class HeadInverseKinematics:
@@ -63,16 +60,13 @@ class HeadInverseKinematics:
         Check the sample data for more detailed example.
     body_template : Dict[str, np.ndarray]
         Dictionary containing the positions of fly model body segments.
-        Check data.py for the default dictionary.
-    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
-        Logging level as a string, by default "INFO"
+        Check body_config.py for the default dictionary.
     """
 
     def __init__(
         self,
         aligned_pos: Dict[str, np.ndarray],
         body_template: Dict[str, np.ndarray],
-        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         self.aligned_pos = aligned_pos
         self.body_template = body_template
@@ -99,11 +93,6 @@ class HeadInverseKinematics:
         # Biomechanical model `zero pose` joint angles
         self.rest_head_pitch = self.get_rest_head_pitch()
         self.rest_antenna_pitch = self.get_rest_antenna_pitch()
-
-        # Get the logger of the module
-        self.logger = logging.getLogger(self.__class__.__name__)
-        numeric_level = getattr(logging, log_level.upper(), None)
-        self.logger.setLevel(numeric_level)
 
     def compute_head_angles(
         self,
@@ -142,7 +131,7 @@ class HeadInverseKinematics:
 
         if export_path is not None:
             save_file(Path(export_path) / "head_joint_angles.pkl", head_angles)
-            self.logger.info("Head joint angles are saved at %s!", export_path)
+            _logger.info("Head joint angles are saved at %s!", export_path)
 
         return head_angles
 
