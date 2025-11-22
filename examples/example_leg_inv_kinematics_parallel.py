@@ -1,4 +1,5 @@
 import matplotlib
+
 matplotlib.use("Agg")
 
 import pickle
@@ -163,7 +164,7 @@ if __name__ == "__main__":
         aligned_pose_data = _generate_input_sequence(n_repeats)
         seq_length = aligned_pose_data[list(aligned_pose_data.keys())[0]].shape[0]
         legs = [f"{side}{pos}" for side in "RL" for pos in ["F", "M", "H"]]
-        
+
         # Define kinematic chains
         kin_chain = KinematicChainSeq(
             bounds_dof=BOUNDS_LOCOMOTION,
@@ -178,28 +179,28 @@ if __name__ == "__main__":
             initial_angles=INITIAL_ANGLES_LOCOMOTION,
             log_level="INFO",
         )
-        
+
         # Solve inverse and forward kinematics
         start_time = time()
         joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
             n_workers=n_workers, hide_progress_bar=True, **kwargs
         )
         wall_time = time() - start_time
-        
+
         return {
             "wall_time": wall_time,
             "seq_length": seq_length,
             "n_workers": n_workers,
             "joint_angles": joint_angles,
-            "forward_kinematics": forward_kinematics
+            "forward_kinematics": forward_kinematics,
         }
 
     # Run weak scaling test (task size is proportional to number of workers)
     # n_cpu_cores = joblib.cpu_count(only_physical_cores=True)
     n_cpu_cores = 36  # joblib.cpu_count is unreliable on clusters - hardcoding it
-    assert n_cpu_cores >= 12, (
-        "At least 12-ish CPU cores required for this scaling test to make sense"
-    )
+    assert (
+        n_cpu_cores >= 12
+    ), "At least 12-ish CPU cores required for this scaling test to make sense"
 
     print("Running in series...")
     res_serial = _run_invik_pipeline(n_workers=1)
@@ -208,7 +209,7 @@ if __name__ == "__main__":
     print("Running in parallel (over legs only)...")
     res_par_legs = _run_invik_pipeline(n_workers=6, parallel_over_time=False)
     print(f"Parallel-over-legs processing done in {res_par_legs['wall_time']} secs")
-    
+
     print("Running in parallel (over legs and time)...")
     res_par_time = _run_invik_pipeline(n_workers=n_cpu_cores)
     print(f"Parallel-over-time processing done in {res_par_time['wall_time']} secs")
@@ -240,13 +241,13 @@ if __name__ == "__main__":
         label="Serial",
     )
     plt.plot(
-        np.rad2deg(seq_parallel_legs[:seq_serial.shape[0]]),
+        np.rad2deg(seq_parallel_legs[: seq_serial.shape[0]]),
         linestyle=":",
         color="tab:blue",
         label="Parallel over legs",
     )
     plt.plot(
-        np.rad2deg(seq_parallel_time[:seq_serial.shape[0]]),
+        np.rad2deg(seq_parallel_time[: seq_serial.shape[0]]),
         linestyle="--",
         color="tab:red",
         label="Parallel over legs and time",
@@ -260,7 +261,7 @@ if __name__ == "__main__":
     # Result should be identical if only parallelizing over legs
     for dof_key, serial_output in data["serial"]["joint_angles"].items():
         par_legs_output = data["parallel_legs"]["joint_angles"][dof_key]
-        assert np.allclose(serial_output, par_legs_output[:serial_output.shape[0]])
+        assert np.allclose(serial_output, par_legs_output[: serial_output.shape[0]])
     print(
         "Results are identical between serial processing and parallel processing "
         "over legs only - OK"
@@ -271,7 +272,7 @@ if __name__ == "__main__":
     diff_all = []
     for dof_key, par_legs_output in data["parallel_legs"]["joint_angles"].items():
         par_time_output = data["parallel_legs_and_time"]["joint_angles"][dof_key]
-        diff = np.abs(par_legs_output - par_time_output[:par_legs_output.shape[0]])
+        diff = np.abs(par_legs_output - par_time_output[: par_legs_output.shape[0]])
         diff_all.append(diff)
         par_legs_all.append(par_legs_output)
     par_legs_all = np.concatenate(par_legs_all)
@@ -292,7 +293,6 @@ if __name__ == "__main__":
     print("Max difference in results is smaller enough - OK")
     assert nonzero_diff_mean < 1e-4
     print("Mean difference in results among nonzero frames is smaller enough - OK")
-    
 
     # Calculate speedup
     steps_per_sec_by_mode = {}
@@ -306,4 +306,3 @@ if __name__ == "__main__":
         speedup = steps_per_sec / serial_steps_per_sec
         n_workers = data[mode]["n_workers"]
         print(f"{mode}: {speedup:.2f}x speedup with {n_workers} processes")
-

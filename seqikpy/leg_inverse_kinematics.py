@@ -60,11 +60,6 @@ class LegInvKinBase(ABC):
             INITIAL_ANGLES if initial_angles is None else initial_angles
         )
 
-        # Get the logger of the module
-        _logger = logging.getLogger(self.__class__.__name__)
-        numeric_level = getattr(logging, log_level.upper(), None)
-        _logger.setLevel(numeric_level)
-
     def calculate_ik(
         self,
         kinematic_chain: Chain,
@@ -132,7 +127,7 @@ class LegInvKinBase(ABC):
         ----------
         export_path : Union[Path, str], optional
             Path where the results will be saved,
-            if None, nothing is saveed, by default None
+            if None, nothing is saved, by default None
 
         Returns
         -------
@@ -218,7 +213,7 @@ class LegInvKinSeq(LegInvKinBase):
         """Process a single leg through all stages."""
         leg_name = segment_name.split("_")[0]
 
-        if not leg_name in kinematic_chain_class.body_size:
+        if leg_name not in kinematic_chain_class.body_size:
             return segment_name, None, {}
 
         # Create a temporary instance to process this leg
@@ -392,7 +387,7 @@ class LegInvKinSeq(LegInvKinBase):
         ----------
         export_path : Union[Path, str], optional
             Path where the results will be saved,
-            if None, nothing is saveed, by default None
+            if None, nothing is saved, by default None
         stages (kwargs) : List[int], optional
             Stages to run the inverse kinematics. Default is all stages
             ([1, 2, 3, 4]).
@@ -400,7 +395,7 @@ class LegInvKinSeq(LegInvKinBase):
             Number of parallel jobs for leg processing. -1 uses all cores,
             1 disables parallelization, by default 1.
         parallel_over_time (kwargs) : bool, optional
-            Ignored unless n_workers > 1. This flag determins whether to
+            Ignored unless n_workers > 1. This flag determines whether to
             parallelize over time and legs or legs only. By default True.
         avg_workloads_per_worker (kwargs) : int, optional
             Ignored unless n_workers > 1 and parallel_over_time is True.
@@ -669,7 +664,7 @@ class LegInvKinGeneric(LegInvKinBase):
         """Process a single leg for generic inverse kinematics."""
         leg_name = segment_name.split("_")[0]
 
-        if not leg_name in kinematic_chain_class.body_size:
+        if leg_name not in kinematic_chain_class.body_size:
             return segment_name, None, {}
 
         # Create a temporary instance to process this leg
@@ -677,12 +672,6 @@ class LegInvKinGeneric(LegInvKinBase):
         temp_instance.kinematic_chain_class = kinematic_chain_class
         temp_instance.initial_angles = initial_angles_dict
         temp_instance.joint_angles_dict = {}
-
-        # Setup minimal logger
-        import logging
-
-        temp_instance.logger = logging.getLogger("LegInvKinGeneric")
-        temp_instance.logger.setLevel(logging.INFO)
 
         origin = segment_array[:, 0, :]
         end_effector_pos = segment_array[:, -1, :]
@@ -795,7 +784,7 @@ class LegInvKinGeneric(LegInvKinBase):
             if None, nothing is saveed, by default None
         n_workers (kwargs) : int, optional
             Number of parallel jobs for leg processing. -1 uses all cores,
-            1 disables  parallelization, by default 1.
+            1 disables parallelization, by default 1.
 
         Returns
         -------

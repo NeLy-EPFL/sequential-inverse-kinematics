@@ -435,7 +435,7 @@ def split_arrays_into_chunks(
     arrays: list[np.ndarray],
     approx_n_chunks_total: int,
     overlap: int = 20,
-    min_chunk_size: int = 1000,
+    min_chunk_size: int = 100,
 ) -> list[tuple[int, int, np.ndarray]]:
     """Splits arrays into chunks with overlap between chunks. This is useful for
     processing long sequences from multiple kinematic chains in parallel.
@@ -452,7 +452,7 @@ def split_arrays_into_chunks(
     overlap : int, optional
         Number of overlapping frames between chunks, by default 20.
     min_chunk_size : int, optional
-        Minimum size of each chunk, by default 1000.
+        Minimum size of each chunk, by default 100.
 
     Returns
     -------
@@ -465,7 +465,10 @@ def split_arrays_into_chunks(
     assert overlap < min_chunk_size, "Overlap must be smaller than min_chunk_size."
     n_arrays = len(arrays)
     assert n_arrays > 0, "Number of arrays must be positive"
-    n_chunks_per_array = int(approx_n_chunks_total / n_arrays)
+    assert (
+        approx_n_chunks_total >= n_arrays
+    ), "Approximate number of chunks must be at least equal to the number of arrays."
+    n_chunks_per_array = int(approx_n_chunks_total / n_arrays)  # guaranteed to be >= 1
     for arr in arrays:
         assert arr.shape == arrays[0].shape, "All arrays must have the same shape."
     assert arrays[0].ndim >= 1, "Arrays must be at least 1-dimensional."
@@ -558,7 +561,7 @@ def merge_chunks_into_arrays(
     ]
     for array_idx, start_idx, chunk_arr in chunks:
         # The first part of the chunk overlaps with the previous chunk. The policy is:
-        #   - For the first half of the over lap, just use data from the previous chunk
+        #   - For the first half of the overlap, just use data from the previous chunk
         #     while the current chunk is still "warming up" from the initial condition
         #   - For the second half of the overlap, use a linear "blend" between the
         #     previous chunk and the current chunk, with the weight of the current chunk
