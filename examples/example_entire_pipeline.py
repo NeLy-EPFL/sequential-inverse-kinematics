@@ -18,11 +18,11 @@ from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
 from seqikpy.body_config import neuromechfly_body_config
-from seqikpy.utils import save_file, from_sdf
+from seqikpy.utils import save_file
 
 logging.basicConfig(
     format=" %(asctime)s - %(levelname)s- %(message)s",
-    handlers=[logging.StreamHandler()]
+    handlers=[logging.StreamHandler()],
 )
 
 
@@ -78,8 +78,7 @@ if __name__ == "__main__":
             body_template=neuromechfly_body_config.template,
         )
         head_joint_angles = class_hk.compute_head_angles(
-            export_path=data_path,
-            compute_ant_angles=True
+            export_path=data_path, compute_ant_angles=True
         )
         # Calculate the leg joint angles using the sequential IK
         class_seq_ik = LegInvKinSeq(
@@ -89,11 +88,10 @@ if __name__ == "__main__":
                 legs_list=["RF", "LF"],
                 body_size=None,
             ),
-            initial_angles=neuromechfly_body_config.initial_angles_rad
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
         leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
-            export_path=data_path,
-            hide_progress_bar=False
+            export_path=data_path, hide_progress_bar=False
         )
 
         full_body_ik = {**head_joint_angles, **leg_joint_angles}
@@ -110,7 +108,9 @@ if __name__ == "__main__":
             import matplotlib.pyplot as plt
 
             time_step = 1e-2
-            time = time = np.arange(0, full_body_ik['Angle_head_roll'].shape[0], 1) * time_step
+            time = time = (
+                np.arange(0, full_body_ik["Angle_head_roll"].shape[0], 1) * time_step
+            )
 
             for ja_name, ja_value in full_body_ik.items():
                 plt.plot(ja_value, label=ja_name, lw=2)
