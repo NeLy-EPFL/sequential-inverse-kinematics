@@ -372,14 +372,13 @@ class LegInvKinSeq(LegInvKinBase):
     def run_ik_and_fk(
         self,
         export_path: Union[Path, str] = None,
-        stages: list[int] = [1, 2, 3, 4],
+        stages: list[int] | None = None,
         n_workers: int = 1,
         parallel_over_time: bool = True,
         chunk_overlap: int = 20,
         avg_workloads_per_worker: int = 2,
         min_chunk_size: int = 100,
         hide_progress_bar: bool = False,
-        **kwargs,
     ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
         """Runs inverse and forward kinematics for leg joints.
 
@@ -397,6 +396,10 @@ class LegInvKinSeq(LegInvKinBase):
         parallel_over_time (kwargs) : bool, optional
             Ignored unless n_workers > 1. This flag determines whether to
             parallelize over time and legs or legs only. By default True.
+        chunk_overlap (kwargs) : int, optional
+            Ignored unless n_workers > 1 and parallel_over_time is True.
+            This is the number of overlapping frames between time series
+            chunks. By default 20.
         avg_workloads_per_worker (kwargs) : int, optional
             Ignored unless n_workers > 1 and parallel_over_time is True.
             This is the rough number of workloads to be assigned to each
@@ -408,7 +411,7 @@ class LegInvKinSeq(LegInvKinBase):
             Minimum chunk size (in frames) for each time series payload.
             If the time series is shorter than this size, the number of
             workers will be reduced accordingly. By default 100.
-        hide_progress_bar (kwargs) : Optional[bool], optional
+        hide_progress_bar (kwargs) : bool, optional
             Hide the progress bar, by default False.
 
         Returns
@@ -417,6 +420,8 @@ class LegInvKinSeq(LegInvKinBase):
             Two dictionaries containing joint angles and forward
             kinematics, respectively.
         """
+        if stages is None:
+            stages = [1, 2, 3, 4]
         if max(stages) > 4 or not all(np.diff(stages) == 1):
             raise ValueError(
                 "Maximum stage number is 4 and the list should be strictly incremental."
@@ -773,7 +778,6 @@ class LegInvKinGeneric(LegInvKinBase):
         export_path: Union[Path, str] = None,
         n_workers: int = 1,
         hide_progress_bar=False,
-        **kwargs,
     ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
         """Runs inverse and forward kinematics for leg joints.
 
@@ -781,8 +785,8 @@ class LegInvKinGeneric(LegInvKinBase):
         ----------
         export_path : Union[Path, str], optional
             Path where the results will be saved,
-            if None, nothing is saveed, by default None
-        n_workers (kwargs) : int, optional
+            if None, nothing is saved, by default None
+        n_workers : int, optional
             Number of parallel jobs for leg processing. -1 uses all cores,
             1 disables parallelization, by default 1.
 

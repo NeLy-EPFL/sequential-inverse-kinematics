@@ -153,7 +153,7 @@ class TestParallelization:
         )
 
         joint_angles_seq, fk_seq = gen_ik_sequential.run_ik_and_fk(
-            hide_progress_bar=True, n_jobs=1
+            hide_progress_bar=True, n_workers=1
         )
 
         # Parallel processing

@@ -538,7 +538,7 @@ def merge_chunks_into_arrays(
     seq_length : int
         Length of each array.
     overlap : int, optional
-        Number of overlapping frames between chunks, by default 100.
+        Number of overlapping frames between chunks, by default 20.
 
     Returns
     -------
