@@ -4,17 +4,18 @@
 from setuptools import setup, find_packages
 
 setup(
-    python_requires=">3.8,<3.13",
+    python_requires=">3.9,<=3.14",
     description="Inverse kinematics module for Drosophila",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     install_requires=[
         "ikpy>=3.3.4",
         "opencv-python>4.5",
-        "numpy<2.0",
+        "numpy>=2.0,<3",
         "tqdm",
         "matplotlib",
         "pandas",
+        "joblib>=1.5,<2",
     ],
     extras_require={
         "dev": [
