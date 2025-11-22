@@ -434,7 +434,7 @@ def from_sdf(sdf_file: str):
 def split_arrays_into_chunks(
     arrays: list[np.ndarray],
     approx_n_chunks_total: int,
-    overlap: int = 100,
+    overlap: int = 20,
     min_chunk_size: int = 1000,
 ) -> list[tuple[int, int, np.ndarray]]:
     """Splits arrays into chunks with overlap between chunks. This is useful for
@@ -450,7 +450,7 @@ def split_arrays_into_chunks(
         chunks is generally different in order to make the total number of chunks a
         multiple of the number of arrays (i.e. kinematic chains).
     overlap : int, optional
-        Number of overlapping frames between chunks, by default 100.
+        Number of overlapping frames between chunks, by default 20.
     min_chunk_size : int, optional
         Minimum size of each chunk, by default 1000.
 
@@ -472,6 +472,7 @@ def split_arrays_into_chunks(
     seq_length = arrays[0].shape[0]
 
     # If the chunk size is too small, return the entire arrays as single chunks
+    print(seq_length, min_chunk_size)
     if seq_length <= min_chunk_size:
         return [(arr_idx, 0, arr) for arr_idx, arr in enumerate(arrays)]
 
@@ -519,7 +520,7 @@ def merge_chunks_into_arrays(
     chunks: list[tuple[int, int, np.ndarray]],
     n_arrays: int,
     seq_length: int,
-    overlap: int = 100,
+    overlap: int = 20,
 ) -> list[np.ndarray]:
     """Merges chunks back into arrays.
 
@@ -573,6 +574,11 @@ def merge_chunks_into_arrays(
         mask_shape = (chunk_length_with_overlap,) + (1,) * (chunk_arr.ndim - 1)
         blend_weight_curr = blend_weight_curr.reshape(mask_shape)
         blend_weight_prev = 1 - blend_weight_curr
+        if n_arrays == 1:
+            # special case: if dofs are already separated by leg, then we should save
+            # data to the only array even though array_idx might be > 0 (because they
+            # can be originally from all legs)
+            array_idx = 0
         target_arr = merged_arrays[array_idx]
         target_arr[target_slice] = (
             target_arr[target_slice] * blend_weight_prev + chunk_arr * blend_weight_curr

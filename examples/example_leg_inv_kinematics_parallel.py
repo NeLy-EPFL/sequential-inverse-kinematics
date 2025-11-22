@@ -174,37 +174,31 @@ if __name__ == "__main__":
         log_level="INFO",
     )
 
-    # # Run inverse and forward kinematics
-    # # Serial processing
-    # print("Running in series...")
-    # start = time()
-    # results_serial = class_seq_ik.run_ik_and_fk(n_workers=1)
-    # walltime_serial = time() - start
-    # print(f"Sequential IK took {walltime_serial} secs")
+    # Run inverse and forward kinematics
+    # Serial processing
+    print("Running in series...")
+    start = time()
+    results_serial = class_seq_ik.run_ik_and_fk(n_workers=1)
+    walltime_serial = time() - start
+    print(f"Sequential IK took {walltime_serial} secs")
 
-    # # Parallel over legs only
-    # print("Running in parallel over legs only...")
-    # start = time()
-    # leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
-    #     n_workers=-1,
-    #     parallel_over_time=False,
-    #     chunk_overlap=10,
-    #     min_chunk_size=20,
-    # )
-    # walltime_parallel_legs = time() - start
-    # print(f"Parallel IK over legs took {walltime_parallel_legs} secs")
+    # Parallel over legs only
+    print("Running in parallel over legs only...")
+    start = time()
+    results_parallel_legs = class_seq_ik.run_ik_and_fk(
+        n_workers=-1, parallel_over_time=False
+    )
+    walltime_parallel_legs = time() - start
+    print(f"Parallel IK over legs took {walltime_parallel_legs} secs")
 
-    # # Parallel over legs and over time
-    # print("Running in parallel over legs and over time...")
-    # start = time()
-    # leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
-    #     n_workers=-1,
-    #     parallel_over_time=True,
-    #     chunk_overlap=10,
-    #     min_chunk_size=20,
-    # )
-    # walltime_parallel_legs_and_time = time() - start
-    # print(f"Parallel IK over legs and time took {walltime_parallel_legs_and_time} secs")
+    # Parallel over legs and over time
+    print("Running in parallel over legs and over time...")
+    start = time()
+    results_parallel_legs_and_time = class_seq_ik.run_ik_and_fk(
+        n_workers=-1, parallel_over_time=True
+    )
+    walltime_parallel_legs_and_time = time() - start
+    print(f"Parallel IK over legs and time took {walltime_parallel_legs_and_time} secs")
 
     # Save results
     output_path = data_dir / "parallel_inv_and_fwd_kinematics_benchmark.pkl"
@@ -218,13 +212,13 @@ if __name__ == "__main__":
             },
             "parallel_legs": {
                 "walltime_secs": walltime_parallel_legs,
-                "leg_joint_angles": leg_joint_angles,
-                "forward_kinematics": forward_kinematics,
+                "leg_joint_angles": results_parallel_legs[0],
+                "forward_kinematics": results_parallel_legs[1],
             },
             "parallel_legs_and_time": {
                 "walltime_secs": walltime_parallel_legs_and_time,
-                "leg_joint_angles": leg_joint_angles,
-                "forward_kinematics": forward_kinematics,
+                "leg_joint_angles": results_parallel_legs_and_time[0],
+                "forward_kinematics": results_parallel_legs_and_time[1],
             },
         }
         pickle.dump(data, f)
@@ -235,22 +229,26 @@ if __name__ == "__main__":
         print(data.keys())
 
     example_dof = "Angle_RF_ThC_pitch"
+    seq_serial = data["serial"]["leg_joint_angles"][example_dof]
+    seq_parallel_legs = data["parallel_legs"]["leg_joint_angles"][example_dof]
+    seq_parallel_time = data["parallel_legs_and_time"]["leg_joint_angles"][example_dof]
+
     plt.plot(
-        np.rad2deg(data["serial"]["leg_joint_angles"][example_dof]),
+        np.rad2deg(seq_serial),
         linestyle="-",
         color="black",
         label="Serial",
     )
     plt.plot(
-        np.rad2deg(data["parallel_legs"]["leg_joint_angles"][example_dof]),
+        np.rad2deg(seq_parallel_legs),
         linestyle=":",
         color="tab:blue",
         label="Parallel over legs",
     )
     plt.plot(
-        np.rad2deg(data["parallel_legs_and_time"]["leg_joint_angles"][example_dof]),
-        linestyle="-",
-        color="tab:green",
+        np.rad2deg(seq_parallel_time),
+        linestyle="--",
+        color="tab:red",
         label="Parallel over legs and time",
     )
     plt.xlabel("Frame index")
@@ -259,4 +257,28 @@ if __name__ == "__main__":
     plt.title("Leg Inverse Kinematics Result Comparison")
     plt.show()
 
-    1
+    diff_serial_parallel_legs_all = []
+    diff_serial_parallel_time_all = []
+    for key in data["serial"]["leg_joint_angles"].keys():
+        seq_serial = data["serial"]["leg_joint_angles"][key]
+        seq_parallel_legs = data["parallel_legs"]["leg_joint_angles"][key]
+        seq_parallel_time = data["parallel_legs_and_time"]["leg_joint_angles"][key]
+
+        diff_serial_parallel_legs = np.abs(seq_serial - seq_parallel_legs)
+        diff_serial_parallel_time = np.abs(seq_serial - seq_parallel_time)
+
+        range_ = np.nanpercentile(seq_serial, 99) - np.nanpercentile(seq_serial, 1)
+        diff_serial_parallel_legs_all.append(diff_serial_parallel_legs / range_)
+        diff_serial_parallel_time_all.append(diff_serial_parallel_time / range_)
+
+    diff_serial_parallel_legs_all = np.stack(diff_serial_parallel_legs_all)
+    diff_serial_parallel_time_all = np.stack(diff_serial_parallel_time_all)
+
+    print(
+        "Max % absolute difference between serial and parallel over legs: ",
+        np.nanmax(diff_serial_parallel_legs_all),
+    )
+    print(
+        "Max % absolute difference between serial and parallel over legs and time: ",
+        np.nanmax(diff_serial_parallel_time_all),
+    )

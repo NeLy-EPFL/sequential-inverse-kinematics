@@ -379,9 +379,9 @@ class LegInvKinSeq(LegInvKinBase):
         export_path: Union[Path, str] = None,
         n_workers: int = 1,
         parallel_over_time: bool = True,
-        chunk_overlap: int = 100,
+        chunk_overlap: int = 20,
         avg_workloads_per_worker: int = 2,
-        min_chunk_size: int = 500,
+        min_chunk_size: int = 100,
         hide_progress_bar: bool = False,
         **kwargs,
     ) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray]]:
@@ -491,7 +491,7 @@ class LegInvKinSeq(LegInvKinBase):
                 for array_idx, start_idx, chunk_arr in input_chunks
             )
 
-            # Merge results
+            # Get results
             result_chunks_fk = []
             result_chunks_joint_angles = defaultdict(list)
             for chunk_idx in range(len(input_chunks)):
@@ -501,7 +501,7 @@ class LegInvKinSeq(LegInvKinBase):
                 for key, arr in local_joint_angles.items():
                     result_chunks_joint_angles[key].append((array_idx, start_idx, arr))
 
-            # Merge results
+            # Merge output chunks and store in dicts
             output_arrays_fk = merge_chunks_into_arrays(
                 result_chunks_fk,
                 n_arrays=len(leg_segments),
@@ -513,10 +513,10 @@ class LegInvKinSeq(LegInvKinBase):
             for key, arr_chunks in result_chunks_joint_angles.items():
                 self.joint_angles_dict[key] = merge_chunks_into_arrays(
                     arr_chunks,
-                    n_arrays=len(leg_segments),
+                    n_arrays=1,
                     seq_length=seq_length,
                     overlap=chunk_overlap,
-                )
+                )[0]
 
         _logger.debug("Joint angles and forward kinematics are computed.")
 
