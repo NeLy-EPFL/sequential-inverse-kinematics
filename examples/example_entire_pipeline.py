@@ -17,7 +17,7 @@ from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
 from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
-from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
+from seqikpy.data import neuromechfly_body_config
 from seqikpy.utils import save_file, from_sdf
 
 logging.basicConfig(
@@ -66,17 +66,16 @@ if __name__ == "__main__":
             file_name="pose3d.h5",
             legs_list=["RF", "LF"],
             convert_func=convert_from_anipose_to_dict,
-            pts2align=PTS2ALIGN,
+            pts2align=neuromechfly_body_config.points_to_align,
             include_claw=False,
-            body_template=NMF_TEMPLATE,
-            log_level="INFO"
+            body_template=neuromechfly_body_config.template,
         )
 
         aligned_pos = align.align_pose(export_path=data_path)
         # Compute the head joint angles
         class_hk = HeadInverseKinematics(
             aligned_pos=aligned_pos,
-            body_template=NMF_TEMPLATE,
+            body_template=neuromechfly_body_config.template,
         )
         head_joint_angles = class_hk.compute_head_angles(
             export_path=data_path,
@@ -86,11 +85,11 @@ if __name__ == "__main__":
         class_seq_ik = LegInvKinSeq(
             aligned_pos=aligned_pos,
             kinematic_chain_class=KinematicChainSeq(
-                bounds_dof=BOUNDS,
+                bounds_dof=neuromechfly_body_config.dof_bounds_rad,
                 legs_list=["RF", "LF"],
                 body_size=None,
             ),
-            initial_angles=INITIAL_ANGLES
+            initial_angles=neuromechfly_body_config.initial_angles_rad
         )
         leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
             export_path=data_path,

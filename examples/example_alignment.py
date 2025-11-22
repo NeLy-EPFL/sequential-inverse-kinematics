@@ -5,7 +5,7 @@ import pickle
 from pathlib import Path
 
 from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
-from seqikpy.data import NMF_TEMPLATE, PTS2ALIGN
+from seqikpy.data import neuromechfly_body_config
 from seqikpy.utils import load_file, save_file
 
 
@@ -21,10 +21,9 @@ if __name__ == "__main__":
         legs_list=["RF", "LF"],
         # You can provide your own conversion function
         convert_func=convert_from_anipose_to_dict,
-        pts2align=PTS2ALIGN,
+        pts2align=neuromechfly_body_config.points_to_align,
         include_claw=False,
-        body_template=NMF_TEMPLATE,
-        log_level="INFO"
+        body_template=neuromechfly_body_config.template,
     )
 
     aligned_pos = align.align_pose(export_path=DATA_PATH)
@@ -38,10 +37,9 @@ if __name__ == "__main__":
         file_name="converted_dict.pkl",
         legs_list=["RF", "LF"],
         convert_func=None,
-        pts2align=PTS2ALIGN,
+        pts2align=neuromechfly_body_config.points_to_align,
         include_claw=False,
-        body_template=NMF_TEMPLATE,
-        log_level="INFO"
+        body_template=neuromechfly_body_config.template,
     )
 
     aligned_pos = align.align_pose(export_path=DATA_PATH)
@@ -59,8 +57,7 @@ if __name__ == "__main__":
         pose_data_dict=pose_data,
         legs_list=["RF", "LF"],
         include_claw=False,
-        body_template=NMF_TEMPLATE,
-        log_level="INFO"
+        body_template=neuromechfly_body_config.template,
     )
 
     aligned_pos = align.align_pose(export_path=DATA_PATH)

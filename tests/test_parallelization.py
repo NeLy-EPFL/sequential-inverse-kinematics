@@ -27,13 +27,12 @@ from pathlib import Path
 import seqikpy
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq, LegInvKinGeneric
 from seqikpy.kinematic_chain import KinematicChainSeq, KinematicChainGeneric
-from seqikpy.data import BOUNDS, INITIAL_ANGLES
+from seqikpy.data import neuromechfly_body_config
 from seqikpy.utils import (
     calculate_body_size,
     split_arrays_into_chunks,
     merge_chunks_into_arrays,
 )
-from seqikpy.data import NMF_TEMPLATE
 
 PKG_PATH = Path(seqikpy.__path__[0]).parent
 
@@ -68,7 +67,7 @@ def synthetic_pose_data():
 @pytest.fixture
 def test_body_size():
     """Create body size for test legs."""
-    return calculate_body_size(NMF_TEMPLATE, ["RF", "LF"])
+    return calculate_body_size(neuromechfly_body_config.template, ["RF", "LF"])
 
 
 class TestParallelization:
@@ -78,7 +77,7 @@ class TestParallelization:
         """Test that LegInvKinSeq gives identical results for sequential vs parallel processing."""
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -87,7 +86,7 @@ class TestParallelization:
         seq_ik_sequential = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_seq, fk_seq = seq_ik_sequential.run_ik_and_fk(
@@ -98,7 +97,7 @@ class TestParallelization:
         seq_ik_parallel = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_par, fk_par = seq_ik_parallel.run_ik_and_fk(
@@ -140,7 +139,7 @@ class TestParallelization:
         """Test that LegInvKinGeneric gives identical results for sequential vs parallel processing."""
 
         kinematic_chain_gen = KinematicChainGeneric(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -149,7 +148,7 @@ class TestParallelization:
         gen_ik_sequential = LegInvKinGeneric(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_gen,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_seq, fk_seq = gen_ik_sequential.run_ik_and_fk(
@@ -160,7 +159,7 @@ class TestParallelization:
         gen_ik_parallel = LegInvKinGeneric(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_gen,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_par, fk_par = gen_ik_parallel.run_ik_and_fk(
@@ -199,7 +198,7 @@ class TestParallelization:
         """Test different values of n_workers parameter."""
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -207,7 +206,7 @@ class TestParallelization:
         seq_ik = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         # Test with n_workers=1 (sequential)
@@ -219,7 +218,7 @@ class TestParallelization:
         seq_ik_2 = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
         joint_angles_2, _ = seq_ik_2.run_ik_and_fk(
             stages=[1], hide_progress_bar=True, n_workers=2, parallel_over_time=False
@@ -229,7 +228,7 @@ class TestParallelization:
         seq_ik_all = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
         joint_angles_all, _ = seq_ik_all.run_ik_and_fk(
             stages=[1], hide_progress_bar=True, n_workers=-1, parallel_over_time=False
@@ -252,7 +251,7 @@ class TestParallelization:
         single_leg_data = {"RF_leg": np.random.randn(20, 5, 3) * 0.1}
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF"],
             body_size={k: v for k, v in test_body_size.items() if "RF" in k},
         )
@@ -260,7 +259,7 @@ class TestParallelization:
         seq_ik_sequential = LegInvKinSeq(
             aligned_pos=single_leg_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_seq, _ = seq_ik_sequential.run_ik_and_fk(
@@ -270,7 +269,7 @@ class TestParallelization:
         seq_ik_parallel = LegInvKinSeq(
             aligned_pos=single_leg_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_par, _ = seq_ik_parallel.run_ik_and_fk(
@@ -293,7 +292,7 @@ class TestParallelization:
         }
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -301,7 +300,7 @@ class TestParallelization:
         seq_ik = LegInvKinSeq(
             aligned_pos=no_leg_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles, fk = seq_ik.run_ik_and_fk(
@@ -318,7 +317,7 @@ class TestParallelization:
         """Test parallel processing over both legs and time runs without crashing."""
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -328,7 +327,7 @@ class TestParallelization:
         seq_ik_parallel_time = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_par_time, fk_par_time = seq_ik_parallel_time.run_ik_and_fk(
@@ -359,7 +358,7 @@ class TestParallelization:
         """Test different chunk overlap values."""
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -372,7 +371,7 @@ class TestParallelization:
             seq_ik = LegInvKinSeq(
                 aligned_pos=synthetic_pose_data,
                 kinematic_chain_class=kinematic_chain_seq,
-                initial_angles=INITIAL_ANGLES,
+                initial_angles=neuromechfly_body_config.initial_angles_rad,
             )
 
             joint_angles, _ = seq_ik.run_ik_and_fk(
@@ -410,7 +409,7 @@ class TestParallelization:
         }
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -418,7 +417,7 @@ class TestParallelization:
         seq_ik = LegInvKinSeq(
             aligned_pos=small_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         # This should work and fall back to simpler parallelization or sequential
@@ -441,7 +440,7 @@ class TestParallelization:
         """Test comparison between parallel over legs only vs legs and time."""
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -450,7 +449,7 @@ class TestParallelization:
         seq_ik_legs_only = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_legs, _ = seq_ik_legs_only.run_ik_and_fk(
@@ -461,7 +460,7 @@ class TestParallelization:
         seq_ik_time = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         joint_angles_time, _ = seq_ik_time.run_ik_and_fk(
@@ -617,7 +616,7 @@ class TestPerformance:
             pytest.skip("Need multiple legs for meaningful performance test")
 
         kinematic_chain_seq = KinematicChainSeq(
-            bounds_dof=BOUNDS,
+            bounds_dof=neuromechfly_body_config.dof_bounds_rad,
             legs_list=["RF", "LF"],
             body_size=test_body_size,
         )
@@ -626,7 +625,7 @@ class TestPerformance:
         seq_ik_sequential = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         start_time = time.time()
@@ -639,7 +638,7 @@ class TestPerformance:
         seq_ik_parallel = LegInvKinSeq(
             aligned_pos=synthetic_pose_data,
             kinematic_chain_class=kinematic_chain_seq,
-            initial_angles=INITIAL_ANGLES,
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
 
         start_time = time.time()

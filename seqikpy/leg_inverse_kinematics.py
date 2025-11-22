@@ -13,15 +13,15 @@ from joblib import Parallel, delayed
 from ikpy.chain import Chain
 
 from seqikpy.utils import save_file, split_arrays_into_chunks, merge_chunks_into_arrays
-from seqikpy.data import INITIAL_ANGLES
+from seqikpy.data import neuromechfly_body_config
 from seqikpy.kinematic_chain import (
     KinematicChainBase,
     KinematicChainSeq,
     KinematicChainGeneric,
 )
 
-# Ignore the warnings
-warnings.filterwarnings("ignore")
+# # Ignore the warnings
+# warnings.filterwarnings("ignore")
 
 _logger = logging.getLogger(__name__)
 
@@ -43,8 +43,6 @@ class LegInvKinBase(ABC):
     initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
         If not provided, the default values from data.py will be used.
-    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
-        Logging level as a string, by default "INFO"
     """
 
     def __init__(
@@ -52,13 +50,13 @@ class LegInvKinBase(ABC):
         aligned_pos: Dict[str, np.ndarray],
         kinematic_chain_class: KinematicChainBase,
         initial_angles: Optional[Dict[str, np.ndarray]] = None,
-        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         self.aligned_pos = aligned_pos
         self.kinematic_chain_class = kinematic_chain_class
-        self.initial_angles = (
-            INITIAL_ANGLES if initial_angles is None else initial_angles
-        )
+        if initial_angles is not None:
+            self.initial_angles = initial_angles
+        else:
+            self.initial_angles = neuromechfly_body_config.initial_angles_rad
 
     def calculate_ik(
         self,
@@ -156,8 +154,6 @@ class LegInvKinSeq(LegInvKinBase):
     initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
         If not provided, the default values from data.py will be used.
-    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
-        Logging level as a string, by default "INFO"
 
     Examples
     --------
@@ -165,7 +161,7 @@ class LegInvKinSeq(LegInvKinBase):
     >>> from pathlib import Path
     >>> from seqikpy.kinematic_chain import KinematicChainSeq
     >>> from seqikpy.leg_inverse_kinematics import LegInvKinSeq
-    >>> from seqikpy.data import BOUNDS, INITIAL_ANGLES
+    >>> from seqikpy.data import neuromechfly_body_config
     >>> from seqikpy.utils import load_file
 
     >>> DATA_PATH = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
@@ -176,11 +172,11 @@ class LegInvKinSeq(LegInvKinBase):
     >>> seq_ik = LegInvKinSeq(
             aligned_pos=aligned_pos,
             kinematic_chain_class=KinematicChainSeq(
-                bounds_dof=BOUNDS,
+                bounds_dof=neuromechfly_body_config.dof_bounds_rad,
                 legs_list=["RF", "LF"],
                 body_size=None,
             ),
-            initial_angles=INITIAL_ANGLES
+            initial_angles=neuromechfly_body_config.initial_angles_rad
         )
 
     >>> leg_joint_angles, forward_kinematics = seq_ik.run_ik_and_fk(
@@ -195,9 +191,8 @@ class LegInvKinSeq(LegInvKinBase):
         aligned_pos: Dict[str, np.ndarray],
         kinematic_chain_class: KinematicChainSeq,
         initial_angles: Optional[Dict[str, np.ndarray]] = None,
-        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
-        super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
+        super().__init__(aligned_pos, kinematic_chain_class, initial_angles)
         # Create an empty dict for joint angles
         self.joint_angles_dict = {}
 
@@ -487,16 +482,15 @@ class LegInvKinSeq(LegInvKinBase):
     ):
         forward_kinematics_dict = {}
         for segment_name, segment_array in leg_segments:
-            result_name, result_fk, local_joint_angles = (
-                self._process_single_leg_sequence(
-                    segment_name,
-                    segment_array,
-                    stages,
-                    self.kinematic_chain_class,
-                    self.initial_angles,
-                    hide_progress_bar,
-                )
+            res = self._process_single_leg_sequence(
+                segment_name,
+                segment_array,
+                stages,
+                self.kinematic_chain_class,
+                self.initial_angles,
+                hide_progress_bar,
             )
+            result_name, result_fk, local_joint_angles = res
             if result_fk is not None:
                 forward_kinematics_dict[result_name] = result_fk
                 self.joint_angles_dict.update(local_joint_angles)
@@ -616,8 +610,6 @@ class LegInvKinGeneric(LegInvKinBase):
     initial_angles : Dict[str, np.ndarray], optional
         Initial angles of DOFs.
         If not provided, the default values from data.py will be used.
-    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
-        Logging level as a string, by default "INFO"
 
     Examples
     --------
@@ -625,7 +617,7 @@ class LegInvKinGeneric(LegInvKinBase):
     >>> from pathlib import Path
     >>> from seqikpy.kinematic_chain import KinematicChainGeneric
     >>> from seqikpy.leg_inverse_kinematics import LegInvKinGeneric
-    >>> from seqikpy.data import BOUNDS, INITIAL_ANGLES
+    >>> from seqikpy.data import neuromechfly_body_config
     >>> from seqikpy.utils import load_file
 
     >>> DATA_PATH = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
@@ -636,11 +628,11 @@ class LegInvKinGeneric(LegInvKinBase):
     >>> seq_ik = LegInvKinGeneric(
             aligned_pos=aligned_pos,
             kinematic_chain_class=KinematicChainGeneric(
-                bounds_dof=BOUNDS,
+                bounds_dof=neuromechfly_body_config.dof_bounds_rad,
                 legs_list=["RF", "LF"],
                 body_size=None,
             ),
-            initial_angles=INITIAL_ANGLES
+            initial_angles=neuromechfly_body_config.initial_angles_rad
         )
 
     >>> leg_joint_angles, forward_kinematics = gen_ik.run_ik_and_fk(
@@ -654,9 +646,8 @@ class LegInvKinGeneric(LegInvKinBase):
         aligned_pos: Dict[str, np.ndarray],
         kinematic_chain_class: KinematicChainGeneric,
         initial_angles: Optional[Dict[str, np.ndarray]] = None,
-        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
-        super().__init__(aligned_pos, kinematic_chain_class, initial_angles, log_level)
+        super().__init__(aligned_pos, kinematic_chain_class, initial_angles)
         # Create an empty dict for joint angles
         self.joint_angles_dict = {}
 
@@ -813,15 +804,14 @@ class LegInvKinGeneric(LegInvKinBase):
         if n_workers == 1 or len(leg_segments) <= 1:
             # Sequential processing
             for segment_name, segment_array in leg_segments:
-                result_name, result_fk, local_joint_angles = (
-                    self._process_single_leg_generic(
-                        segment_name,
-                        segment_array,
-                        self.kinematic_chain_class,
-                        self.initial_angles,
-                        hide_progress_bar,
-                    )
+                res = self._process_single_leg_generic(
+                    segment_name,
+                    segment_array,
+                    self.kinematic_chain_class,
+                    self.initial_angles,
+                    hide_progress_bar,
                 )
+                result_name, result_fk, local_joint_angles = res
                 if result_fk is not None:
                     forward_kinematics_dict[result_name] = result_fk
                     self.joint_angles_dict.update(local_joint_angles)

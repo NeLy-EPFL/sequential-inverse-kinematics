@@ -1,8 +1,72 @@
-""" Data, constants, and paths. """
+"""Data, constants, and paths."""
 
 import numpy as np
+import warnings
+from dataclasses import dataclass
+from copy import deepcopy as _deepcopy
 
-INITIAL_ANGLES = {
+
+@dataclass
+class BodyConfig:
+    # Size of the template body segments
+    segment_sizes: dict[str, float]
+
+    # Key points to align, to be provided in the alignment.Align class
+    points_to_align: dict[str, list[str]]
+
+    # Key points that are used in alignment
+    skeleton: list[str]
+
+    # Pose of each body landmark in the NeuroMechFly v0.0.6 model
+    # Note that each leg segment represents the joint in the proximal part
+    # For example, RF_Coxa means Thorax-Coxa joint
+    template: dict[str, np.ndarray]
+
+    # Initial joint angles for each leg and stage
+    initial_angles_rad: dict[str, dict[str, np.ndarray]] | None = None
+
+    # Lower bound of a DOF should be strictly lower than the initial angle.
+    # Upper bound of a DOF should be strictly bigger than the initial angle.
+    dof_bounds_rad: dict[str, tuple[float, float]] | None = None
+
+    def get_copy_of_initial_angles_in_deg(self):
+        initial_angles_deg = {}
+        for leg_name, stages in self.initial_angles_rad.items():
+            initial_angles_deg[leg_name] = {}
+            for stage, angles_rad in stages.items():
+                initial_angles_deg[leg_name][stage] = np.rad2deg(angles_rad)
+        return initial_angles_deg
+
+    def get_copy_of_dof_bounds_in_deg(self):
+        if self.dof_bounds_rad is None:
+            return None
+        dof_bounds_deg = {}
+        for dof, (lower_rad, upper_rad) in self.dof_bounds_rad.items():
+            dof_bounds_deg[dof] = (np.rad2deg(lower_rad), np.rad2deg(upper_rad))
+        return dof_bounds_deg
+
+    def set_initial_angles_in_deg(
+        self, initial_angles_deg: dict[str, dict[str, np.ndarray]]
+    ):
+        initial_angles_rad = {}
+        for leg_name, stages in initial_angles_deg.items():
+            initial_angles_rad[leg_name] = {}
+            for stage, angles_deg in stages.items():
+                initial_angles_rad[leg_name][stage] = np.deg2rad(angles_deg)
+        self.initial_angles_rad = initial_angles_rad
+
+    def set_dof_bounds_in_deg(self, dof_bounds_deg: dict[str, tuple[float, float]]):
+        dof_bounds_rad = {}
+        for dof, (lower_deg, upper_deg) in dof_bounds_deg.items():
+            dof_bounds_rad[dof] = (np.deg2rad(lower_deg), np.deg2rad(upper_deg))
+        self.dof_bounds_rad = dof_bounds_rad
+
+    def deepcopy(self):
+        return _deepcopy(self)
+
+
+# Define default BodyConfig for NeuroMechFly
+_NMF_INITIAL_ANGLES_RAD = {
     "RF": {
         # Base ThC yaw pitch CTr pitch
         "stage_1": np.array([0.0, 0.45, -0.07, -2.14]),
@@ -22,27 +86,25 @@ INITIAL_ANGLES = {
     },
 }
 
-# Lower bound of a DOF should be strictly lower than the initial angle.
-# Upper bound of a DOF should be strictly bigger than the initial angle.
-BOUNDS = {
-    "RF_ThC_roll": (np.deg2rad(-130), np.deg2rad(50)),
-    "RF_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
-    "RF_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
-    "RF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(0)),
-    "RF_CTr_roll": (np.deg2rad(-150), np.deg2rad(0)),
-    "RF_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
-    "RF_TiTa_pitch": (np.deg2rad(-150), np.deg2rad(0)),
-    "LF_ThC_roll": (np.deg2rad(-50), np.deg2rad(130)),
-    "LF_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
-    "LF_ThC_pitch": (np.deg2rad(-40), np.deg2rad(60)),
-    "LF_CTr_pitch": (np.deg2rad(-180), np.deg2rad(0)),
-    "LF_CTr_roll": (np.deg2rad(0), np.deg2rad(150)),
-    "LF_FTi_pitch": (np.deg2rad(0), np.deg2rad(170)),
-    "LF_TiTa_pitch": (np.deg2rad(-150), np.deg2rad(0)),
+_NMF_BOUNDS_DEG = {
+    "RF_ThC_roll": (-130, 50),
+    "RF_ThC_yaw": (-50, 50),
+    "RF_ThC_pitch": (-40, 60),
+    "RF_CTr_pitch": (-180, 0),
+    "RF_CTr_roll": (-150, 0),
+    "RF_FTi_pitch": (0, 170),
+    "RF_TiTa_pitch": (-150, 0),
+    "LF_ThC_roll": (-50, 130),
+    "LF_ThC_yaw": (-50, 50),
+    "LF_ThC_pitch": (-40, 60),
+    "LF_CTr_pitch": (-180, 0),
+    "LF_CTr_roll": (0, 150),
+    "LF_FTi_pitch": (0, 170),
+    "LF_TiTa_pitch": (-150, 0),
 }
 
-# Size of the template body segments
-NMF_SIZE = {
+
+_NMF_SIZE = {
     "RF_Coxa": 0.40,
     "RM_Coxa": 0.182,
     "RH_Coxa": 0.199,
@@ -77,8 +139,7 @@ NMF_SIZE = {
     "Antenna_mid_thorax": 0.9355746896961248,
 }
 
-# Key points to align, to be provided in the alignment.Align class
-PTS2ALIGN = {
+_NMF_PTS2ALIGN = {
     "R_head": ["base_anten_R", "tip_anten_R"],
     "RF_leg": [
         "thorax_coxa_R",
@@ -99,22 +160,7 @@ PTS2ALIGN = {
 }
 
 
-def get_pts2align(path: str):
-    """Deletes the keys from the PTS2ALIGN dictionary."""
-    pts_temp = PTS2ALIGN.copy()
-    if "_RF" in path:
-        del pts_temp["RF_leg"]
-    elif "_LF" in path:
-        del pts_temp["LF_leg"]
-    elif "_RLF" in path or "_LRF" in path:
-        del pts_temp["LF_leg"]
-        del pts_temp["RF_leg"]
-
-    return pts_temp
-
-
-# Key points that are used in alignment
-SKELETON = [
+_NMF_SKELETON = [
     "base_anten_R",
     "tip_anten_R",
     "thorax_coxa_R",
@@ -134,10 +180,8 @@ SKELETON = [
     "claw_L",
 ]
 
-# Pose of each body landmark in the NeuroMechFly v0.0.6 model
-# Note that each leg segment represents the joint in the proximal part
-# For example, RF_Coxa means Thorax-Coxa joint
-NMF_TEMPLATE = {
+
+_NMF_TEMPLATE = {
     "RF_Coxa": np.array([0.33, -0.17, 1.07]),
     "RF_Femur": np.array([0.33, -0.17, 0.67]),
     "RF_Tibia": np.array([0.33, -0.17, -0.02]),
@@ -166,3 +210,52 @@ NMF_TEMPLATE = {
     "R_dorsal_hum": np.array([0.41, -0.37, 1.32]),
     # "R_ant_notopleural": np.array([0.30, -0.39, 1.39]),
 }
+
+
+neuromechfly_body_config = BodyConfig(
+    initial_angles_rad=_NMF_INITIAL_ANGLES_RAD,
+    segment_sizes=_NMF_SIZE,
+    points_to_align=_NMF_PTS2ALIGN,
+    skeleton=_NMF_SKELETON,
+    template=_NMF_TEMPLATE,
+)
+neuromechfly_body_config.set_dof_bounds_in_deg(_NMF_BOUNDS_DEG)
+
+
+# Define constants for backward compatibility but with deprecation warnings
+class DeprecatedConstant:
+    """Wrapper to issue deprecation warnings for constants."""
+
+    def __init__(self, value, name):
+        self._value = value
+        self._name = name
+
+    def __get__(self, instance, owner):
+        message = (
+            f"The constant `seqikpy.data.{self._name}` is deprecated and will be "
+            "removed in a future version. Use the `seqikpy.data.BodyConfig` dataclass "
+            "instead. You can import the default configuration "
+            "`seqikpy.data.neuromechfly_body_config` and access its attributes. "
+            "For example, instead of `NMF_TEMPLATE`, use "
+            "`neuromechfly_body_config.template`."
+        )
+        warnings.warn(message, DeprecationWarning, stacklevel=2)
+        return self._value
+
+    def __set__(self, instance, value):
+        raise AttributeError(
+            f"`seqikpy.data.{self._name}` is a constant and cannot be modified."
+        )
+
+
+# Deprecated constants
+INITIAL_ANGLES = DeprecatedConstant(_NMF_INITIAL_ANGLES_RAD, "INITIAL_ANGLES")
+_nmf_bounds_rad = {
+    key: (np.deg2rad(low_deg), np.deg2rad(up_deg))
+    for key, (low_deg, up_deg) in _NMF_BOUNDS_DEG.items()
+}
+BOUNDS = DeprecatedConstant(_nmf_bounds_rad, "BOUNDS")
+NMF_SIZE = DeprecatedConstant(_NMF_SIZE, "NMF_SIZE")
+PTS2ALIGN = DeprecatedConstant(_NMF_PTS2ALIGN, "PTS2ALIGN")
+SKELETON = DeprecatedConstant(_NMF_SKELETON, "SKELETON")
+NMF_TEMPLATE = DeprecatedConstant(_NMF_TEMPLATE, "NMF_TEMPLATE")

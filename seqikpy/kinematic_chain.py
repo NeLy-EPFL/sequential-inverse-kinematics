@@ -9,7 +9,7 @@ import numpy as np
 from ikpy.chain import Chain
 from ikpy.link import OriginLink, URDFLink
 
-from seqikpy.data import NMF_TEMPLATE
+from seqikpy.data import neuromechfly_body_config
 from seqikpy.utils import calculate_body_size
 
 # Ignore the warnings
@@ -42,7 +42,7 @@ class KinematicChainBase(ABC):
     ) -> None:
         # NMF size is calculated internally if size is not provided
         self.body_size = (
-            calculate_body_size(NMF_TEMPLATE, legs_list)
+            calculate_body_size(neuromechfly_body_config.template, legs_list)
             if body_size is None
             else body_size
         )

@@ -13,9 +13,10 @@ import seqikpy
 from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.utils import load_file, calculate_body_size
+from seqikpy.data import neuromechfly_body_config
 
 
-TEMPLATE_NMF_LOCOMOTION = {
+_TEMPLATE_NMF_LOCOMOTION = {
     "RF_Coxa": np.array([0.35, -0.27, 0.400]),
     "RF_Femur": np.array([0.35, -0.27, -0.025]),
     "RF_Tibia": np.array([0.35, -0.27, -0.731]),
@@ -48,7 +49,7 @@ TEMPLATE_NMF_LOCOMOTION = {
     "LH_Claw": np.array([-0.215, 0.087, -2.588]),
 }
 
-INITIAL_ANGLES_LOCOMOTION = {
+_INITIAL_ANGLES_LOCOMOTION_RAD = {
     "RF": {
         # Base ThC yaw pitch CTr pitch
         "stage_1": np.array([0.0, 0.45, -0.07, -2.14]),
@@ -91,49 +92,50 @@ INITIAL_ANGLES_LOCOMOTION = {
     },
 }
 
-BOUNDS_LOCOMOTION = {
-    "RF_ThC_yaw": (-3.141592653589793, 3.141592653589793),
-    "RF_ThC_pitch": (np.deg2rad(-90), np.deg2rad(90)),
-    "RF_ThC_roll": (-3.141592653589793, 3.141592653589793),
-    "RF_CTr_pitch": (-3.141592653589793, 3.141592653589793),
-    "RF_FTi_pitch": (-3.141592653589793, 3.141592653589793),
-    "RF_CTr_roll": (-3.141592653589793, 3.141592653589793),
-    "RF_TiTa_pitch": (-3.141592653589793, np.deg2rad(0)),
-    "RM_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
-    "RM_ThC_pitch": (-3.141592653589793, 3.141592653589793),
-    "RM_ThC_roll": (-3.141592653589793, 0),
-    "RM_CTr_pitch": (-3.141592653589793, 3.141592653589793),
-    "RM_FTi_pitch": (-3.141592653589793, 3.141592653589793),
-    "RM_CTr_roll": (-3.141592653589793, 3.141592653589793),
-    "RM_TiTa_pitch": (-3.141592653589793, np.deg2rad(0)),
-    "RH_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
-    "RH_ThC_pitch": (np.deg2rad(-50), np.deg2rad(50)),
-    "RH_ThC_roll": (-3.141592653589793, 0),
-    "RH_CTr_pitch": (np.deg2rad(-180), np.deg2rad(0)),
-    "RH_FTi_pitch": (-3.141592653589793, 3.141592653589793),
-    "RH_CTr_roll": (-3.141592653589793, 3.141592653589793),
-    "RH_TiTa_pitch": (-3.141592653589793, np.deg2rad(0)),
-    "LF_ThC_yaw": (-3.141592653589793, 3.141592653589793),
-    "LF_ThC_pitch": (np.deg2rad(-90), np.deg2rad(90)),
-    "LF_ThC_roll": (-3.141592653589793, 3.141592653589793),
-    "LF_CTr_pitch": (-3.141592653589793, 3.141592653589793),
-    "LF_FTi_pitch": (-3.141592653589793, 3.141592653589793),
-    "LF_CTr_roll": (-3.141592653589793, 3.141592653589793),
-    "LF_TiTa_pitch": (-3.141592653589793, np.deg2rad(0)),
-    "LM_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
-    "LM_ThC_pitch": (-3.141592653589793, 3.141592653589793),
-    "LM_ThC_roll": (0, 3.141592653589793),
-    "LM_CTr_pitch": (-3.141592653589793, 3.141592653589793),
-    "LM_FTi_pitch": (-3.141592653589793, 3.141592653589793),
-    "LM_CTr_roll": (-3.141592653589793, 3.141592653589793),
-    "LM_TiTa_pitch": (-3.141592653589793, np.deg2rad(0)),
-    "LH_ThC_yaw": (np.deg2rad(-50), np.deg2rad(50)),
-    "LH_ThC_pitch": (np.deg2rad(-50), np.deg2rad(50)),
-    "LH_ThC_roll": (0, 3.141592653589793),
-    "LH_CTr_pitch": (np.deg2rad(-180), np.deg2rad(0)),
-    "LH_FTi_pitch": (-3.141592653589793, 3.141592653589793),
-    "LH_CTr_roll": (-3.141592653589793, 3.141592653589793),
-    "LH_TiTa_pitch": (-3.141592653589793, np.deg2rad(0)),
+
+_BOUNDS_LOCOMOTION_DEG = {
+    "RF_ThC_yaw": (-180, 180),
+    "RF_ThC_pitch": (-90, 90),
+    "RF_ThC_roll": (-180, 180),
+    "RF_CTr_pitch": (-180, 180),
+    "RF_FTi_pitch": (-180, 180),
+    "RF_CTr_roll": (-180, 180),
+    "RF_TiTa_pitch": (-180, 0),
+    "RM_ThC_yaw": (-50, 50),
+    "RM_ThC_pitch": (-180, 180),
+    "RM_ThC_roll": (-180, 0),
+    "RM_CTr_pitch": (-180, 180),
+    "RM_FTi_pitch": (-180, 180),
+    "RM_CTr_roll": (-180, 180),
+    "RM_TiTa_pitch": (-180, 0),
+    "RH_ThC_yaw": (-50, 50),
+    "RH_ThC_pitch": (-50, 50),
+    "RH_ThC_roll": (-180, 0),
+    "RH_CTr_pitch": (-180, 0),
+    "RH_FTi_pitch": (-180, 180),
+    "RH_CTr_roll": (-180, 180),
+    "RH_TiTa_pitch": (-180, 0),
+    "LF_ThC_yaw": (-180, 180),
+    "LF_ThC_pitch": (-90, 90),
+    "LF_ThC_roll": (-180, 180),
+    "LF_CTr_pitch": (-180, 180),
+    "LF_FTi_pitch": (-180, 180),
+    "LF_CTr_roll": (-180, 180),
+    "LF_TiTa_pitch": (-180, 0),
+    "LM_ThC_yaw": (-50, 50),
+    "LM_ThC_pitch": (-180, 180),
+    "LM_ThC_roll": (0, 180),
+    "LM_CTr_pitch": (-180, 180),
+    "LM_FTi_pitch": (-180, 180),
+    "LM_CTr_roll": (-180, 180),
+    "LM_TiTa_pitch": (-180, 0),
+    "LH_ThC_yaw": (-50, 50),
+    "LH_ThC_pitch": (-50, 50),
+    "LH_ThC_roll": (0, 180),
+    "LH_CTr_pitch": (-180, 0),
+    "LH_FTi_pitch": (-180, 180),
+    "LH_CTr_roll": (-180, 180),
+    "LH_TiTa_pitch": (-180, 0),
 }
 
 
@@ -165,10 +167,16 @@ if __name__ == "__main__":
         seq_length = aligned_pose_data[list(aligned_pose_data.keys())[0]].shape[0]
         legs = [f"{side}{pos}" for side in "RL" for pos in ["F", "M", "H"]]
 
+        # Create body config data class
+        body_config = neuromechfly_body_config.deepcopy()
+        body_config.template = _TEMPLATE_NMF_LOCOMOTION
+        body_config.initial_angles_rad = _INITIAL_ANGLES_LOCOMOTION_RAD
+        body_config.set_dof_bounds_in_deg(_BOUNDS_LOCOMOTION_DEG)
+
         # Define kinematic chains
         kin_chain = KinematicChainSeq(
-            bounds_dof=BOUNDS_LOCOMOTION,
-            body_size=calculate_body_size(TEMPLATE_NMF_LOCOMOTION, legs),
+            bounds_dof=body_config.dof_bounds_rad,
+            body_size=calculate_body_size(body_config.template, legs),
             legs_list=legs,
         )
 
@@ -176,7 +184,7 @@ if __name__ == "__main__":
         class_seq_ik = LegInvKinSeq(
             aligned_pos=aligned_pose_data,
             kinematic_chain_class=kin_chain,
-            initial_angles=INITIAL_ANGLES_LOCOMOTION,
+            initial_angles=body_config.initial_angles_rad,
         )
 
         # Solve inverse and forward kinematics

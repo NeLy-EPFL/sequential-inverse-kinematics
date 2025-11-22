@@ -1,11 +1,11 @@
-""" Test kinematic chain generation"""
+"""Test kinematic chain generation"""
 
 import pytest
 from pathlib import Path
 
 import seqikpy
 from seqikpy.kinematic_chain import KinematicChainSeq, KinematicChainGeneric
-from seqikpy.data import BOUNDS, INITIAL_ANGLES
+from seqikpy.data import neuromechfly_body_config
 from seqikpy.utils import load_file
 
 PKG_PATH = Path(seqikpy.__path__[0])
@@ -13,12 +13,16 @@ PKG_PATH = Path(seqikpy.__path__[0])
 
 @pytest.fixture
 def setup_kinematic_chain_generic():
-    return KinematicChainGeneric(BOUNDS, ["RF", "LF"], None)
+    return KinematicChainGeneric(
+        neuromechfly_body_config.dof_bounds_rad, ["RF", "LF"], None
+    )
 
 
 @pytest.fixture
 def setup_kinematic_chain_seq():
-    return KinematicChainSeq(BOUNDS, ["RF", "LF"], None)
+    return KinematicChainSeq(
+        neuromechfly_body_config.dof_bounds_rad, ["RF", "LF"], None
+    )
 
 
 @pytest.mark.parametrize("leg_name", ["RF", "LF"])
