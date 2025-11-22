@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 from seqikpy.kinematic_chain import KinematicChainSeq, KinematicChainGeneric
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq, LegInvKinGeneric
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import load_file, from_sdf, calculate_body_size
 
 

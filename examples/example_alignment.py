@@ -5,7 +5,7 @@ import pickle
 from pathlib import Path
 
 from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import load_file, save_file
 
 

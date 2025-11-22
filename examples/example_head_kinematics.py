@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import load_file
 
 DATA_PATH = Path('../data/anipose_220525_aJO_Fly001_001/pose-3d')

@@ -9,7 +9,7 @@ import numpy as np
 from ikpy.chain import Chain
 from ikpy.link import OriginLink, URDFLink
 
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import calculate_body_size
 
 # Ignore the warnings

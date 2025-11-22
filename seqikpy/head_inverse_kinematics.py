@@ -4,7 +4,7 @@ Example usage:
 >>> import pickle
 >>> from pathlib import Path
 >>> from seqikpy.head_inverse_kinematics import HeadInverseKinematics
->>> from seqikpy.data import neuromechfly_body_config
+>>> from seqikpy.body_config import neuromechfly_body_config
 
 >>> DATA_PATH = Path("../data/anipose/normal_case/pose-3d")
 >>> f_path = DATA_PATH / "aligned_pose3d.h5"

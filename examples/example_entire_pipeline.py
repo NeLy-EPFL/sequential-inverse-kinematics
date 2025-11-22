@@ -17,7 +17,7 @@ from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
 from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import save_file, from_sdf
 
 logging.basicConfig(

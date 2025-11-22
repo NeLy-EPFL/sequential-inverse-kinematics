@@ -21,7 +21,7 @@ NOTE: if the 3D pose is not in the format described above, then you need to
 * Or, if you obtain the 3D pose from anipose, simply set `convert_func`
 to `convert_from_anipose_to_dict` .
 
->>> from seqikpy.data import neuromechfly_body_config
+>>> from seqikpy.body_config import neuromechfly_body_config
 >>> data_path = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
 >>> align = AlignPose.from_file_path(
 >>>     main_dir=data_path,
@@ -72,7 +72,7 @@ import numpy as np
 from pathlib import Path
 from typing import Dict, List, Union, Optional, Literal, Callable
 
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import save_file, calculate_body_size, dict_to_nparray_pose
 
 
@@ -233,7 +233,7 @@ class AlignPose:
     ----------
     pose_data_dict : Dict[str, np.ndarray]
         3D pose put in a dictionary that has the following structure defined by
-        seqikpy.data.neuromechfly_body_config.points_to_align (see data.py for details)
+        seqikpy.body_config.neuromechfly_body_config.points_to_align (see body_config.py for details)
 
         Example format
 

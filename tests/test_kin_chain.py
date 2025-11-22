@@ -5,7 +5,7 @@ from pathlib import Path
 
 import seqikpy
 from seqikpy.kinematic_chain import KinematicChainSeq, KinematicChainGeneric
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import load_file
 
 PKG_PATH = Path(seqikpy.__path__[0])

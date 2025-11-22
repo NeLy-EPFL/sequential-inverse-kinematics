@@ -13,7 +13,7 @@ import seqikpy
 from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.utils import load_file, calculate_body_size
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 
 
 _TEMPLATE_NMF_LOCOMOTION = {

@@ -5,7 +5,7 @@ import warnings
 from collections import defaultdict
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Tuple, Union, Literal, Optional
+from typing import Dict, Tuple, Union, Optional
 
 import numpy as np
 from tqdm import trange
@@ -13,7 +13,7 @@ from joblib import Parallel, delayed
 from ikpy.chain import Chain
 
 from seqikpy.utils import save_file, split_arrays_into_chunks, merge_chunks_into_arrays
-from seqikpy.data import neuromechfly_body_config
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.kinematic_chain import (
     KinematicChainBase,
     KinematicChainSeq,
@@ -161,7 +161,7 @@ class LegInvKinSeq(LegInvKinBase):
     >>> from pathlib import Path
     >>> from seqikpy.kinematic_chain import KinematicChainSeq
     >>> from seqikpy.leg_inverse_kinematics import LegInvKinSeq
-    >>> from seqikpy.data import neuromechfly_body_config
+    >>> from seqikpy.body_config import neuromechfly_body_config
     >>> from seqikpy.utils import load_file
 
     >>> DATA_PATH = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
@@ -617,7 +617,7 @@ class LegInvKinGeneric(LegInvKinBase):
     >>> from pathlib import Path
     >>> from seqikpy.kinematic_chain import KinematicChainGeneric
     >>> from seqikpy.leg_inverse_kinematics import LegInvKinGeneric
-    >>> from seqikpy.data import neuromechfly_body_config
+    >>> from seqikpy.body_config import neuromechfly_body_config
     >>> from seqikpy.utils import load_file
 
     >>> DATA_PATH = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
