@@ -35,7 +35,7 @@ Our framework contains:
 * Inverse kinematics: calculate joint angles sequentially from 3D poses.
 * Visualization: plot and animate the results in 3D.
 
-`SeqIKPy` is aimed at researchers studying detailed joint motion in animals with complex, multiple degrees-of-freedom body appendages. We provide examples for the fruit fly, *Drosophila melanogaster*. However, each module can easily be extended to be used with another model organism; the only requirements are the 3D kinematics of the target animal and its corresponding kinematic chain. Our package requires minimal Python knowledge, and extensive tutorials at [https://nely-epfl.github.io/sequential-inverse-kinematics](https://nely-epfl.github.io/sequential-inverse-kinematics) are available to novice users.
+`SeqIKPy` is aimed at researchers studying detailed joint motion in animals with complex, multiple degrees-of-freedom body appendages. We provide examples for the fruit fly, *Drosophila melanogaster*. However, each module can easily be extended to be used with another model organism; the only requirements are the 3D kinematics of the target animal and its corresponding kinematic chain. Our package requires minimal Python knowledge, and extensive tutorials are available to novice users at [https://nely-epfl.github.io/sequential-inverse-kinematics](https://nely-epfl.github.io/sequential-inverse-kinematics).
 
 # Statement of need
 
