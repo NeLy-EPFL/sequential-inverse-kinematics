@@ -1,6 +1,7 @@
 import numpy as np
 from dataclasses import dataclass
 from copy import deepcopy as _deepcopy
+from typing import Optional
 
 
 @dataclass
@@ -20,11 +21,11 @@ class BodyConfig:
     template: dict[str, np.ndarray]
 
     # Initial joint angles for each leg and stage
-    initial_angles_rad: dict[str, dict[str, np.ndarray]] | None = None
+    initial_angles_rad: Optional[dict[str, dict[str, np.ndarray]]] = None
 
     # Lower bound of a DOF should be strictly lower than the initial angle.
     # Upper bound of a DOF should be strictly bigger than the initial angle.
-    dof_bounds_rad: dict[str, tuple[float, float]] | None = None
+    dof_bounds_rad: Optional[dict[str, tuple[float, float]]] = None
 
     def get_copy_of_initial_angles_in_deg(self):
         initial_angles_deg = {}

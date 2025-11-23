@@ -365,7 +365,7 @@ class LegInvKinSeq(LegInvKinBase):
     def run_ik_and_fk(
         self,
         export_path: Union[Path, str] = None,
-        stages: list[int] | None = None,
+        stages: Optional[list[int]] = None,
         n_workers: int = 1,
         parallel_over_time: bool = True,
         chunk_overlap: int = 20,
