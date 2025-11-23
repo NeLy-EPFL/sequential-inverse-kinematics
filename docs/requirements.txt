@@ -1,4 +1,4 @@
-jupyter-book<2
+jupyter-book<2  # jupyter book v2 has a different API
 matplotlib
 numpy
 ghp-import

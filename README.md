@@ -46,7 +46,7 @@ Documentation can be found [here](https://nely-epfl.github.io/sequential-inverse
 
 # 🛠️ Installation
 
-If you aim to purely use SeqIKPy as a dpendency for your project, you can install the newest version of the package manually by running the following line in the terminal:
+If you aim to purely use SeqIKPy as a dependency for your project, you can install the newest version of the package manually by running the following line in the terminal:
 ```bash
 # Optionally create/activate a virtual environment first. Then,
 $ pip install seqikpy

@@ -108,9 +108,6 @@ if __name__ == "__main__":
             import matplotlib.pyplot as plt
 
             time_step = 1e-2
-            time = time = (
-                np.arange(0, full_body_ik["Angle_head_roll"].shape[0], 1) * time_step
-            )
 
             for ja_name, ja_value in full_body_ik.items():
                 plt.plot(ja_value, label=ja_name, lw=2)
