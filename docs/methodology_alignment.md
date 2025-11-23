@@ -8,7 +8,7 @@ The computation of joint angles could serve two primary purposes:
 
 ## Alignment process
 
-We first map and align the experimentally acquired 3D poses with a biomechanical model's body [NeuroMechFly](https://github.com/NeLy-EPFL/NeuroMechFly). The alignment process consists of two stages. At the initial stage, we calculate the distances between specific body landmarks to derive the scaling constant to magnify or reduce the size of the experimental 3D data to match the body proportions of the biomechanical model (shown in the Figure below).
+We first map and align the experimentally acquired 3D poses with a biomechanical model's body [NeuroMechFly](https://github.com/NeLy-EPFL/NeuroMechFly). This process is also known as "calibration" in pose estimation literature. The alignment process consists of two stages. At the initial stage, we calculate the distances between specific body landmarks to derive the scaling constant to magnify or reduce the size of the experimental 3D data to match the body proportions of the biomechanical model (shown in the Figure below).
 
 ```{image} ./_images/NMF_zero_pose.png
 :width: 800px

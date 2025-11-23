@@ -1,5 +1,6 @@
 """
-Code for aligning 3D pose to a fly template.
+Code for aligning 3D pose to a fly template, aka "calibration" in pose estimation
+literature.
 The best practice for getting good alignment is to have an accurate 3D pose and
 a template whose key points are matching the tracked key points closely.
 
@@ -227,7 +228,9 @@ def convert_from_df3dpp_to_dict(
 
 
 class AlignPose:
-    """Aligns the 3D poses. For the class usage examples, please refer to example_alignment.py
+    """Aligns the 3D poses. This process is also known as "calibration" in
+    pose estimation literature. For the class usage examples, please refer
+    to example_alignment.py.
 
     Parameters
     ----------
