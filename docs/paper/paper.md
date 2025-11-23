@@ -9,6 +9,9 @@ authors:
   - name: Pembe Gizem Özdil
     orcid: 0000-0003-4507-6642
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
+  - name: Sibo Wang-Chen
+    orcid: 0000-0002-7601-8886
+    affiliation: 1
   - name: Chuanfang Ning
     affiliation: 2
   - name: Auke Ijspeert
