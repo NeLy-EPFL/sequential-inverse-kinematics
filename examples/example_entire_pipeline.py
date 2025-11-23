@@ -1,12 +1,13 @@
 """
-    Runs the entire pipeline from pose alignment to joint angles on a path given by the user.
-    Note that running this script will take about 40 minutes.
+Runs the entire pipeline from pose alignment to joint angles on a path given by the user.
+Note that running this script will take about 40 minutes.
 
-    Example usage:
+Example usage:
 
-    >>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001 --plot
+>>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001 --plot
 
 """
+
 import logging
 from pathlib import Path
 import time

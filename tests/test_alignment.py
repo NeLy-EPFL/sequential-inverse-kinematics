@@ -1,4 +1,4 @@
-""" Test alignment tools """
+"""Test alignment tools"""
 
 import pytest
 from pathlib import Path

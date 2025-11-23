@@ -1,4 +1,4 @@
-""" Example usage of head inverse kinematics module. """
+"""Example usage of head inverse kinematics module."""
 
 import numpy as np
 import matplotlib.pyplot as plt

@@ -1,4 +1,4 @@
-""" Module that contains a set of kinematic chains."""
+"""Module that contains a set of kinematic chains."""
 
 import warnings
 import numpy as np

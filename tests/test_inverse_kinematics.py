@@ -1,4 +1,4 @@
-""" Test inverse kinematics tools """
+"""Test inverse kinematics tools"""
 
 import pytest
 from pathlib import Path

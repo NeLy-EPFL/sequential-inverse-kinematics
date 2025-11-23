@@ -1,6 +1,7 @@
 """
-    Examples showing how to use the alignment class in three different ways.
+Examples showing how to use the alignment class in three different ways.
 """
+
 from pathlib import Path
 
 from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict

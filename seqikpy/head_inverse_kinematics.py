@@ -1,4 +1,4 @@
-""" Implementation of a class to calculate head inverse kinematics.
+"""Implementation of a class to calculate head inverse kinematics.
 
 Example usage:
 >>> import pickle

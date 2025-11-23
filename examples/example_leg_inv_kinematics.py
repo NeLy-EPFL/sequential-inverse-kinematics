@@ -1,6 +1,6 @@
 """
-    Example usage of leg inverse kinematics module.
-    Note that running this script will take about 30 minutes.
+Example usage of leg inverse kinematics module.
+Note that running this script will take about 30 minutes.
 """
 
 import time

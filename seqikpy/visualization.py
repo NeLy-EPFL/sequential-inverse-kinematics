@@ -1,4 +1,4 @@
-""" Functions for plotting and animation. """
+"""Functions for plotting and animation."""
 
 import logging
 import subprocess
