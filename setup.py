@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-"""The setup script."""
 from setuptools import setup, find_packages
 
 setup(
@@ -17,13 +16,7 @@ setup(
         "pandas",
         "joblib>=1.5,<2",
     ],
-    extras_require={
-        "dev": [
-            "pytest",
-            "ImageHash",
-            "black==22.3.0"
-        ]
-    },
+    extras_require={"dev": ["pytest", "ImageHash", "black==22.3.0"]},
     license="Apache License 2.0",
     package_data={"seqikpy": ["data/*"]},
     include_package_data=True,
