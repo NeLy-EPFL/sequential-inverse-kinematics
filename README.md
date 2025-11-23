@@ -46,9 +46,22 @@ Documentation can be found [here](https://nely-epfl.github.io/sequential-inverse
 
 # 🛠️ Installation
 
-You can install the newest version of the package manually by running the following line in the terminal:
+If you aim to purely use SeqIKPy as a dpendency for your project, you can install the newest version of the package manually by running the following line in the terminal:
 ```bash
+# Optionally create/activate a virtual environment first. Then,
 $ pip install seqikpy
+```
+
+If you plan to follow the tutorial or help develop SeqIKPy, you should download the `data/` directory, which contains sample data for demonstration and testing. In this case, you should clone this GitHub repository and installing it locally instead of downloading it from PyPI:
+```bash
+# Optionally create/activate a virtual environment first. Then,
+$ git clone git@github.com:NeLy-EPFL/sequential-inverse-kinematics.git
+# ... or with HTTP: git clone https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git
+$ cd sequential-inverse-kinematics/
+
+# Install the package locally, along with optional dependencies for development
+$ pip install -e ".[dev]" --config-settings editable_mode=compat
+# ... where editable_mode=compat helps static code analyzers in IDEs parse your code better
 ```
 
 # 🏁 Quick Start
