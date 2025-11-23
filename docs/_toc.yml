@@ -18,6 +18,7 @@ parts:
   chapters:
   - file: seqikpy_grooming
   - file: visualization
+  - file: parallel_processing
 - caption: 💬 References
   chapters:
   - file: seqikpy
