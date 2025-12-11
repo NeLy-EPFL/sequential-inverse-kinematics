@@ -19,7 +19,10 @@ You can as well clone the repository and install the package by running the foll
 ```bash
 git clone https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git
 cd sequential-inverse-kinematics
-pip install -e . (or pip install -e ".[dev]" for development)
+# If you don't have `uv` installed, you can install it with:
+pip install uv
+# Install the package locally using `uv` (faster than pip):
+uv pip install -e . (or uv pip install -e ".[dev]" for development)
 ```
 
 To check if the installation was successful, you can run the following line in the terminal and see if it throws any errors:
