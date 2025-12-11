@@ -26,6 +26,8 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
+logging.getLogger().setLevel(logging.INFO)
+
 
 def parse_args():
     """Argument parser."""
@@ -50,14 +52,12 @@ def parse_args():
 if __name__ == "__main__":
 
     args = parse_args()
-    path_name = args.path
+    path_name = args.path if args.path is not None else "../data/anipose_220807_Fly002_002"
 
-    path_name += "/" if not path_name.endswith("/") else ""
+    paths = Path(path_name).rglob("pose3d.h5")
 
-    paths = Path(path_name).rglob("pose-3d")
-
-    for data_path in paths:
-
+    for data_path_file in paths:
+        data_path = data_path_file.parent
         logging.info("Running code in %s", data_path)
 
         start = time.time()
