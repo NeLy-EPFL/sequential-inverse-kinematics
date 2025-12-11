@@ -12,7 +12,7 @@ setup(
         "opencv-python>4.5",
         "numpy>=2.0,<3",
         "tqdm",
-        "matplotlib",
+        "matplotlib<3.10",
         "pandas",
         "joblib>=1.5,<2",
     ],

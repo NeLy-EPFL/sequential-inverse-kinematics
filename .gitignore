@@ -250,3 +250,5 @@ poetry.toml
 *.pdf
 *.csv
 *.ai
+*.svg
+*.pkl
