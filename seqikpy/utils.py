@@ -134,14 +134,6 @@ def calculate_body_size(
     return body_size
 
 
-def drop_level_dlc(data_frame):
-    """Converts DLC type dataframe into one level df."""
-    data_frame.columns = data_frame.columns.droplevel()
-    data_frame.columns = ["_".join(col) for col in data_frame.columns.values]
-
-    return data_frame
-
-
 def fix_coxae_pos(
     points3d, right_coxa_kp="thorax_coxa_R", left_coxa_kp="thorax_coxa_L"
 ):

@@ -142,7 +142,7 @@ def video_frames_generator(
 def get_plot_config(data_path: Path):
     """Get experimental conditions from the data path.
     Data path should look like:
-    "/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d"
+    "../data/pose-3d"
     """
     assert data_path.parts[-1] == "pose-3d", "The data path should end with pose-3d"
     assert data_path.parts[-2] == "behData", "The data path should contain behData"
