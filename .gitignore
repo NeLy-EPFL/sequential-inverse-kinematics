@@ -252,3 +252,5 @@ poetry.toml
 *.ai
 *.svg
 *.pkl
+# MyST build outputs
+_build
