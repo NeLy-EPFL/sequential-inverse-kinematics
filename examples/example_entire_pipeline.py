@@ -52,7 +52,9 @@ def parse_args():
 if __name__ == "__main__":
 
     args = parse_args()
-    path_name = args.path if args.path is not None else "../data/anipose_220807_Fly002_002"
+    path_name = (
+        args.path if args.path is not None else "../data/anipose_220807_Fly002_002"
+    )
 
     paths = Path(path_name).rglob("pose3d.h5")
 

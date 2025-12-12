@@ -60,10 +60,7 @@ class MouseArmIKSeq(LegInvKinBase):
         arm_markers: np.ndarray,
         segment_lengths: Optional[MouseArmSegmentLengths] = None,
     ) -> None:
-        if (
-            arm_markers.ndim != 3
-            or arm_markers.shape[2] != 3
-        ):
+        if arm_markers.ndim != 3 or arm_markers.shape[2] != 3:
             raise ValueError(
                 "arm_markers must have shape (n_frames, 3, 3): "
                 "[shoulder, elbow, wrist] x [x,y,z]"
@@ -158,9 +155,9 @@ class MouseArmIKSeq(LegInvKinBase):
                 elbow_recon[t] = pos_links[3] + origin[t]
 
             self.joint_angles_dict[f"Angle_{segment_name}_Shoulder_yaw"] = shoulder_yaw
-            self.joint_angles_dict[
-                f"Angle_{segment_name}_Shoulder_pitch"
-            ] = shoulder_pitch
+            self.joint_angles_dict[f"Angle_{segment_name}_Shoulder_pitch"] = (
+                shoulder_pitch
+            )
 
             wrist_placeholder = np.zeros_like(elbow_recon)
             forward_kin = np.stack([origin, elbow_recon, wrist_placeholder], axis=1)
@@ -295,9 +292,6 @@ class MouseArmIKSeq(LegInvKinBase):
         ]
         return Chain(name="L_mouse_arm_stage_2", links=links)
 
-    # -------------------------------------------------------------------------
-    # Main solver
-    # -------------------------------------------------------------------------
     def run_ik_and_fk(
         self,
         hide_progress_bar: bool = False,
@@ -413,56 +407,6 @@ def main():
                 ax.legend()
     plt.tight_layout()
     plt.show()
-
-    # --------------------------------------------------------------------------
-    # See the code below to use visualization codes to animate or plot 3D points
-    # --------------------------------------------------------------------------
-    # fk_array = np.zeros((n_frames, 3, 3))
-    # fk_array[:, 0, :] = fk["L_shoulder"]
-    # fk_array[:, 1, :] = fk["L_elbow"]
-    # fk_array[:, 2, :] = fk["L_wrist"]
-
-    # ground_truth = {"L_arm": kin_array}
-    # fk_arm = {"L_arm": fk_array}
-
-    # animate_3d_points(
-    #     points3d=ground_truth,
-    #     points3d_second=fk_arm,
-    #     export_path="fk_ik_elev_0_azim_0.mp4",
-    #     frame_no=50,
-    #     elev=0,
-    #     azim=0,
-    #     fps=100,
-    #     marker_types={"L_arm": "o"},
-    # )
-
-    # t = 3
-    # for azim, elev in [(0, 0)]:
-    #     fig = plt.figure(dpi=100)
-    #     ax3d = fig.add_subplot(projection="3d")
-    #     ax3d.view_init(azim=azim, elev=elev)
-
-    #     ax3d.set_xlabel("x")
-    #     ax3d.set_ylabel("y")
-    #     ax3d.set_zlabel("z")
-
-    #     plot_3d_points(
-    #         ax3d,
-    #         ground_truth,
-    #         t=t,
-    #         marker_types={"L_arm": "o"},
-    #     )
-    #     ax3d.legend(bbox_to_anchor=(1.3, 0.6))
-
-    #     plot_3d_points(
-    #         ax3d,
-    #         fk_arm,
-    #         t=t,
-    #         marker_types={"L_arm": "x"},
-    #     )
-
-    #     ax3d.set_title("Solid - raw 3D, Dashed - FK", y=0.95)
-    #     plt.show()
 
 
 if __name__ == "__main__":
