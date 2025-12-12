@@ -17,6 +17,7 @@ parts:
 - caption: 📚 Tutorials
   chapters:
   - file: seqikpy_grooming
+  - file: seqikpy_mouse_reaching
   - file: visualization
   - file: parallel_processing
 - caption: 💬 References
