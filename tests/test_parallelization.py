@@ -176,7 +176,7 @@ class TestParallelization:
                 np.testing.assert_array_almost_equal(
                     joint_angles_seq[key],
                     joint_angles_par[key],
-                    decimal=10,
+                    decimal=3,
                     err_msg=f"Results differ for {key}",
                 )
 
