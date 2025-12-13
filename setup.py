@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    python_requires=">3.9,<=3.14.2",
+    python_requires=">3.9,<3.15",
     description="Inverse kinematics module for Drosophila",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",

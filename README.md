@@ -59,14 +59,12 @@ $ git clone git@github.com:NeLy-EPFL/sequential-inverse-kinematics.git
 # ... or with HTTP: git clone https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git
 $ cd sequential-inverse-kinematics/
 
-# Install the package locally, along with optional dependencies for development
-# If you don't have `uv` installed, you can install it with:
-$ pip install uv
-
-
-# Install the package locally (development mode) using `uv` (faster than pip):
-$ uv pip install -e ".[dev]" --config-settings editable_mode=compat
+# Install the package locally (development mode)
+$ pip install -e ".[dev]" --config-settings editable_mode=compat
 # ... where editable_mode=compat helps static code analyzers in IDEs parse your code better
+
+# Alternatively, use uv for faster dependency resolution (`pip install uv` first)
+$ uv pip install -e ".[dev]"
 ```
 
 # 🏁 Quick Start
