@@ -6,6 +6,30 @@ from typing import Optional
 
 @dataclass
 class BodyConfig:
+    """
+    Configuration for the body model used in physics simulation.
+
+    Attributes:
+        segment_sizes (dict[str, float]): Size of the template body segments.
+        skeleton (list[str]): Key points that are used in alignment process.
+        points_to_align (dict[str, list[str]]): Body key points to align,
+            to be provided in `AlignPose`. Each key is the name of a kinematic
+            chain, and each value is a list of body keypoint names. All body
+            keypoint name must be found in `skeleton`.
+        template (dict[str, np.ndarray]): A template for the specified skeleton,
+            i.e. the xyz position of all body keypoints.
+        initial_angles_rad (Optional[dict[str, dict[str, np.ndarray]]]): Initial
+            joint angles for each leg and stage, in radians. The keys of the
+            outer dict are leg names (e.g., "RF", "LF"), and the keys of the
+            inner dict are stage names (e.g., "stage_1", "stage_2"). The values
+            of the inner dict are numpy arrays of joint angles relevant to that
+            processing stage in radians.
+        dof_bounds_rad (Optional[dict[str, tuple[float, float]]]): Lower and
+            upper bounds for each degree of freedom (DOF), in radians. Each key
+            is a DOF name (e.g., "RF_ThC_roll"), and each value is a tuple of
+            (lower_bound, upper_bound).
+    """
+
     # Size of the template body segments
     segment_sizes: dict[str, float]
 
@@ -27,7 +51,10 @@ class BodyConfig:
     # Upper bound of a DOF should be strictly bigger than the initial angle.
     dof_bounds_rad: Optional[dict[str, tuple[float, float]]] = None
 
-    def get_copy_of_initial_angles_in_deg(self):
+    def get_copy_of_initial_angles_in_deg(self) -> dict[str, dict[str, np.ndarray]]:
+        """Returns a copy of the initial joint angles in degrees. Note that this
+        is a *copy* of the underlying data, not a view of it. To mutate values,
+        modify `.initial_angles_rad` in radians."""
         initial_angles_deg = {}
         for leg_name, stages in self.initial_angles_rad.items():
             initial_angles_deg[leg_name] = {}
@@ -35,7 +62,10 @@ class BodyConfig:
                 initial_angles_deg[leg_name][stage] = np.rad2deg(angles_rad)
         return initial_angles_deg
 
-    def get_copy_of_dof_bounds_in_deg(self):
+    def get_copy_of_dof_bounds_in_deg(self) -> Optional[dict[str, tuple[float, float]]]:
+        """Returns a copy of the DOF bounds in degrees. Note that this is a
+        *copy* of the underlying data, not a view of it. To mutate values,
+        modify `.dof_bounds_rad` in radians."""
         if self.dof_bounds_rad is None:
             return None
         dof_bounds_deg = {}
@@ -45,7 +75,9 @@ class BodyConfig:
 
     def set_initial_angles_in_deg(
         self, initial_angles_deg: dict[str, dict[str, np.ndarray]]
-    ):
+    ) -> None:
+        """Sets the initial joint angles using values in degrees. This mutates
+        the underlying data stored in `.initial_angles_rad`."""
         initial_angles_rad = {}
         for leg_name, stages in initial_angles_deg.items():
             initial_angles_rad[leg_name] = {}
@@ -54,6 +86,8 @@ class BodyConfig:
         self.initial_angles_rad = initial_angles_rad
 
     def set_dof_bounds_in_deg(self, dof_bounds_deg: dict[str, tuple[float, float]]):
+        """Sets the DOF bounds using values in degrees. This mutates the
+        underlying data stored in `.dof_bounds_rad`."""
         dof_bounds_rad = {}
         for dof, (lower_deg, upper_deg) in dof_bounds_deg.items():
             dof_bounds_rad[dof] = (np.deg2rad(lower_deg), np.deg2rad(upper_deg))
@@ -101,7 +135,6 @@ _NMF_BOUNDS_DEG = {
     "LF_TiTa_pitch": (-150, 0),
 }
 
-
 _NMF_SIZE = {
     "RF_Coxa": 0.40,
     "RM_Coxa": 0.182,
@@ -138,7 +171,10 @@ _NMF_SIZE = {
 }
 
 _NMF_PTS2ALIGN = {
-    "R_head": ["base_anten_R", "tip_anten_R"],
+    "R_head": [
+        "base_anten_R",
+        "tip_anten_R",
+    ],
     "RF_leg": [
         "thorax_coxa_R",
         "coxa_femur_R",
@@ -146,8 +182,15 @@ _NMF_PTS2ALIGN = {
         "tibia_tarsus_R",
         "claw_R",
     ],
-    "Thorax": ["thorax_wing_R", "thorax_midpoint_tether", "thorax_wing_L"],
-    "L_head": ["base_anten_L", "tip_anten_L"],
+    "Thorax": [
+        "thorax_wing_R",
+        "thorax_midpoint_tether",
+        "thorax_wing_L",
+    ],
+    "L_head": [
+        "base_anten_L",
+        "tip_anten_L",
+    ],
     "LF_leg": [
         "thorax_coxa_L",
         "coxa_femur_L",
@@ -156,7 +199,6 @@ _NMF_PTS2ALIGN = {
         "claw_L",
     ],
 }
-
 
 _NMF_SKELETON = [
     "base_anten_R",
@@ -177,7 +219,6 @@ _NMF_SKELETON = [
     "tibia_tarsus_L",
     "claw_L",
 ]
-
 
 _NMF_TEMPLATE = {
     "RF_Coxa": np.array([0.33, -0.17, 1.07]),
@@ -208,7 +249,6 @@ _NMF_TEMPLATE = {
     "R_dorsal_hum": np.array([0.41, -0.37, 1.32]),
     # "R_ant_notopleural": np.array([0.30, -0.39, 1.39]),
 }
-
 
 neuromechfly_body_config = BodyConfig(
     initial_angles_rad=_NMF_INITIAL_ANGLES_RAD,
