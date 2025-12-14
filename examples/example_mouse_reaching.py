@@ -30,7 +30,6 @@ from ikpy.chain import Chain
 from ikpy.link import OriginLink, URDFLink
 
 from seqikpy.leg_inverse_kinematics import LegInvKinBase
-from seqikpy.visualization import plot_3d_points, animate_3d_points
 
 
 # Simple axes helpers
@@ -45,7 +44,7 @@ class MouseArmSegmentLengths:
     forearm: float  # elbow -> wrist
 
 
-class MouseArmIKSeq(LegInvKinBase):
+class MouseArmIKSeq:
     """
     Sequential inverse kinematics for a single mouse arm.
 
