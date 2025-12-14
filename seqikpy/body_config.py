@@ -1,55 +1,116 @@
+import logging
 import numpy as np
-from dataclasses import dataclass
 from copy import deepcopy as _deepcopy
 from typing import Optional
 
+_logger = logging.getLogger(__name__)
 
-@dataclass
+
 class BodyConfig:
-    """
-    Configuration for the body model used in physics simulation.
 
-    Attributes:
-        segment_sizes (dict[str, float]): Size of the template body segments.
-        skeleton (list[str]): Key points that are used in alignment process.
-        points_to_align (dict[str, list[str]]): Body key points to align,
-            to be provided in `AlignPose`. Each key is the name of a kinematic
-            chain, and each value is a list of body keypoint names. All body
-            keypoint name must be found in `skeleton`.
-        template (dict[str, np.ndarray]): A template for the specified skeleton,
-            i.e. the xyz position of all body keypoints.
-        initial_angles_rad (Optional[dict[str, dict[str, np.ndarray]]]): Initial
-            joint angles for each leg and stage, in radians. The keys of the
-            outer dict are leg names (e.g., "RF", "LF"), and the keys of the
-            inner dict are stage names (e.g., "stage_1", "stage_2"). The values
-            of the inner dict are numpy arrays of joint angles relevant to that
-            processing stage in radians.
-        dof_bounds_rad (Optional[dict[str, tuple[float, float]]]): Lower and
-            upper bounds for each degree of freedom (DOF), in radians. Each key
-            is a DOF name (e.g., "RF_ThC_roll"), and each value is a tuple of
-            (lower_bound, upper_bound).
-    """
-
-    # Size of the template body segments
     segment_sizes: dict[str, float]
-
-    # Key points to align, to be provided in the alignment.Align class
     points_to_align: dict[str, list[str]]
-
-    # Key points that are used in alignment
     skeleton: list[str]
-
-    # Pose of each body landmark in the NeuroMechFly v0.0.6 model
-    # Note that each leg segment represents the joint in the proximal part
-    # For example, RF_Coxa means Thorax-Coxa joint
     template: dict[str, np.ndarray]
+    _initial_angles_rad: Optional[dict[str, dict[str, np.ndarray]]]
+    _dof_bounds_rad: Optional[dict[str, tuple[float, float]]]
 
-    # Initial joint angles for each leg and stage
-    initial_angles_rad: Optional[dict[str, dict[str, np.ndarray]]] = None
+    def __init__(
+        self,
+        segment_sizes: dict[str, float],
+        points_to_align: dict[str, list[str]],
+        skeleton: list[str],
+        template: dict[str, np.ndarray],
+        initial_angles_rad: Optional[dict[str, dict[str, np.ndarray]]] = None,
+        initial_angles_deg: Optional[dict[str, dict[str, np.ndarray]]] = None,
+        dof_bounds_rad: Optional[dict[str, tuple[float, float]]] = None,
+        dof_bounds_deg: Optional[dict[str, tuple[float, float]]] = None,
+    ):
+        """
+        Configuration for the body model used in physics simulation.
 
-    # Lower bound of a DOF should be strictly lower than the initial angle.
-    # Upper bound of a DOF should be strictly bigger than the initial angle.
-    dof_bounds_rad: Optional[dict[str, tuple[float, float]]] = None
+        Attributes:
+            segment_sizes (dict[str, float]): Size of the template body segments.
+            skeleton (list[str]): Key points that are used in alignment process.
+            points_to_align (dict[str, list[str]]): Body key points to align,
+                to be provided in `AlignPose`. Each key is the name of a kinematic
+                chain, and each value is a list of body keypoint names. All body
+                keypoint name must be found in `skeleton`.
+            template (dict[str, np.ndarray]): A template for the specified skeleton,
+                i.e. the xyz position of all body keypoints. For example, this can
+                be the pose of each body landmark in the NeuroMechFly v0.0.6 model.
+                Note that each leg segment represents the joint in the proximal part
+                For example, RF_Coxa means Thorax-Coxa joint
+            initial_angles_rad (Optional[dict[str, dict[str, np.ndarray]]]): Initial
+                joint angles for each leg and stage, in radians. The keys of the
+                outer dict are leg names (e.g., "RF", "LF"), and the keys of the
+                inner dict are stage names (e.g., "stage_1", "stage_2"). The values
+                of the inner dict are numpy arrays of joint angles relevant to that
+                processing stage in radians.
+            initial_angles_deg (Optional[dict[str, dict[str, np.ndarray]]]): Same
+                as `initial_angles_rad`, but in degrees. Specify only one of these.
+            dof_bounds_rad (Optional[dict[str, tuple[float, float]]]): Lower and
+                upper bounds for each degree of freedom (DOF), in radians. Each key
+                is a DOF name (e.g., "RF_ThC_roll"), and each value is a tuple of
+                (lower_bound, upper_bound).
+            dof_bounds_deg (Optional[dict[str, tuple[float, float]]]): Same as
+                `dof_bounds_rad`, but in degrees. Specify only one of these.
+        """
+        self.segment_sizes = segment_sizes
+        self.points_to_align = points_to_align
+        self.skeleton = skeleton
+        self.template = template
+
+        if initial_angles_rad is not None and initial_angles_deg is not None:
+            raise ValueError(
+                "Specify only one of initial_angles_rad or initial_angles_deg"
+            )
+        if initial_angles_rad is not None:
+            self.initial_angles_rad = initial_angles_rad
+        elif initial_angles_deg is not None:
+            self.set_initial_angles_in_deg(initial_angles_deg)
+        else:
+            self.initial_angles_rad = {}  # not set
+
+        if dof_bounds_rad is not None and dof_bounds_deg is not None:
+            raise ValueError("Specify only one of dof_bounds_rad or dof_bounds_deg")
+        if dof_bounds_rad is not None:
+            self.dof_bounds_rad = dof_bounds_rad
+        elif dof_bounds_deg is not None:
+            self.set_dof_bounds_in_deg(dof_bounds_deg)
+        else:
+            self.dof_bounds_rad = None  # not set
+
+    @property
+    def dof_bounds_rad(self):
+        return self._dof_bounds_rad
+
+    @dof_bounds_rad.setter
+    def dof_bounds_rad(self, value: Optional[dict[str, tuple[float, float]]]):
+        for dof, (lower, upper) in value.items():
+            if not upper > lower:
+                _logger.warning(
+                    f"Upper bound ({upper}) is not strictly greater than lower "
+                    f"bound ({lower}) for DoF {dof}"
+                )
+            if not (-np.pi <= lower <= np.pi) or not (-np.pi <= upper <= np.pi):
+                _logger.warning(f"DOF bounds for {dof} are out of range [-pi, pi]")
+        self._dof_bounds_rad = value
+
+    @property
+    def initial_angles_rad(self):
+        return self._initial_angles_rad
+
+    @initial_angles_rad.setter
+    def initial_angles_rad(self, value: Optional[dict[str, dict[str, np.ndarray]]]):
+        for chain, initial_angles_by_stage in value.items():
+            for stage, initial_angles in initial_angles_by_stage.items():
+                if (initial_angles < -np.pi).any() or (initial_angles > np.pi).any():
+                    _logger.warning(
+                        f"Some initial angles for chain {chain} at stage {stage} "
+                        f"are out of range [-pi, pi]"
+                    )
+        self._initial_angles_rad = value
 
     def get_copy_of_initial_angles_in_deg(self) -> dict[str, dict[str, np.ndarray]]:
         """Returns a copy of the initial joint angles in degrees. Note that this
@@ -251,10 +312,10 @@ _NMF_TEMPLATE = {
 }
 
 neuromechfly_body_config = BodyConfig(
-    initial_angles_rad=_NMF_INITIAL_ANGLES_RAD,
     segment_sizes=_NMF_SIZE,
     points_to_align=_NMF_PTS2ALIGN,
     skeleton=_NMF_SKELETON,
     template=_NMF_TEMPLATE,
+    initial_angles_rad=_NMF_INITIAL_ANGLES_RAD,
+    dof_bounds_deg=_NMF_BOUNDS_DEG,
 )
-neuromechfly_body_config.set_dof_bounds_in_deg(_NMF_BOUNDS_DEG)
