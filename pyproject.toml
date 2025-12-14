@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seqikpy"
+version = "1.1.0"
+description = "Inverse kinematics module for biomechanical models"
+readme = "README.md"
+requires-python = ">=3.10,<3.15"
+license = { text = "Apache License 2.0" }
+keywords = ["inverse kinematics", "robotics", "insects", "motion analysis"]
+authors = [
+    { name = "Pembe Gizem Özdil", email = "pgizemozdil@gmail.com" },
+    { name = "Sibo Wang-Chen", email = "sibo.wang@epfl.ch" },
+    { name = "Chuanfang Ning", email = "chuanfang.ning@epfl.ch" },
+    { name = "Auke Ijspeert", email = "auke.ijspeert@epfl.ch" },
+    { name = "Pavan Ramdya", email = "pavan.ramdya@epfl.ch" },
+]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Software Development :: Libraries",
+]
+
+dependencies = [
+    "ikpy>=3.3.4,<4",
+    "opencv-python>=4.5,<5",
+    "numpy>=2.0,<3",
+    "tqdm>=4,<5",
+    "matplotlib>=3,<4",
+    "pandas>=2,<3",
+    "joblib>=1.5,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9,<10",
+    "ImageHash>=4.3,<5",
+    "black==25.11.0",
+]
+
+[project.urls]
+Homepage = "https://nely-epfl.github.io/sequential-inverse-kinematics"
+Repository = "https://github.com/NeLy-EPFL/sequential-inverse-kinematics"
+
+[tool.setuptools.packages.find]
+include = ["seqikpy", "seqikpy.*"]
