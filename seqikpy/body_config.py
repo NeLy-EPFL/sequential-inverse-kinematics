@@ -1,0 +1,321 @@
+import logging
+import numpy as np
+from copy import deepcopy as _deepcopy
+from typing import Optional
+
+_logger = logging.getLogger(__name__)
+
+
+class BodyConfig:
+
+    segment_sizes: dict[str, float]
+    points_to_align: dict[str, list[str]]
+    skeleton: list[str]
+    template: dict[str, np.ndarray]
+    _initial_angles_rad: Optional[dict[str, dict[str, np.ndarray]]]
+    _dof_bounds_rad: Optional[dict[str, tuple[float, float]]]
+
+    def __init__(
+        self,
+        segment_sizes: dict[str, float],
+        points_to_align: dict[str, list[str]],
+        skeleton: list[str],
+        template: dict[str, np.ndarray],
+        initial_angles_rad: Optional[dict[str, dict[str, np.ndarray]]] = None,
+        initial_angles_deg: Optional[dict[str, dict[str, np.ndarray]]] = None,
+        dof_bounds_rad: Optional[dict[str, tuple[float, float]]] = None,
+        dof_bounds_deg: Optional[dict[str, tuple[float, float]]] = None,
+    ):
+        """
+        Configuration for the body model used in physics simulation.
+
+        Attributes:
+            segment_sizes (dict[str, float]): Size of the template body segments.
+            skeleton (list[str]): Key points that are used in alignment process.
+            points_to_align (dict[str, list[str]]): Body key points to align,
+                to be provided in `AlignPose`. Each key is the name of a kinematic
+                chain, and each value is a list of body keypoint names. All body
+                keypoint name must be found in `skeleton`.
+            template (dict[str, np.ndarray]): A template for the specified skeleton,
+                i.e. the xyz position of all body keypoints. For example, this can
+                be the pose of each body landmark in the NeuroMechFly v0.0.6 model.
+                Note that each leg segment represents the joint in the proximal part
+                For example, RF_Coxa means Thorax-Coxa joint
+            initial_angles_rad (Optional[dict[str, dict[str, np.ndarray]]]): Initial
+                joint angles for each leg and stage, in radians. The keys of the
+                outer dict are leg names (e.g., "RF", "LF"), and the keys of the
+                inner dict are stage names (e.g., "stage_1", "stage_2"). The values
+                of the inner dict are numpy arrays of joint angles relevant to that
+                processing stage in radians.
+            initial_angles_deg (Optional[dict[str, dict[str, np.ndarray]]]): Same
+                as `initial_angles_rad`, but in degrees. Specify only one of these.
+            dof_bounds_rad (Optional[dict[str, tuple[float, float]]]): Lower and
+                upper bounds for each degree of freedom (DOF), in radians. Each key
+                is a DOF name (e.g., "RF_ThC_roll"), and each value is a tuple of
+                (lower_bound, upper_bound).
+            dof_bounds_deg (Optional[dict[str, tuple[float, float]]]): Same as
+                `dof_bounds_rad`, but in degrees. Specify only one of these.
+        """
+        self.segment_sizes = segment_sizes
+        self.points_to_align = points_to_align
+        self.skeleton = skeleton
+        self.template = template
+
+        if initial_angles_rad is not None and initial_angles_deg is not None:
+            raise ValueError(
+                "Specify only one of initial_angles_rad or initial_angles_deg"
+            )
+        if initial_angles_rad is not None:
+            self.initial_angles_rad = initial_angles_rad
+        elif initial_angles_deg is not None:
+            self.set_initial_angles_in_deg(initial_angles_deg)
+        else:
+            self.initial_angles_rad = {}  # not set
+
+        if dof_bounds_rad is not None and dof_bounds_deg is not None:
+            raise ValueError("Specify only one of dof_bounds_rad or dof_bounds_deg")
+        if dof_bounds_rad is not None:
+            self.dof_bounds_rad = dof_bounds_rad
+        elif dof_bounds_deg is not None:
+            self.set_dof_bounds_in_deg(dof_bounds_deg)
+        else:
+            self.dof_bounds_rad = None  # not set
+
+    @property
+    def dof_bounds_rad(self):
+        return self._dof_bounds_rad
+
+    @dof_bounds_rad.setter
+    def dof_bounds_rad(self, value: Optional[dict[str, tuple[float, float]]]):
+        for dof, (lower, upper) in value.items():
+            if not upper > lower:
+                _logger.warning(
+                    f"Upper bound ({upper}) is not strictly greater than lower "
+                    f"bound ({lower}) for DoF {dof}"
+                )
+            if not (-np.pi <= lower <= np.pi) or not (-np.pi <= upper <= np.pi):
+                _logger.warning(f"DOF bounds for {dof} are out of range [-pi, pi]")
+        self._dof_bounds_rad = value
+
+    @property
+    def initial_angles_rad(self):
+        return self._initial_angles_rad
+
+    @initial_angles_rad.setter
+    def initial_angles_rad(self, value: Optional[dict[str, dict[str, np.ndarray]]]):
+        for chain, initial_angles_by_stage in value.items():
+            for stage, initial_angles in initial_angles_by_stage.items():
+                if (initial_angles < -np.pi).any() or (initial_angles > np.pi).any():
+                    _logger.warning(
+                        f"Some initial angles for chain {chain} at stage {stage} "
+                        f"are out of range [-pi, pi]"
+                    )
+        self._initial_angles_rad = value
+
+    def get_copy_of_initial_angles_in_deg(self) -> dict[str, dict[str, np.ndarray]]:
+        """Returns a copy of the initial joint angles in degrees. Note that this
+        is a *copy* of the underlying data, not a view of it. To mutate values,
+        modify `.initial_angles_rad` in radians."""
+        initial_angles_deg = {}
+        for leg_name, stages in self.initial_angles_rad.items():
+            initial_angles_deg[leg_name] = {}
+            for stage, angles_rad in stages.items():
+                initial_angles_deg[leg_name][stage] = np.rad2deg(angles_rad)
+        return initial_angles_deg
+
+    def get_copy_of_dof_bounds_in_deg(self) -> Optional[dict[str, tuple[float, float]]]:
+        """Returns a copy of the DOF bounds in degrees. Note that this is a
+        *copy* of the underlying data, not a view of it. To mutate values,
+        modify `.dof_bounds_rad` in radians."""
+        if self.dof_bounds_rad is None:
+            return None
+        dof_bounds_deg = {}
+        for dof, (lower_rad, upper_rad) in self.dof_bounds_rad.items():
+            dof_bounds_deg[dof] = (np.rad2deg(lower_rad), np.rad2deg(upper_rad))
+        return dof_bounds_deg
+
+    def set_initial_angles_in_deg(
+        self, initial_angles_deg: dict[str, dict[str, np.ndarray]]
+    ) -> None:
+        """Sets the initial joint angles using values in degrees. This mutates
+        the underlying data stored in `.initial_angles_rad`."""
+        initial_angles_rad = {}
+        for leg_name, stages in initial_angles_deg.items():
+            initial_angles_rad[leg_name] = {}
+            for stage, angles_deg in stages.items():
+                initial_angles_rad[leg_name][stage] = np.deg2rad(angles_deg)
+        self.initial_angles_rad = initial_angles_rad
+
+    def set_dof_bounds_in_deg(self, dof_bounds_deg: dict[str, tuple[float, float]]):
+        """Sets the DOF bounds using values in degrees. This mutates the
+        underlying data stored in `.dof_bounds_rad`."""
+        dof_bounds_rad = {}
+        for dof, (lower_deg, upper_deg) in dof_bounds_deg.items():
+            dof_bounds_rad[dof] = (np.deg2rad(lower_deg), np.deg2rad(upper_deg))
+        self.dof_bounds_rad = dof_bounds_rad
+
+    def deepcopy(self):
+        return _deepcopy(self)
+
+
+# Define default BodyConfig for NeuroMechFly
+_NMF_INITIAL_ANGLES_RAD = {
+    "RF": {
+        # Base ThC yaw pitch CTr pitch
+        "stage_1": np.array([0.0, 0.45, -0.07, -2.14]),
+        # Base ThC yaw pitch roll CTr pitch CTr roll
+        "stage_2": np.array([0.0, 0.45, -0.07, -0.32, -2.14, 1.4]),
+        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch
+        "stage_3": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0]),
+        # Base ThC yaw pitch roll CTr pitch CTr roll FTi pitch TiTa pitch
+        "stage_4": np.array([0.0, 0.45, -0.07, -0.32, -2.14, -1.25, 1.48, 0.0, 0.0]),
+    },
+    # Same order for the contralateral leg
+    "LF": {
+        "stage_1": np.array([0.0, -0.45, -0.07, -2.14]),
+        "stage_2": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.4]),
+        "stage_3": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0]),
+        "stage_4": np.array([0.0, -0.45, -0.07, 0.32, -2.14, 1.25, 1.48, 0.0, 0.0]),
+    },
+}
+
+_NMF_BOUNDS_DEG = {
+    "RF_ThC_roll": (-130, 50),
+    "RF_ThC_yaw": (-50, 50),
+    "RF_ThC_pitch": (-40, 60),
+    "RF_CTr_pitch": (-180, 0),
+    "RF_CTr_roll": (-150, 0),
+    "RF_FTi_pitch": (0, 170),
+    "RF_TiTa_pitch": (-150, 0),
+    "LF_ThC_roll": (-50, 130),
+    "LF_ThC_yaw": (-50, 50),
+    "LF_ThC_pitch": (-40, 60),
+    "LF_CTr_pitch": (-180, 0),
+    "LF_CTr_roll": (0, 150),
+    "LF_FTi_pitch": (0, 170),
+    "LF_TiTa_pitch": (-150, 0),
+}
+
+_NMF_SIZE = {
+    "RF_Coxa": 0.40,
+    "RM_Coxa": 0.182,
+    "RH_Coxa": 0.199,
+    "LF_Coxa": 0.40,
+    "LM_Coxa": 0.182,
+    "LH_Coxa": 0.199,
+    "RF_Femur": 0.69,
+    "RM_Femur": 0.7829999999999999,
+    "RH_Femur": 0.8360000000000001,
+    "LF_Femur": 0.69,
+    "LM_Femur": 0.7829999999999999,
+    "LH_Femur": 0.8360000000000001,
+    "RF_Tibia": 0.54,
+    "RM_Tibia": 0.668,
+    "RH_Tibia": 0.6849999999999998,
+    "LF_Tibia": 0.54,
+    "LM_Tibia": 0.668,
+    "LH_Tibia": 0.6849999999999998,
+    "RF_Tarsus": 0.63,
+    "RM_Tarsus": 0.6949999999999998,
+    "RH_Tarsus": 0.7950000000000002,
+    "LF_Tarsus": 0.63,
+    "LM_Tarsus": 0.6949999999999998,
+    "LH_Tarsus": 0.7950000000000002,
+    "RF": 2.26,
+    "RM": 2.328,
+    "RH": 2.515,
+    "LF": 2.26,
+    "LM": 2.328,
+    "LH": 2.515,
+    "Antenna": 0.2745906043549196,
+    "Antenna_mid_thorax": 0.9355746896961248,
+}
+
+_NMF_PTS2ALIGN = {
+    "R_head": [
+        "base_anten_R",
+        "tip_anten_R",
+    ],
+    "RF_leg": [
+        "thorax_coxa_R",
+        "coxa_femur_R",
+        "femur_tibia_R",
+        "tibia_tarsus_R",
+        "claw_R",
+    ],
+    "Thorax": [
+        "thorax_wing_R",
+        "thorax_midpoint_tether",
+        "thorax_wing_L",
+    ],
+    "L_head": [
+        "base_anten_L",
+        "tip_anten_L",
+    ],
+    "LF_leg": [
+        "thorax_coxa_L",
+        "coxa_femur_L",
+        "femur_tibia_L",
+        "tibia_tarsus_L",
+        "claw_L",
+    ],
+}
+
+_NMF_SKELETON = [
+    "base_anten_R",
+    "tip_anten_R",
+    "thorax_coxa_R",
+    "coxa_femur_R",
+    "femur_tibia_R",
+    "tibia_tarsus_R",
+    "claw_R",
+    "thorax_wing_R",
+    "thorax_midpoint_tether",
+    "thorax_wing_L",
+    "base_anten_L",
+    "tip_anten_L",
+    "thorax_coxa_L",
+    "coxa_femur_L",
+    "femur_tibia_L",
+    "tibia_tarsus_L",
+    "claw_L",
+]
+
+_NMF_TEMPLATE = {
+    "RF_Coxa": np.array([0.33, -0.17, 1.07]),
+    "RF_Femur": np.array([0.33, -0.17, 0.67]),
+    "RF_Tibia": np.array([0.33, -0.17, -0.02]),
+    "RF_Tarsus": np.array([0.33, -0.17, -0.56]),
+    "RF_Claw": np.array([0.33, -0.17, -1.19]),
+    "LF_Coxa": np.array([0.33, 0.17, 1.07]),
+    "LF_Femur": np.array([0.33, 0.17, 0.67]),
+    "LF_Tibia": np.array([0.33, 0.17, -0.02]),
+    "LF_Tarsus": np.array([0.33, 0.17, -0.56]),
+    "LF_Claw": np.array([0.33, 0.17, -1.19]),
+    "R_Antenna_base": np.array([1.01, -0.10, 1.41]),
+    "L_Antenna_base": np.array([1.01, 0.10, 1.41]),
+    "R_Antenna_edge": np.array([1.06, -0.10, 1.14]),
+    "L_Antenna_edge": np.array([1.06, 0.10, 1.14]),
+    # "Labellum": np.array([0.75, 0.0, 0.81]),
+    "R_post_vertical": np.array([0.7, -0.2, 1.59]),
+    "L_post_vertical": np.array([0.7, 0.2, 1.59]),
+    # "R_ant_orb": np.array([0.88, -0.18, 1.49]),
+    # "L_ant_orb": np.array([0.88, 0.18, 1.49]),
+    "R_wing": np.array([0.08, -0.4, 1.43]),
+    "L_wing": np.array([0.08, 0.4, 1.43]),
+    "Neck": np.array([0.53, 0.0, 1.3]),
+    "Thorax_mid": np.array([0.08, 0.0, 1.43]),
+    "L_dorsal_hum": np.array([0.41, 0.37, 1.32]),
+    # "L_ant_notopleural": np.array([0.28, 0.39, 1.39]),
+    "R_dorsal_hum": np.array([0.41, -0.37, 1.32]),
+    # "R_ant_notopleural": np.array([0.30, -0.39, 1.39]),
+}
+
+neuromechfly_body_config = BodyConfig(
+    segment_sizes=_NMF_SIZE,
+    points_to_align=_NMF_PTS2ALIGN,
+    skeleton=_NMF_SKELETON,
+    template=_NMF_TEMPLATE,
+    initial_angles_rad=_NMF_INITIAL_ANGLES_RAD,
+    dof_bounds_deg=_NMF_BOUNDS_DEG,
+)

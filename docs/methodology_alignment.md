@@ -8,9 +8,9 @@ The computation of joint angles could serve two primary purposes:
 
 ## Alignment process
 
-We first map and align the experimentally acquired 3D poses with a biomechanical model's body [NeuroMechFly](https://github.com/NeLy-EPFL/NeuroMechFly). The alignment process consists of two stages. At the initial stage, we calculate the distances between specific body landmarks to derive the scaling constant to magnify or reduce the size of the experimental 3D data to match the body proportions of the biomechanical model (shown in the Figure below).
+We first map and align the experimentally acquired 3D poses with a biomechanical model's body [NeuroMechFly](https://github.com/NeLy-EPFL/NeuroMechFly). Such templates can be obtained directly from biomechanical models (e.g., URDF/SDF files) by extracting joint locations in a reference pose using the provided [from_sdf](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/1598cf49a166f061695c01b5feace398be2a5cac/seqikpy/utils.py#L394) functionality or standard 3D modeling tools. This process is also known as calibration in the pose estimation literature. This process is also known as "calibration" in pose estimation literature. The alignment process consists of two stages. At the initial stage, we calculate the distances between specific body landmarks to derive the scaling constant to magnify or reduce the size of the experimental 3D data to match the body proportions of the biomechanical model (shown in the Figure below).
 
-```{image} ./images/NMF_zero_pose.png
+```{image} ./_images/NMF_zero_pose.png
 :width: 800px
 :align: center
 :name: biomech-model

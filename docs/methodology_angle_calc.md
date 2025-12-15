@@ -26,16 +26,14 @@ For instance, if the thorax-coxa joint angles are calculated in the order of *ya
 
 ## Head and antennal joint angle calculation
 
-Since the head consists of two moving body parts (left and right antennae) on the main neck joint, the kinematic chain approach is infeasible as it tends to follow one antenna "more closely" than the other, thus introducing errors.
-
-To calculate the neck and antennal joint angles, we resorted to the conventional angle formula using the dot product of two vectors.
+Since the head consists of two coupled kinematic chains (left and right antennae) attached to the same neck joint, a single kinematic chain formulation is not suitable, as it tends to bias the solution toward one antenna and introduces angle estimation errors. We therefore compute head and antennal joint angles using vector-based geometric definitions instead of a unified inverse kinematics model.
 
 The vectors constructed for the head joint angles are as follows:
 
-- **Head roll:** the angle between the vector from the right antenna base to the right antenna base and the global mediolateral axis.
-- **Head pitch:** the angle between the vector from the neck to the mid-antennae base and the global anteroposterior axis.
-- **Head yaw:** the angle between the vector from the right antenna base to the right antenna base and the global anteroposterior axis.
-- **Antennal pitch:** the angle between the vector from the neck to the antenna base and the vector from the antenna base to the tip.
-- **Antennal yaw:** the angle between the vector from the right antenna base to the left antenna base and the vector from the antenna base to the antenna tip.
+- **Head roll:** The angle between the vector from the right antenna base to the left antenna base, and the global mediolateral axis in the transverse plane.
+- **Head pitch:** The angle between the vector from the neck to the mid-antennae base and the global anteroposterior axis in the sagittal plane. We subtracted the resting head pitch angle from the calculated joint angles to obtain joint angles relative to the resting position.
+- **Head yaw:** The angle between the vector from the right antenna base to the left antenna base, and the global anteroposterior axis in the dorsal plane.
+- **Antennal pitch:** The angle between the vector from the neck to the antenna base and the vector from the antenna base to the antenna tip in the sagittal plane.
+- **Antennal yaw:** The angle between the vector from the right antenna base to the left antenna base and the vector from the antenna base to the antenna tip in the transverse plane.
 
 Note that, when the head rotation reaches 90 degrees, the antennal pitch and yaw calculations will swap their roles, causing inaccurate computations. To circumvent this issue, we first calculate the head joint angles and then de-rotate the head key points by the amount of head rotation to calculate the antennal joint angles.

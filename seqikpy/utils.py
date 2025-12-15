@@ -1,16 +1,14 @@
-""" Utilities. """
+"""Utilities."""
 
-from pathlib import Path
 import logging
-from typing import Dict, List
 import pickle
 import numpy as np
 import cv2
-from scipy.interpolate import pchip_interpolate
-
-import xml
 import xml.etree.ElementTree as ET
-import numpy as np
+from pathlib import Path
+from typing import Dict, List
+from collections import defaultdict
+from scipy.interpolate import pchip_interpolate
 
 
 def get_fps_from_video(video_dir):
@@ -134,14 +132,6 @@ def calculate_body_size(
         )
 
     return body_size
-
-
-def drop_level_dlc(data_frame):
-    """Converts DLC type dataframe into one level df."""
-    data_frame.columns = data_frame.columns.droplevel()
-    data_frame.columns = ["_".join(col) for col in data_frame.columns.values]
-
-    return data_frame
 
 
 def fix_coxae_pos(
@@ -431,3 +421,160 @@ def from_sdf(sdf_file: str):
         for joint in joints
     }
     return body_template, joint_bounds
+
+
+def split_arrays_into_chunks(
+    arrays: list[np.ndarray],
+    approx_n_chunks_total: int,
+    overlap: int = 20,
+    min_chunk_size: int = 100,
+) -> list[tuple[int, int, np.ndarray]]:
+    """Splits arrays into chunks with overlap between chunks. This is useful for
+    processing long sequences from multiple kinematic chains in parallel.
+
+    Parameters
+    ----------
+    arrays : list[np.ndarray]
+        List of arrays to be split into chunks. Each array should have shape
+        (sequence_length, ...) where `...` can be any number of dimensions.
+    approx_n_chunks_total : int
+        Approximate number of chunks to split the arrays into. The actual number of
+        chunks is generally different in order to make the total number of chunks a
+        multiple of the number of arrays (i.e. kinematic chains).
+    overlap : int, optional
+        Number of overlapping frames between chunks, by default 20.
+    min_chunk_size : int, optional
+        Minimum size of each chunk, by default 100.
+
+    Returns
+    -------
+    list[tuple[int, int, np.ndarray]]
+        List of tuples containing
+            - array_idx: int
+            - start_idx_within_array: int
+            - chunk_of_array: np.ndarray
+    """
+    assert overlap < min_chunk_size, "Overlap must be smaller than min_chunk_size."
+    n_arrays = len(arrays)
+    assert n_arrays > 0, "Number of arrays must be positive"
+    assert (
+        approx_n_chunks_total >= n_arrays
+    ), "Approximate number of chunks must be at least equal to the number of arrays."
+    n_chunks_per_array = int(approx_n_chunks_total / n_arrays)  # guaranteed to be >= 1
+    for arr in arrays:
+        assert arr.shape == arrays[0].shape, "All arrays must have the same shape."
+    assert arrays[0].ndim >= 1, "Arrays must be at least 1-dimensional."
+    seq_length = arrays[0].shape[0]
+
+    # If the chunk size is too small, return the entire arrays as single chunks
+    if seq_length <= min_chunk_size:
+        return [(arr_idx, 0, arr) for arr_idx, arr in enumerate(arrays)]
+
+    # Create chunks
+    chunk_size = seq_length // n_chunks_per_array  # last chunk is generally larger
+    if chunk_size < min_chunk_size:
+        n_chunks_per_array = seq_length // min_chunk_size
+        chunk_size = seq_length // n_chunks_per_array
+        logging.warning(
+            f"Requested number of chunks results in chunk size smaller than "
+            f"min_chunk_size. Reducing number of chunks per array to "
+            f"{n_chunks_per_array}."
+        )
+
+    chunks = []
+    for array_idx, arr in enumerate(arrays):
+        start_idx = 0
+        for chunk_idx in range(n_chunks_per_array):
+            # Determine the end index of the chunk before adding overlap
+            if chunk_idx == n_chunks_per_array - 1:
+                end_idx_before_overlap = seq_length
+                end_idx_after_overlap = seq_length
+            else:
+                end_idx_before_overlap = start_idx + chunk_size
+                end_idx_after_overlap = end_idx_before_overlap + overlap
+                assert end_idx_after_overlap <= seq_length, (
+                    "Chunk end idx with overlap exceeds array length - shouldn't "
+                    "happen because the present chunk is not the last one, and the "
+                    "chunk after it is guaranteed to be at least `min_chunk_size` "
+                    "long, which is guaranteed to be larger than `overlap`."
+                )
+            assert end_idx_before_overlap - start_idx >= min_chunk_size, (
+                "Chunk size is smaller than minimum chunk size - shouldn't happen "
+                "because the total array length is guaranteed to be at least "
+                "`min_chunk_size` long and the `n_chunks` is rounded down."
+            )
+
+            chunk_arr = arr[start_idx:end_idx_after_overlap]
+            chunks.append((array_idx, start_idx, chunk_arr))
+            start_idx = end_idx_before_overlap
+    return chunks
+
+
+def merge_chunks_into_arrays(
+    chunks: list[tuple[int, int, np.ndarray]],
+    n_arrays: int,
+    seq_length: int,
+    overlap: int = 20,
+) -> list[np.ndarray]:
+    """Merges chunks back into arrays.
+
+    Parameters
+    ----------
+    chunks : list[tuple[int, int, np.ndarray]]
+        List of tuples containing
+            - array_idx: int
+            - start_idx_within_array: int
+            - chunk_of_array: np.ndarray of shape (chunk_length_with_overlap, ...)
+    n_arrays : int
+        Number of arrays (i.e. kinematic chains).
+    seq_length : int
+        Length of each array.
+    overlap : int, optional
+        Number of overlapping frames between chunks, by default 20.
+
+    Returns
+    -------
+    list[np.ndarray]
+        List of merged arrays, each of shape (seq_length, ...) where `...` matches the
+        shape of chunked arrays in the input.
+    """
+    assert n_arrays > 0, "Number of arrays must be positive"
+    ref_arr = chunks[0][2]
+    assert ref_arr.ndim >= 1, "Arrays must be at least 1-dimensional"
+    for _, _, chunk_arr in chunks:
+        assert (
+            chunk_arr.shape[1:] == ref_arr.shape[1:]
+        ), "All chunks must have the same shape except for the 0th dimension"
+
+    # Blend chunks into full arrays
+    merged_arrays = [
+        np.zeros((seq_length, *ref_arr.shape[1:]), dtype=ref_arr.dtype)
+        for _ in range(n_arrays)
+    ]
+    for array_idx, start_idx, chunk_arr in chunks:
+        # The first part of the chunk overlaps with the previous chunk. The policy is:
+        #   - For the first half of the overlap, just use data from the previous chunk
+        #     while the current chunk is still "warming up" from the initial condition
+        #   - For the second half of the overlap, use a linear "blend" between the
+        #     previous chunk and the current chunk, with the weight of the current chunk
+        #     increasing linearly from 0 to 1.
+        chunk_length_with_overlap = chunk_arr.shape[0]
+        blend_weight_curr = np.ones(chunk_length_with_overlap)
+        if start_idx > 0:
+            # Ramp up the weight of the current chunk over the overlap region
+            blend_weight_curr[:overlap] = np.linspace(-1, 1, overlap, endpoint=False)
+            blend_weight_curr = np.clip(blend_weight_curr, 0, 1)
+        target_slice = np.s_[start_idx : start_idx + chunk_length_with_overlap]
+        mask_shape = (chunk_length_with_overlap,) + (1,) * (chunk_arr.ndim - 1)
+        blend_weight_curr = blend_weight_curr.reshape(mask_shape)
+        blend_weight_prev = 1 - blend_weight_curr
+        if n_arrays == 1:
+            # special case: if dofs are already separated by leg, then we should save
+            # data to the only array even though array_idx might be > 0 (because they
+            # can be originally from all legs)
+            array_idx = 0
+        target_arr = merged_arrays[array_idx]
+        target_arr[target_slice] = (
+            target_arr[target_slice] * blend_weight_prev + chunk_arr * blend_weight_curr
+        )
+    return merged_arrays

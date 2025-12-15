@@ -12,10 +12,10 @@ seqikpy.alignment module
    :undoc-members:
    :show-inheritance:
 
-seqikpy.data module
--------------------
+seqikpy.body_config module
+--------------------------
 
-.. automodule:: seqikpy.data
+.. automodule:: seqikpy.body_config
    :members:
    :undoc-members:
    :show-inheritance:

@@ -6,7 +6,7 @@
 </p>
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-red)](https://opensource.org/license/apache-2-0)
-[![python](https://img.shields.io/badge/python-3.9%2C%203.10-blue)]()
+[![python](https://img.shields.io/pypi/pyversions/seqikpy)]()
 [![Cov](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/main/docs/images/coverage.svg?raw=true)]()
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12601317.svg)](https://doi.org/10.5281/zenodo.12601317)
 </div>
@@ -46,9 +46,25 @@ Documentation can be found [here](https://nely-epfl.github.io/sequential-inverse
 
 # 🛠️ Installation
 
-You can install the newest version of the package manually by running the following line in the terminal:
+If you aim to purely use SeqIKPy as a dependency for your project, you can install the newest version of the package manually by running the following line in the terminal:
 ```bash
+# Optionally create/activate a virtual environment first. Then,
 $ pip install seqikpy
+```
+
+If you plan to follow the tutorial or help develop SeqIKPy, you should download the `data/` directory, which contains sample data for demonstration and testing. In this case, you should clone this GitHub repository and installing it locally instead of downloading it from PyPI:
+```bash
+# Optionally create/activate a virtual environment first. Then,
+$ git clone git@github.com:NeLy-EPFL/sequential-inverse-kinematics.git
+# ... or with HTTP: git clone https://github.com/NeLy-EPFL/sequential-inverse-kinematics.git
+$ cd sequential-inverse-kinematics/
+
+# Install the package locally (development mode)
+$ pip install -e ".[dev]" --config-settings editable_mode=compat
+# ... where editable_mode=compat helps static code analyzers in IDEs parse your code better
+
+# Alternatively, use uv for faster dependency resolution (`pip install uv` first)
+$ uv pip install -e ".[dev]"
 ```
 
 # 🏁 Quick Start
@@ -72,7 +88,7 @@ If you find this package useful in your research, please consider citing it usin
 
 ```bibtex
 @software{ozdil2024seqikpy,
-  author       = {Ozdil, Pembe Gizem and Ijspeert, Auke and Ramdya, Pavan},
+  author       = {{\"O}zdil, Pembe Gizem and Wang-Chen, Sibo and Ning, Chuanfang and Ijspeert, Auke and Ramdya, Pavan},
   title        = {sequential-inverse-kinematics: v1.0.0},
   month        = jun,
   year         = 2024,

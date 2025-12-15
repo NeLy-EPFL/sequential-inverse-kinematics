@@ -1,4 +1,4 @@
-""" Test visualization tools """
+"""Test visualization tools"""
 
 import pytest
 

@@ -1,12 +1,13 @@
 """
-    Runs the entire pipeline from pose alignment to joint angles on a path given by the user.
-    Note that running this script will take about 40 minutes.
+Runs the entire pipeline from pose alignment to joint angles on a path given by the user.
+Note that running this script will take about 40 minutes.
 
-    Example usage:
+Example usage:
 
-    >>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001 --plot
+>>> python example_entire_pipeline.py -p ../data/anipose_220525_aJO_Fly001_001 --plot
 
 """
+
 import logging
 from pathlib import Path
 import time
@@ -17,13 +18,15 @@ from seqikpy.alignment import AlignPose, convert_from_anipose_to_dict
 from seqikpy.kinematic_chain import KinematicChainSeq
 from seqikpy.leg_inverse_kinematics import LegInvKinSeq
 from seqikpy.head_inverse_kinematics import HeadInverseKinematics
-from seqikpy.data import BOUNDS, INITIAL_ANGLES, NMF_TEMPLATE, PTS2ALIGN
-from seqikpy.utils import save_file, from_sdf
+from seqikpy.body_config import neuromechfly_body_config
+from seqikpy.utils import save_file
 
 logging.basicConfig(
     format=" %(asctime)s - %(levelname)s- %(message)s",
-    handlers=[logging.StreamHandler()]
+    handlers=[logging.StreamHandler()],
 )
+
+logging.getLogger().setLevel(logging.INFO)
 
 
 def parse_args():
@@ -49,14 +52,14 @@ def parse_args():
 if __name__ == "__main__":
 
     args = parse_args()
-    path_name = args.path
+    path_name = (
+        args.path if args.path is not None else "../data/anipose_220807_Fly002_002"
+    )
 
-    path_name += "/" if not path_name.endswith("/") else ""
+    paths = Path(path_name).rglob("pose3d.h5")
 
-    paths = Path(path_name).rglob("pose-3d")
-
-    for data_path in paths:
-
+    for data_path_file in paths:
+        data_path = data_path_file.parent
         logging.info("Running code in %s", data_path)
 
         start = time.time()
@@ -66,35 +69,32 @@ if __name__ == "__main__":
             file_name="pose3d.h5",
             legs_list=["RF", "LF"],
             convert_func=convert_from_anipose_to_dict,
-            pts2align=PTS2ALIGN,
+            pts2align=neuromechfly_body_config.points_to_align,
             include_claw=False,
-            body_template=NMF_TEMPLATE,
-            log_level="INFO"
+            body_template=neuromechfly_body_config.template,
         )
 
         aligned_pos = align.align_pose(export_path=data_path)
         # Compute the head joint angles
         class_hk = HeadInverseKinematics(
             aligned_pos=aligned_pos,
-            body_template=NMF_TEMPLATE,
+            body_template=neuromechfly_body_config.template,
         )
         head_joint_angles = class_hk.compute_head_angles(
-            export_path=data_path,
-            compute_ant_angles=True
+            export_path=data_path, compute_ant_angles=True
         )
         # Calculate the leg joint angles using the sequential IK
         class_seq_ik = LegInvKinSeq(
             aligned_pos=aligned_pos,
             kinematic_chain_class=KinematicChainSeq(
-                bounds_dof=BOUNDS,
+                bounds_dof=neuromechfly_body_config.dof_bounds_rad,
                 legs_list=["RF", "LF"],
                 body_size=None,
             ),
-            initial_angles=INITIAL_ANGLES
+            initial_angles=neuromechfly_body_config.initial_angles_rad,
         )
         leg_joint_angles, forward_kinematics = class_seq_ik.run_ik_and_fk(
-            export_path=data_path,
-            hide_progress_bar=False
+            export_path=data_path, hide_progress_bar=False
         )
 
         full_body_ik = {**head_joint_angles, **leg_joint_angles}
@@ -111,7 +111,6 @@ if __name__ == "__main__":
             import matplotlib.pyplot as plt
 
             time_step = 1e-2
-            time = time = np.arange(0, full_body_ik['Angle_head_roll'].shape[0], 1) * time_step
 
             for ja_name, ja_value in full_body_ik.items():
                 plt.plot(ja_value, label=ja_name, lw=2)

@@ -1,4 +1,4 @@
-""" Functions for plotting and animation. """
+"""Functions for plotting and animation."""
 
 import logging
 import subprocess
@@ -142,7 +142,7 @@ def video_frames_generator(
 def get_plot_config(data_path: Path):
     """Get experimental conditions from the data path.
     Data path should look like:
-    "/mnt/nas2/GO/7cam/220810_aJO-GAL4xUAS-CsChr/Fly001/001_RLF/behData/pose-3d"
+    "../data/pose-3d"
     """
     assert data_path.parts[-1] == "pose-3d", "The data path should end with pose-3d"
     assert data_path.parts[-2] == "behData", "The data path should contain behData"
@@ -585,6 +585,8 @@ def plot_joint_angle(
         Path where the plot will be saved, by default None
     """
     colors = generate_color_map(cmap="Set2", n=len(angles_to_plot))
+    legend_handles = []
+    legend_labels = []
 
     for i, joint_name in enumerate(angles_to_plot):
         joint_angles = kinematics_data[joint_name]
@@ -611,6 +613,16 @@ def plot_joint_angle(
             label=label,
             color=colors[i],
         )
+        proxy = plt.Line2D(
+            [0],
+            [0],
+            linestyle="-",
+            marker="o",
+            color=tuple(colors[i]) if hasattr(colors[i], "__iter__") else colors[i],
+            markersize=4.5,
+        )
+        legend_handles.append(proxy)
+        legend_labels.append(label)
 
     if stim_lines is not None:
         ax.vlines(stim_lines, -200, 200, "red", lw=0.5)
@@ -618,7 +630,13 @@ def plot_joint_angle(
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     if show_legend:
-        ax.legend(bbox_to_anchor=(1.2, 1), frameon=False, borderaxespad=0.0)
+        ax.legend(
+            handles=legend_handles,
+            labels=legend_labels,
+            bbox_to_anchor=(1.2, 1),
+            frameon=False,
+            borderaxespad=0.0,
+        )
 
     if export_path is not None:
         plt.savefig(export_path, bbox_inches="tight")

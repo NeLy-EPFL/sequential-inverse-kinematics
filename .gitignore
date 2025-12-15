@@ -250,3 +250,7 @@ poetry.toml
 *.pdf
 *.csv
 *.ai
+*.svg
+*.pkl
+# MyST build outputs
+_build

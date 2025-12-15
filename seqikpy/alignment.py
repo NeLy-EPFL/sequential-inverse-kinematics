@@ -1,5 +1,6 @@
 """
-Code for aligning 3D pose to a fly template.
+Code for aligning 3D pose to a fly template, aka "calibration" in pose estimation
+literature.
 The best practice for getting good alignment is to have an accurate 3D pose and
 a template whose key points are matching the tracked key points closely.
 
@@ -21,15 +22,16 @@ NOTE: if the 3D pose is not in the format described above, then you need to
 * Or, if you obtain the 3D pose from anipose, simply set `convert_func`
 to `convert_from_anipose_to_dict` .
 
+>>> from seqikpy.body_config import neuromechfly_body_config
 >>> data_path = Path("../data/anipose_220525_aJO_Fly001_001/pose-3d")
 >>> align = AlignPose.from_file_path(
 >>>     main_dir=data_path,
 >>>     file_name="pose3d.h5",
 >>>     legs_list=["RF","LF"],
 >>>     convert_func=convert_from_anipose_to_dict,
->>>     pts2align=PTS2ALIGN,
+>>>     pts2align=neuromechfly_body_config.points_to_align,
 >>>     include_claw=False,
->>>     body_template=NMF_TEMPLATE,
+>>>     body_template=neuromechfly_body_config.template,
 >>> )
 >>> aligned_pos = align.align_pose(export_path=data_path)
 
@@ -41,9 +43,9 @@ Case 2: we have a pose data in the required data structure, we just want to load
 >>>     file_name="converted_pose_dict.pkl",
 >>>     legs_list=["RF","LF"],
 >>>     convert_func=None,
->>>     pts2align=PTS2ALIGN,
+>>>     pts2align=neuromechfly_body_config.points_to_align,
 >>>     include_claw=False,
->>>     body_template=NMF_TEMPLATE,
+>>>     body_template=neuromechfly_body_config.template,
 >>> )
 >>> aligned_pos = align.align_pose(export_path=data_path)
 
@@ -59,26 +61,23 @@ in the right format. If not, use the static method `convert_from_anipose`.
 >>>     pose_data_dict=pose_data,
 >>>     legs_list=["RF","LF"],
 >>>     include_claw=False,
->>>     body_template=NMF_TEMPLATE,
+>>>     body_template=neuromechfly_body_config.template,
 >>> )
 >>> aligned_pos = align.align_pose(export_path=data_path)
 
 """
 
-from pathlib import Path
-from typing import Dict, List, Union, Optional, Literal, Callable
 import pickle
 import logging
-
 import numpy as np
+from pathlib import Path
+from typing import Dict, List, Union, Optional, Literal, Callable
 
-from seqikpy.data import PTS2ALIGN, NMF_TEMPLATE
+from seqikpy.body_config import neuromechfly_body_config
 from seqikpy.utils import save_file, calculate_body_size, dict_to_nparray_pose
 
-logging.basicConfig(
-    format=" %(asctime)s - %(levelname)s- %(message)s",
-    handlers=[logging.StreamHandler()],
-)
+
+_logger = logging.getLogger(__name__)
 
 
 def _get_mean_quantile(vector, quantile_diff=0.05):
@@ -106,7 +105,7 @@ def convert_from_anipose_to_dict(
     pose_3d: Dict[str, np.ndarray], pts2align: Dict[str, List[str]]
 ) -> Dict[str, np.ndarray]:
     """Loads anipose 3D pose data into a dictionary.
-    See data.py for a mapping from keypoint name to segment name.
+    See body_config.py for a mapping from keypoint name to segment name.
 
     Parameters
     ----------
@@ -121,7 +120,7 @@ def convert_from_anipose_to_dict(
         }
     pts2align : Dict[str, List[str]]
         Segment names and corresponding key point names to be aligned,
-        check data.py for an example, by default None
+        check body_config.py for an example, by default None
 
     Returns
     -------
@@ -229,13 +228,15 @@ def convert_from_df3dpp_to_dict(
 
 
 class AlignPose:
-    """Aligns the 3D poses. For the class usage examples, please refer to example_alignment.py
+    """Aligns the 3D poses. This process is also known as "calibration" in
+    pose estimation literature. For the class usage examples, please refer
+    to example_alignment.py.
 
     Parameters
     ----------
     pose_data_dict : Dict[str, np.ndarray]
-        3D pose put in a dictionary that has the following structure defined
-        by PTS2ALIGN (see data.py for more details)
+        3D pose put in a dictionary that has the following structure defined by
+        seqikpy.body_config.neuromechfly_body_config.points_to_align (see body_config.py for details)
 
         Example format
 
@@ -254,17 +255,14 @@ class AlignPose:
         If True, claw is included in the scaling process, by default False
     body_template : Dict[str, np.ndarray], optional
         A dictionary containing the positions of fly model body segments.
-        Check ./data.py for the default dictionary, by default None
+        Check ./body_config.py for the default dictionary, by default None
     body_size : Dict[str, float], optional
         A dictionary containing the  limb size of the fly.
         If the user wants to scale the animal data to match the
         biomechanical model, then `body_size` should be the same as
         the model body size. Otherwise, the user should calculate the
         animal's body size.
-        Check ./data.py for an example.
-    log_level : Literal["DEBUG", "INFO", "WARNING", "ERROR"], optional
-        Logging level as a string, by default "INFO"
-
+        Check ./body_config.py for an example.
     """
 
     def __init__(
@@ -274,21 +272,18 @@ class AlignPose:
         include_claw: Optional[bool] = False,
         body_template: Optional[Dict[str, np.ndarray]] = None,
         body_size: Optional[Dict[str, float]] = None,
-        log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO",
     ) -> None:
         self.pose_data_dict = pose_data_dict
         self.include_claw = include_claw
-        self.body_template = NMF_TEMPLATE if body_template is None else body_template
+        if body_template is not None:
+            self.body_template = body_template
+        else:
+            self.body_template = neuromechfly_body_config.template
         # Calculate the size of the limbs from the template
         if body_size is None:
             self.body_size = calculate_body_size(self.body_template, legs_list)
         else:
             self.body_size = body_size
-
-        # Get the logger of the module
-        self.logger = logging.getLogger(self.__class__.__name__)
-        numeric_level = getattr(logging, log_level.upper(), None)
-        self.logger.setLevel(numeric_level)
 
     @classmethod
     def from_file_path(
@@ -319,7 +314,7 @@ class AlignPose:
             by default None
         pts2align : Dict[str, List[str]], optional
             Body part names and corresponding key points names to be aligned,
-            check data.py for an example, by default None
+            check body_config.py for an example, by default None
 
         Returns
         -------
@@ -339,7 +334,8 @@ class AlignPose:
             raise FileNotFoundError(f"{file_name} does not exits in {main_dir}")
 
         if convert_func is not None:
-            pts2align = PTS2ALIGN if pts2align is None else pts2align
+            if pts2align is None:
+                pts2align = neuromechfly_body_config.points_to_align
             converted_dict = convert_func(pose_3d, pts2align)
             return cls(converted_dict, **kwargs)
 
@@ -371,7 +367,7 @@ class AlignPose:
                     head_array=segment_array, side=segment[0]
                 )
             else:
-                self.logger.debug("%s is not aligned", segment)
+                _logger.debug("%s is not aligned", segment)
                 continue
         # Take the neck as in the template as the other points are already aligned
         if "Neck" in self.body_template:
@@ -380,7 +376,7 @@ class AlignPose:
         if export_path is not None:
             export_full_path = export_path / "pose3d_aligned.pkl"
             save_file(out_fname=export_full_path, data=aligned_pose)
-            self.logger.info("Aligned pose is saved at %s", export_path)
+            _logger.info("Aligned pose is saved at %s", export_path)
 
         return aligned_pose
 
@@ -472,7 +468,7 @@ class AlignPose:
 
         mean_length = self.get_mean_length(leg_array, segment_is_leg=True)
         scale_factor = self.find_scale_leg(leg_name, mean_length)
-        self.logger.info("Scale factor for %s leg: %s", leg_name, scale_factor)
+        _logger.info("Scale factor for %s leg: %s", leg_name, scale_factor)
 
         for i in range(0, 5):
             if i == 0:
@@ -546,7 +542,7 @@ class AlignPose:
             antbase2thoraxmid_real[stationary_indices]
         )
         scale_tip_ant = ant_tmp / _get_mean_quantile(ant_size)
-        self.logger.info(
+        _logger.info(
             "Scale factor antenna base %s: %s, ant itself: %s",
             side,
             scale_base_ant,

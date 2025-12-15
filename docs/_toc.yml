@@ -17,10 +17,10 @@ parts:
 - caption: 📚 Tutorials
   chapters:
   - file: seqikpy_grooming
-  - file: seqikpy_locomotion
+  - file: seqikpy_mouse_reaching
   - file: visualization
+  - file: parallel_processing
 - caption: 💬 References
   chapters:
-  - file: seqikpy.rst
-  - file: modules.rst
+  - file: seqikpy
   - file: references
