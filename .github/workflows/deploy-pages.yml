@@ -1,10 +1,8 @@
 name: deploy-pages
 
 on:
-  # Trigger the workflow on push to main branch
   push:
-    branches:
-      - main
+    branches: [main]
     paths-ignore:
       - "tests/**"
       - "examples/**"
@@ -12,8 +10,6 @@ on:
 env:
   BASE_URL: /${{ github.event.repository.name }}
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -21,18 +17,20 @@ concurrency:
 jobs:
   deploy-book:
     runs-on: ubuntu-latest
-    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+
+    # Recommended explicit permissions for Pages deployments
     permissions:
+      contents: read
       pages: write
       id-token: write
-    steps:
-      - uses: actions/checkout@v3
 
-      # Install dependencies
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: "3.10"
 
       - name: Install seqikpy
         run: |
@@ -42,19 +40,16 @@ jobs:
         run: |
           pip install -r ./docs/requirements.txt
 
-      # Build the book
       - name: Build the book
         run: |
           sphinx-apidoc -o docs/ seqikpy/
           jupyter-book build docs
 
-      # Upload the book's HTML as an artifact
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: "docs/_build/html"
 
-      # Deploy the book's HTML to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
