@@ -80,6 +80,6 @@ For use cases where sequential inverse kinematics is required, we have implement
 
 # Acknowledgements
 
-We acknowledge the contributors and maintainers of the open-source software tools that SeqIKPy builds upon, including Python, NumPy, SciPy, Matplotlib, and IKPy [@Manceron_IKPy], among others. PGÖ acknowledges support from a Swiss Government Excellence Scholarship for Doctoral Studies and a Google PhD Fellowship. SWC acknowledges support from a Boehringer Ingelheim Fonds PhD fellowship. PR acknowledges support from an SNSF Project Grant (175667) and an SNSF Eccellenza Grant (181239).
+We acknowledge the contributors and maintainers of the open-source software tools that `SeqIKPy` builds upon, including Python, NumPy, SciPy, Matplotlib, and IKPy [@Manceron_IKPy], among others. PGÖ acknowledges support from a Swiss Government Excellence Scholarship for Doctoral Studies and a Google PhD Fellowship. SWC acknowledges support from a Boehringer Ingelheim Fonds PhD fellowship. PR acknowledges support from an SNSF Project Grant (175667) and an SNSF Eccellenza Grant (181239).
 
 # References
