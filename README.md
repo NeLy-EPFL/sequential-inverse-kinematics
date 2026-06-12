@@ -8,7 +8,6 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-red)](https://opensource.org/license/apache-2-0)
 [![python](https://img.shields.io/pypi/pyversions/seqikpy)]()
 [![Cov](https://github.com/NeLy-EPFL/sequential-inverse-kinematics/blob/main/docs/images/coverage.svg?raw=true)]()
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12601317.svg)](https://doi.org/10.5281/zenodo.12601317)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.08557/status.svg)](https://doi.org/10.21105/joss.08557)
 </div>
 
